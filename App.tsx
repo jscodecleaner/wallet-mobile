@@ -6,15 +6,15 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
 import SplashScreen from 'react-native-splash-screen';
-import LoginScreen from './app/screens/login';
+import LoginScreen from './src/screens/login';
 import {isAuthenticated} from '@okta/okta-react-native';
-import Home from './app/screens/home';
+import Home from './src/screens/home';
 import {createConfig} from '@okta/okta-react-native';
 import configFile from './auth.config';
 
 import {useSelector} from 'react-redux';
 
-import themeType from './app/types/theme';
+import themeType from './src/types/theme';
 
 LogBox.ignoreAllLogs(true);
 
@@ -39,7 +39,7 @@ const theme: themeType = {
 };
 
 const App: () => ReactNode = () => {
-  const {authenticated} = useSelector(state => state.user);
+  const {authenticated} = useSelector((state: any) => state.user);
 
   const checkAuthentication = async () => {
     const result = await isAuthenticated();

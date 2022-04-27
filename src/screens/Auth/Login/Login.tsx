@@ -3,12 +3,13 @@ import {View, Image, StyleSheet, StatusBar} from 'react-native';
 import {TextInput, Button, Text, withTheme} from 'react-native-paper';
 import {signIn} from '@okta/okta-react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
-import Error from '../components/error';
-import {useAppDispatch} from '../redux/hooks';
-import {Login} from '../redux/slices/userSlice';
+import Error from '../../../components/error';
+import { useDispatch } from 'react-redux';
+import {Login} from '../../../redux/slices/userSlice';
+import styles from './Login.style';
 
 const LoginScreen = ({theme, navigation}) => {
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
   const [username, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const [progress, setProgress] = useState(false);
@@ -90,17 +91,3 @@ const LoginScreen = ({theme, navigation}) => {
 
 export default withTheme(LoginScreen);
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  button: {margin: 20, paddingVertical: 10, paddingHorizontal: 20},
-  image: {
-    borderRadius: 15,
-    overflow: 'hidden',
-    height: 250,
-    width: 550,
-  },
-  input: {marginVertical: 10, height: 50, width: 350},
-});
