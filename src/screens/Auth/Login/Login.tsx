@@ -1,12 +1,16 @@
 import React, {useState} from 'react';
 import {View, Image, StyleSheet, StatusBar} from 'react-native';
 import {TextInput, Button, Text, withTheme} from 'react-native-paper';
-import {signIn} from '@okta/okta-react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import Error from '../../../components/error';
-import { useDispatch } from 'react-redux';
+import {useDispatch} from 'react-redux';
 import {Login} from '../../../redux/slices/userSlice';
 import styles from './Login.style';
+import logoImage from '../../../assets/images/logo.png';
+import { universalPostRequestWithData } from '../../../services/RequestHandler';
+import { BASE_URL } from '../../../services/common';
+import { ApiEndpoint, StatusCode } from '../../../types/enum';
+import { LoginData } from '../../../types/interface';
 
 const LoginScreen = ({theme, navigation}) => {
   const dispatch = useDispatch();
@@ -15,79 +19,109 @@ const LoginScreen = ({theme, navigation}) => {
   const [progress, setProgress] = useState(false);
   const [error, setError] = useState('');
 
-  const login = () => {
+  const login = async () => {
     if (progress === true) {
       return;
     }
     setProgress(true);
-    signIn({username, password})
-      .then(_token => {
-        setProgress(false);
-        setUserName('');
-        setPassword('');
-        setError('');
-        dispatch(Login(_token));
-      })
-      .then(() => navigation.navigate('Home'))
-      .catch(error => {
-        setProgress(false);
-        setUserName('');
-        setPassword('');
-        setError(error.message);
-      });
-  };
 
-  const reset = () => {
+    const url = `${BASE_URL}/${ApiEndpoint.LOGIN}`;
+    const data = {
+      username,
+      password,
+    };
+
+    const response: any = await universalPostRequestWithData(url, data);
+
+    if (response && response.status === StatusCode.OKAY) {
+      const data: LoginData = response.data.data;
+      dispatch(Login(data));
+
+      setProgress(false);
+      setUserName('');
+      setPassword('');
+      setError('');
+
+      navigation.navigate('VerifyMFA');
+    } else {
+      setProgress(false);
+      setUserName('');
+      setPassword('');
+      setError(response.data.message);
+    }
+  }
+
+  const forgotPassword = () => {
     setProgress(false);
     setUserName('');
     setPassword('');
     setError('');
+    navigation.navigate('ForgotPassword')
+  };
+
+  const signUp = () => {
+    setProgress(false);
+    setUserName('');
+    setPassword('');
+    setError('');
+    navigation.navigate('VerifyMFA')
   };
 
   return (
     <View style={styles.container}>
-      <StatusBar hidden />
-      <Spinner
-        visible={progress}
-        textContent={'Loading...'}
-        textStyle={{
-          color: '#FFF',
-        }}
-      />
-      <Image
-        style={styles.image}
-        source={require('../assets/images/logo.png')}
-      />
-      <TextInput
-        autoCapitalize="none"
-        outlineColor={theme.colors.background}
-        style={styles.input}
-        label="User Name"
-        value={username}
-        onChangeText={text => setUserName(text)}
-      />
-      <TextInput
-        outlineColor={theme.colors.background}
-        style={styles.input}
-        secureTextEntry
-        label="Password"
-        value={password}
-        onChangeText={text => setPassword(text)}
-      />
-      <Error error={error} />
-      <View style={{flexDirection: 'row'}}>
-        <Button style={styles.button} mode="contained" onPress={login}>
-          Login
-        </Button>
-        <Button style={styles.button} mode="contained" onPress={reset}>
-          Reset
-        </Button>
+      <View style={{width: '100%', alignItems: 'center'}}>
+        <StatusBar hidden />
+        <Spinner
+          visible={progress}
+          textContent={'Loading...'}
+          textStyle={{
+            color: '#FFF',
+          }}
+        />
+        <Image
+          style={styles.image}
+          source={logoImage}
+          resizeMode="contain"
+        />
+        <Text>Sign in to your account</Text>
+        <View style={{width: '100%'}}>
+          <TextInput
+            autoCapitalize="none"
+            outlineColor={theme.colors.background}
+            style={styles.input}
+            label="Username or email"
+            value={username}
+            onChangeText={text => setUserName(text)}
+          />
+        </View>
+        <View style={{width: '100%'}}>
+          <TextInput
+            outlineColor={theme.colors.background}
+            style={styles.input}
+            secureTextEntry
+            label="Password"
+            value={password}
+            onChangeText={text => setPassword(text)}
+          />
+        </View>
+        <Error error={error} />
+        <View style={{width: '100%'}}>
+          <Button style={styles.button} mode="contained" onPress={login} color={theme.colors.primary}>
+            {/* <Text style={styles.buttonContent}>Login</Text> */}
+            Login
+          </Button>
+        </View>
+        <View style={{width: '100%', alignItems: 'flex-end'}}>
+          <Button mode="text" onPress={forgotPassword}>
+            Forgot Password?
+          </Button>
+        </View>
       </View>
-      <Text>v 1.0</Text>
-      <Text>{'\u00A9'} CfsWallet</Text>
+      <View style={{height: 50}}>
+        <Button uppercase={false} onPress={signUp}>Don't have an account? Signup</Button>
+      </View>
     </View>
   );
 };
 
 export default withTheme(LoginScreen);
-

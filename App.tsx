@@ -6,15 +6,13 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
 import SplashScreen from 'react-native-splash-screen';
-import LoginScreen from './src/screens/login';
-import {isAuthenticated} from '@okta/okta-react-native';
-import Home from './src/screens/home';
-import {createConfig} from '@okta/okta-react-native';
-import configFile from './auth.config';
-
 import {useSelector} from 'react-redux';
 
+import Login from './src/screens/Auth/Login/Login';
+import Home from './src/screens/Home/Home';
 import themeType from './src/types/theme';
+import ForgetPassword from './src/screens/Auth/ForgetPassword/ForgetPassword';
+import VerifyMFA from './src/screens/Auth/VerifyMFA/VerifyMFA';
 
 LogBox.ignoreAllLogs(true);
 
@@ -32,36 +30,29 @@ const theme: themeType = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    primary: '#216484',
+    primary: '#3f51b5',
     accent: 'yellow',
     background: '#DFEAED',
   },
 };
 
 const App: () => ReactNode = () => {
-  const {authenticated} = useSelector((state: any) => state.user);
+  const {authenticated, mfaActived} = useSelector((state: any) => state.user);
 
-  const checkAuthentication = async () => {
-    const result = await isAuthenticated();
+  const getNavigationScreen = () => {
+    if (authenticated) {
+      if (mfaActived) {
+        return 'Home';
+      } else {
+        return 'VerifyMFA'
+      }
+    } else {
+      return 'Login';
+    }
   };
 
   useEffect(() => {
     SplashScreen.hide();
-  }, []);
-
-  useEffect(() => {
-    (async () => {
-      await createConfig({
-        clientId: configFile.oidc.clientId,
-        redirectUri: configFile.oidc.redirectUri,
-        endSessionRedirectUri: configFile.oidc.endSessionRedirectUri,
-        discoveryUri: configFile.oidc.discoveryUri,
-        scopes: configFile.oidc.scopes,
-        requireHardwareBackedKeyStore: configFile.oidc.requireHardwareBackedKeyStore,
-      });
-
-      await checkAuthentication();
-    })();
   }, []);
 
   return (
@@ -71,11 +62,21 @@ const App: () => ReactNode = () => {
           <Stack.Screen
             name="Login"
             options={{headerShown: false}}
-            component={LoginScreen}
+            component={Login}
           />
           <Stack.Screen
             name="Home"
             component={Home}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="ForgotPassword"
+            component={ForgetPassword}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="VerifyMFA"
+            component={VerifyMFA}
             options={{headerShown: false}}
           />
         </Stack.Navigator>
