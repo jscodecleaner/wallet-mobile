@@ -11,6 +11,7 @@ import { universalPostRequestWithData } from '../../../services/RequestHandler';
 import { BASE_URL } from '../../../services/common';
 import { ApiEndpoint, StatusCode } from '../../../types/enum';
 import { LoginData } from '../../../types/interface';
+import CustomButton from '../../../components/CustomButton/CustomButton';
 
 const LoginScreen = ({theme, navigation}) => {
   const dispatch = useDispatch();
@@ -94,7 +95,7 @@ const LoginScreen = ({theme, navigation}) => {
             onChangeText={text => setUserName(text)}
           />
         </View>
-        <View style={{width: '100%'}}>
+        <View style={{width: '100%', marginBottom: 20}}>
           <TextInput
             outlineColor={theme.colors.background}
             style={styles.input}
@@ -106,10 +107,7 @@ const LoginScreen = ({theme, navigation}) => {
         </View>
         <Error error={error} />
         <View style={{width: '100%'}}>
-          <Button style={styles.button} mode="contained" onPress={login} color={theme.colors.primary}>
-            {/* <Text style={styles.buttonContent}>Login</Text> */}
-            Login
-          </Button>
+          <CustomButton backgroundColor={theme.colors.primary} name="Login" onClick={login} />
         </View>
         <View style={{width: '100%', alignItems: 'flex-end'}}>
           <Button mode="text" onPress={forgotPassword}>

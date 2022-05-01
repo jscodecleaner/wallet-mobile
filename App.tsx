@@ -11,7 +11,7 @@ import {useSelector} from 'react-redux';
 import Login from './src/screens/Auth/Login/Login';
 import Home from './src/screens/Home/Home';
 import themeType from './src/types/theme';
-import ForgetPassword from './src/screens/Auth/ForgetPassword/ForgetPassword';
+import ForgotPassword from './src/screens/Auth/ForgotPassword/ForgotPassword';
 import VerifyMFA from './src/screens/Auth/VerifyMFA/VerifyMFA';
 
 LogBox.ignoreAllLogs(true);
@@ -71,7 +71,7 @@ const App: () => ReactNode = () => {
           />
           <Stack.Screen
             name="ForgotPassword"
-            component={ForgetPassword}
+            component={ForgotPassword}
             options={{headerShown: false}}
           />
           <Stack.Screen
