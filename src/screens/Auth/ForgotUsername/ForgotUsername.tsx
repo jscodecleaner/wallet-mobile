@@ -3,20 +3,20 @@ import { useDispatch } from "react-redux";
 import { View } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { Button, Text, TextInput, withTheme } from 'react-native-paper';
-import styles from './ForgotPassword.style';
+import styles from './ForgotUsername.style';
 import Error from '../../../components/error';
 import { ApiEndpoint, StatusCode } from '../../../types/enum';
 import { BASE_URL } from '../../../services/common';
 import { universalPostRequestWithData } from '../../../services/RequestHandler';
 import CustomButton from '../../../components/CustomButton/CustomButton';
 
-const ForgotPasswordScreen = ({theme, navigation}) => {
+const ForgotUsernameScreen = ({theme, navigation}) => {
   const dispatch = useDispatch();
   const [progress, setProgress] = useState(false);
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
 
-  const getOTP = async () => {
+  const getUsername = async () => {
     if (progress === true) {
       return;
     }
@@ -72,7 +72,7 @@ const ForgotPasswordScreen = ({theme, navigation}) => {
       </View>
       <Error error={error} />
       <View style={{width: '100%', marginTop: 10}}>
-        <CustomButton theme={theme} name="Get OTP" onClick={getOTP} state={validateInput()} />
+        <CustomButton theme={theme} name="Get Email" onClick={getUsername} state={validateInput()} />
       </View>
       <View style={{width: '100%', alignItems: "flex-end"}}>
         <Button mode="text" uppercase={false} onPress={backToLogin} color={theme.colors.primary} >
@@ -83,4 +83,4 @@ const ForgotPasswordScreen = ({theme, navigation}) => {
   )
 };
 
-export default withTheme(ForgotPasswordScreen);
+export default withTheme(ForgotUsernameScreen);

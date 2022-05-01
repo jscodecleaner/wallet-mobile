@@ -18,7 +18,7 @@ export const userSlice = createSlice({
     Login: (state, action: PayloadAction<LoginData>) => {
       state.authenticated = true;
     },
-    LogOut: state => {
+    Logout: state => {
       state.authenticated = false;
       state.mfaActived = false;
     },

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Image, StyleSheet, StatusBar} from 'react-native';
+import {View, Image, StatusBar} from 'react-native';
 import {TextInput, Button, Text, withTheme} from 'react-native-paper';
 import Spinner from 'react-native-loading-spinner-overlay';
 import Error from '../../../components/error';
@@ -38,18 +38,18 @@ const LoginScreen = ({theme, navigation}) => {
       const data: LoginData = response.data.data;
       dispatch(Login(data));
 
-      setProgress(false);
       setUserName('');
       setPassword('');
       setError('');
 
       navigation.navigate('VerifyMFA');
     } else {
-      setProgress(false);
       setUserName('');
       setPassword('');
       setError(response.data.message);
     }
+
+    setProgress(false);
   }
 
   const forgotPassword = () => {
@@ -60,6 +60,14 @@ const LoginScreen = ({theme, navigation}) => {
     navigation.navigate('ForgotPassword')
   };
 
+  const forgotUsername = () => {
+    setProgress(false);
+    setUserName('');
+    setPassword('');
+    setError('');
+    navigation.navigate('ForgotUsername')
+  };
+
   const signUp = () => {
     setProgress(false);
     setUserName('');
@@ -68,17 +76,24 @@ const LoginScreen = ({theme, navigation}) => {
     navigation.navigate('VerifyMFA')
   };
 
+  const validateInput = () => {
+    if (username && password)
+      return "normal";
+    else
+      return "disabled";
+  }
+
   return (
     <View style={styles.container}>
-      <View style={{width: '100%', alignItems: 'center'}}>
-        <StatusBar hidden />
-        <Spinner
+      <Spinner
           visible={progress}
           textContent={'Loading...'}
           textStyle={{
             color: '#FFF',
-          }}
-        />
+        }}
+      />
+      <View style={{width: '100%', alignItems: 'center'}}>
+        <StatusBar hidden />
         <Image
           style={styles.image}
           source={logoImage}
@@ -95,7 +110,7 @@ const LoginScreen = ({theme, navigation}) => {
             onChangeText={text => setUserName(text)}
           />
         </View>
-        <View style={{width: '100%', marginBottom: 20}}>
+        <View style={{width: '100%'}}>
           <TextInput
             outlineColor={theme.colors.background}
             style={styles.input}
@@ -106,8 +121,13 @@ const LoginScreen = ({theme, navigation}) => {
           />
         </View>
         <Error error={error} />
-        <View style={{width: '100%'}}>
-          <CustomButton backgroundColor={theme.colors.primary} name="Login" onClick={login} />
+        <View style={{width: '100%', marginTop: 10}}>
+          <CustomButton theme={theme} name="Login" onClick={login} state={validateInput()} />
+        </View>
+        <View style={{width: '100%', alignItems: 'flex-end'}}>
+          <Button mode="text" onPress={forgotUsername}>
+            Forgot Username?
+          </Button>
         </View>
         <View style={{width: '100%', alignItems: 'flex-end'}}>
           <Button mode="text" onPress={forgotPassword}>

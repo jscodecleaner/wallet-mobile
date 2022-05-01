@@ -13,6 +13,7 @@ import Home from './src/screens/Home/Home';
 import themeType from './src/types/theme';
 import ForgotPassword from './src/screens/Auth/ForgotPassword/ForgotPassword';
 import VerifyMFA from './src/screens/Auth/VerifyMFA/VerifyMFA';
+import ForgotUsername from './src/screens/Auth/ForgotUsername/ForgotUsername';
 
 LogBox.ignoreAllLogs(true);
 
@@ -58,7 +59,7 @@ const App: () => ReactNode = () => {
   return (
     <NavigationContainer>
       <PaperProvider theme={theme}>
-        <Stack.Navigator initialRouteName={authenticated ? 'Home' : 'Login'}>
+        <Stack.Navigator initialRouteName={getNavigationScreen()}>
           <Stack.Screen
             name="Login"
             options={{headerShown: false}}
@@ -72,6 +73,11 @@ const App: () => ReactNode = () => {
           <Stack.Screen
             name="ForgotPassword"
             component={ForgotPassword}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="ForgotUsername"
+            component={ForgotUsername}
             options={{headerShown: false}}
           />
           <Stack.Screen
