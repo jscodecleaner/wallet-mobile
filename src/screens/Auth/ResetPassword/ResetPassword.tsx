@@ -1,22 +1,26 @@
 import React, { useState } from 'react';
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { View } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { Button, Text, TextInput, withTheme } from 'react-native-paper';
-import styles from './ForgotUsername.style';
+import styles from './ResetPassword.style';
 import Error from '../../../components/error';
 import { ApiEndpoint, StatusCode } from '../../../types/enum';
 import { BASE_URL } from '../../../services/common';
 import { universalPostRequestWithData } from '../../../services/RequestHandler';
 import CustomButton from '../../../components/CustomButton/CustomButton';
 
-const ForgotUsernameScreen = ({theme, navigation}) => {
+const ResetPasswordScreen = ({theme, navigation}) => {
   const dispatch = useDispatch();
+  const {access_token} = useSelector((state: any) => state.user);
+
   const [progress, setProgress] = useState(false);
-  const [email, setEmail] = useState('');
+  const [oldPassword, setOldPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [newPassword2, setNewPassword2] = useState('');
   const [error, setError] = useState('');
 
-  const getUsername = async () => {
+  const resetPassword = async () => {
     if (progress === true) {
       return;
     }
@@ -24,14 +28,18 @@ const ForgotUsernameScreen = ({theme, navigation}) => {
 
     const url = `${BASE_URL}/${ApiEndpoint.FORGOT_PASSWORD}`;
     const data = {
-      email: email,
+      new_password: newPassword,
+      old_password: oldPassword
     };
+    const headers = {
+      Authorization: `Bearer ${access_token}`,
+    }
 
-    const response: any = await universalPostRequestWithData(url, data);
+    const response: any = await universalPostRequestWithData(url, data, headers);
     console.log(response);
 
     if (response.status === StatusCode.OKAY) {
-      setError('OTP has been sent to your email.');
+      setError('Password changed successfully.');
     } else {
       setError(response.data.message);
     }
@@ -44,7 +52,7 @@ const ForgotUsernameScreen = ({theme, navigation}) => {
   }
 
   const validateInput = () => {
-    if (email)
+    if (oldPassword && newPassword && newPassword2)
       return "normal";
     else
       return "disabled";
@@ -59,20 +67,40 @@ const ForgotUsernameScreen = ({theme, navigation}) => {
             color: '#FFF',
         }}
       />
-      <Text>Recover Username</Text>
+      <Text>Reset Password</Text>
       <View style={{width: '100%'}}>
         <TextInput
             autoCapitalize="none"
             outlineColor={theme.colors.background}
             style={styles.input}
-            label="Email"
-            value={email}
-            onChangeText={text => setEmail(text)}
+            label="Old Password"
+            value={oldPassword}
+            onChangeText={text => setOldPassword(text)}
+        />
+      </View>
+      <View style={{width: '100%'}}>
+        <TextInput
+            autoCapitalize="none"
+            outlineColor={theme.colors.background}
+            style={styles.input}
+            label="New Password1"
+            value={oldPassword}
+            onChangeText={text => setNewPassword(text)}
+        />
+      </View>
+      <View style={{width: '100%'}}>
+        <TextInput
+            autoCapitalize="none"
+            outlineColor={theme.colors.background}
+            style={styles.input}
+            label="New Password2"
+            value={oldPassword}
+            onChangeText={text => setNewPassword2(text)}
         />
       </View>
       <Error error={error} />
       <View style={{width: '100%', marginTop: 10}}>
-        <CustomButton theme={theme} name="Get Email" onClick={getUsername} state={validateInput()} />
+        <CustomButton theme={theme} name="Reset Password" onClick={resetPassword} state={validateInput()} />
       </View>
       <View style={{width: '100%', alignItems: "flex-end"}}>
         <Button mode="text" uppercase={false} onPress={backToLogin} color={theme.colors.primary} >
@@ -83,4 +111,4 @@ const ForgotUsernameScreen = ({theme, navigation}) => {
   )
 };
 
-export default withTheme(ForgotUsernameScreen);
+export default withTheme(ResetPasswordScreen);
