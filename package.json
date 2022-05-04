@@ -17,6 +17,7 @@
     "@react-navigation/native": "^6.0.4",
     "@react-navigation/native-stack": "^6.2.2",
     "@reduxjs/toolkit": "^1.6.2",
+    "@types/react-native-dotenv": "^0.2.0",
     "axios": "^0.24.0",
     "babel-plugin-optional-require": "^0.3.1",
     "fix": "^0.0.6",

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from "react-redux";
-import { View } from 'react-native';
+import { View, SafeAreaView } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { Button, Text, TextInput, withTheme } from 'react-native-paper';
 import styles from './ForgotPassword.style';
@@ -51,7 +51,7 @@ const ForgotPasswordScreen = ({theme, navigation}) => {
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Spinner
           visible={progress}
           textContent={'Loading...'}
@@ -79,7 +79,7 @@ const ForgotPasswordScreen = ({theme, navigation}) => {
           Back To Login
         </Button>
       </View>
-    </View>
+    </SafeAreaView>
   )
 };
 
