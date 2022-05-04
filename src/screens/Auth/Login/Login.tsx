@@ -8,7 +8,7 @@ import {Login} from '../../../redux/slices/userSlice';
 import styles from './Login.style';
 import logoImage from '../../../assets/images/logo.png';
 import { universalPostRequestWithData } from '../../../services/RequestHandler';
-import { BASE_URL } from '../../../services/common';
+import { BASE_URL, getProxyUrl } from '../../../services/common';
 import { ApiEndpoint, StatusCode } from '../../../types/enum';
 import { LoginData } from '../../../types/interface';
 import CustomButton from '../../../components/CustomButton/CustomButton';
@@ -30,6 +30,7 @@ const LoginScreen = ({theme, navigation}) => {
     const data = {
       username,
       password,
+      'white-label': getProxyUrl(),
     };
 
     const response: any = await universalPostRequestWithData(url, data);

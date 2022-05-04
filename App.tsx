@@ -38,11 +38,11 @@ const theme: themeType = {
 };
 
 const App: () => ReactNode = () => {
-  const {authenticated, mfaActived} = useSelector((state: any) => state.user);
+  const {authenticated, loginData} = useSelector((state: any) => state.user);
 
   const getNavigationScreen = () => {
     if (authenticated) {
-      if (mfaActived) {
+      if (loginData.is_mfa_active) {
         return 'Home';
       } else {
         return 'VerifyMFA'
