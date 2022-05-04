@@ -13,6 +13,7 @@ import { LoginData } from '../../../types/interface';
 import CustomButton from '../../../components/CustomButton/CustomButton';
 import AsyncStorage from '@react-native-community/async-storage';
 import { Login } from '../../../redux/slices/userSlice';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const getLoginDataFromToken = (token: string) => {
   if (!token) return {}
@@ -84,7 +85,7 @@ const VerifyMFAScreen = ({theme, navigation}) => {
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Spinner
           visible={progress}
           textContent={'Loading...'}
@@ -111,7 +112,7 @@ const VerifyMFAScreen = ({theme, navigation}) => {
           Back To Login
         </Button>
       </View>
-    </View> 
+    </SafeAreaView> 
   )
 };
 

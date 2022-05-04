@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Image, StatusBar} from 'react-native';
+import {View, Image, StatusBar, SafeAreaView} from 'react-native';
 import {TextInput, Button, Text, withTheme} from 'react-native-paper';
 import Spinner from 'react-native-loading-spinner-overlay';
 import Error from '../../../components/error';
@@ -85,7 +85,7 @@ const LoginScreen = ({theme, navigation}) => {
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Spinner
           visible={progress}
           textContent={'Loading...'}
@@ -139,7 +139,7 @@ const LoginScreen = ({theme, navigation}) => {
       <View style={{height: 50}}>
         <Button uppercase={false} onPress={signUp}>Don't have an account? Signup</Button>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

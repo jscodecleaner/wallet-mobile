@@ -9,6 +9,7 @@ import { ApiEndpoint, StatusCode } from '../../../types/enum';
 import { BASE_URL } from '../../../services/common';
 import { universalPostRequestWithData } from '../../../services/RequestHandler';
 import CustomButton from '../../../components/CustomButton/CustomButton';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const ResetPasswordScreen = ({theme, navigation}) => {
   const dispatch = useDispatch();
@@ -58,7 +59,7 @@ const ResetPasswordScreen = ({theme, navigation}) => {
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Spinner
           visible={progress}
           textContent={'Loading...'}
@@ -106,7 +107,7 @@ const ResetPasswordScreen = ({theme, navigation}) => {
           Back To Login
         </Button>
       </View>
-    </View>
+    </SafeAreaView>
   )
 };
 
