@@ -7,6 +7,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
 import SplashScreen from 'react-native-splash-screen';
 import {useSelector} from 'react-redux';
+import { Root } from 'react-native-popup-confirm-toast'
 
 import Login from './src/screens/Auth/Login/Login';
 import Home from './src/screens/Home/Home';
@@ -57,37 +58,39 @@ const App: () => ReactNode = () => {
   }, []);
 
   return (
-    <NavigationContainer>
-      <PaperProvider theme={theme}>
-        <Stack.Navigator initialRouteName={getNavigationScreen()}>
-          <Stack.Screen
-            name="Login"
-            options={{headerShown: false}}
-            component={Login}
-          />
-          <Stack.Screen
-            name="Home"
-            component={Home}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="ForgotPassword"
-            component={ForgotPassword}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="ForgotUsername"
-            component={ForgotUsername}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="VerifyMFA"
-            component={VerifyMFA}
-            options={{headerShown: false}}
-          />
-        </Stack.Navigator>
-      </PaperProvider>
-    </NavigationContainer>
+    <Root>
+      <NavigationContainer>
+        <PaperProvider theme={theme}>
+          <Stack.Navigator initialRouteName={getNavigationScreen()}>
+            <Stack.Screen
+              name="Login"
+              options={{headerShown: false}}
+              component={Login}
+            />
+            <Stack.Screen
+              name="Home"
+              component={Home}
+              options={{headerShown: false}}
+            />
+            <Stack.Screen
+              name="ForgotPassword"
+              component={ForgotPassword}
+              options={{headerShown: false}}
+            />
+            <Stack.Screen
+              name="ForgotUsername"
+              component={ForgotUsername}
+              options={{headerShown: false}}
+            />
+            <Stack.Screen
+              name="VerifyMFA"
+              component={VerifyMFA}
+              options={{headerShown: false}}
+            />
+          </Stack.Navigator>
+        </PaperProvider>
+      </NavigationContainer>
+    </Root>
   );
 };
 

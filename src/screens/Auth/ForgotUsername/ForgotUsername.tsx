@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { SafeAreaView, View } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { Button, Text, TextInput, withTheme } from 'react-native-paper';
+import { Popup } from 'react-native-popup-confirm-toast';
 import styles from './ForgotUsername.style';
 import Error from '../../../components/error';
 import { ApiEndpoint, StatusCode } from '../../../types/enum';
@@ -31,7 +32,15 @@ const ForgotUsernameScreen = ({theme, navigation}) => {
     const response: any = await universalPostRequestWithData(url, data);
 
     if (response.status === StatusCode.OKAY) {
-      setError('OTP has been sent to your email.');
+      Popup.show({
+        type: 'success',
+        title: 'Forgot Password',
+        textBody: response.data.message,
+        buttonText: 'OK',
+        callback: () => {
+          Popup.hide();
+        },
+      })
     } else {
       setError(response.data.message);
     }
