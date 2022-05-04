@@ -22,7 +22,7 @@ const ForgotUsernameScreen = ({theme, navigation}) => {
     }
     setProgress(true);
 
-    const url = `${BASE_URL}/${ApiEndpoint.FORGOT_PASSWORD}`;
+    const url = `${BASE_URL}/${ApiEndpoint.FORGOT_USERNAME}`;
     const data = {
       email: email,
       'white-label': getProxyUrl(),
