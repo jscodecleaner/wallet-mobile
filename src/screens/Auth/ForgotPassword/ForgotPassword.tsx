@@ -6,7 +6,7 @@ import { Button, Text, TextInput, withTheme } from 'react-native-paper';
 import styles from './ForgotPassword.style';
 import Error from '../../../components/error';
 import { ApiEndpoint, StatusCode } from '../../../types/enum';
-import { BASE_URL } from '../../../services/common';
+import { BASE_URL, getProxyUrl } from '../../../services/common';
 import { universalPostRequestWithData } from '../../../services/RequestHandler';
 import CustomButton from '../../../components/CustomButton/CustomButton';
 
@@ -24,11 +24,11 @@ const ForgotPasswordScreen = ({theme, navigation}) => {
 
     const url = `${BASE_URL}/${ApiEndpoint.FORGOT_PASSWORD}`;
     const data = {
+      'white-label': getProxyUrl(),
       email: email,
     };
 
     const response: any = await universalPostRequestWithData(url, data);
-    console.log(response);
 
     if (response.status === StatusCode.OKAY) {
       setError('OTP has been sent to your email.');

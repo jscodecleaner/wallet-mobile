@@ -36,7 +36,6 @@ const ResetPasswordScreen = ({theme, navigation}) => {
     }
 
     const response: any = await universalPostRequestWithData(url, data, headers);
-    console.log(response);
 
     if (response.status === StatusCode.OKAY) {
       setError('Password changed successfully.');

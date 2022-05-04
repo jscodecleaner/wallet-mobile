@@ -28,7 +28,6 @@ const ForgotUsernameScreen = ({theme, navigation}) => {
     };
 
     const response: any = await universalPostRequestWithData(url, data);
-    console.log(response);
 
     if (response.status === StatusCode.OKAY) {
       setError('OTP has been sent to your email.');
