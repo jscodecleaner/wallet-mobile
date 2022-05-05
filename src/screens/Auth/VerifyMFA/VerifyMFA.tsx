@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
-import { View } from 'react-native';
+import { View, SafeAreaView } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { Button, TextInput, withTheme } from 'react-native-paper';
 import jwt_decode from "jwt-decode";
+import { Popup } from 'react-native-popup-confirm-toast';
+
 import styles from './VerifyMFA.style';
 import Error from '../../../components/error';
-import { BASE_URL } from '../../../services/common';
+import { BASE_URL, CORP_WALLET_USER_PROFILE_LIST } from '../../../services/common';
 import { ApiEndpoint, StatusCode } from '../../../types/enum';
 import { universalPostRequestWithData } from '../../../services/RequestHandler';
 import { LoginData } from '../../../types/interface';
 import CustomButton from '../../../components/CustomButton/CustomButton';
 import AsyncStorage from '@react-native-community/async-storage';
-import { Login } from '../../../redux/slices/userSlice';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Login, Logout } from '../../../redux/slices/userSlice';
 
 const getLoginDataFromToken = (token: string) => {
   if (!token) return {}
@@ -57,15 +58,31 @@ const VerifyMFAScreen = ({theme, navigation}) => {
     const response = await universalPostRequestWithData(url, data)
     if (response && response.status === StatusCode.OKAY) {
       const data: LoginData = response.data.data
-
       data['expiry_time'] = Date.now() + data.expires_in * 1000
       data['login_time'] = Date.now()
 
       const newData = { ...data, access_token: data.access_token, ...getLoginDataFromToken(data.id_token) }
-      AsyncStorage.setItem('loginData', JSON.stringify(newData))
-      dispatch(Login(newData));
 
-      navigation.navigate('Home')
+      if (CORP_WALLET_USER_PROFILE_LIST.includes(newData.current_profile)) {
+        AsyncStorage.setItem('loginData', JSON.stringify(newData))
+        dispatch(Login(newData));
+  
+        navigation.navigate('Home')
+      } else {
+        setOtp('');
+
+        Popup.show({
+          type: 'confirm',
+          title: 'Invalid Login',
+          textBody: 'Your account is not enabled for native mobile access. Please login via pc or tablet.',
+          buttonText: 'OK',
+          callback: () => {
+            Popup.hide();
+            dispatch(Logout());
+            navigation.navigate('Login');
+          },
+        })
+      }
     } else {
       setError(response.data.message)
     }

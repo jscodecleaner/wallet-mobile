@@ -8,6 +8,8 @@ export const BASE_URL = baseUrl;
 
 export const getProxyUrl = () => PROXY_URL;
 
+export const CORP_WALLET_USER_PROFILE_LIST = ['wallet_user', 'corporate_admin', 'corporate_staff']
+
 export const getLoginData = async () => {
     const loginDataString = await AsyncStorage.getItem('loginData')
     if (!loginDataString) {

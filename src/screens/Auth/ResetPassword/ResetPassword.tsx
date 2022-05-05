@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
-import { View } from 'react-native';
+import { View, SafeAreaView } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { Button, Text, TextInput, withTheme } from 'react-native-paper';
 import styles from './ResetPassword.style';
@@ -9,7 +9,6 @@ import { ApiEndpoint, StatusCode } from '../../../types/enum';
 import { BASE_URL } from '../../../services/common';
 import { universalPostRequestWithData } from '../../../services/RequestHandler';
 import CustomButton from '../../../components/CustomButton/CustomButton';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 const ResetPasswordScreen = ({theme, navigation}) => {
   const dispatch = useDispatch();
