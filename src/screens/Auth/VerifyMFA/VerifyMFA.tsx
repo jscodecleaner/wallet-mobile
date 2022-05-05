@@ -72,7 +72,7 @@ const VerifyMFAScreen = ({theme, navigation}) => {
         setOtp('');
 
         Popup.show({
-          type: 'confirm',
+          type: 'warning',
           title: 'Invalid Login',
           textBody: 'Your account is not enabled for native mobile access. Please login via pc or tablet.',
           buttonText: 'OK',
@@ -81,6 +81,7 @@ const VerifyMFAScreen = ({theme, navigation}) => {
             dispatch(Logout());
             navigation.navigate('Login');
           },
+          confirmButtonStyle: {display: 'none'}
         })
       }
     } else {
