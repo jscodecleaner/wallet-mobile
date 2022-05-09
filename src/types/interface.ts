@@ -29,3 +29,16 @@ export interface LoginData {
     onboardingStatus: string
     entity_name: string
 }
+
+export interface WalletAccountInterface {
+    accountId: string
+    accountName: string
+    accountType: string
+    iBan: string
+    currencyData: {
+        currencyName: string
+        fundsAvailable: number
+        reservedBalance: string
+        accountBalance: number
+    }
+}

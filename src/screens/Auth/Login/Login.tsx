@@ -74,7 +74,7 @@ const LoginScreen = ({theme, navigation}) => {
     setUserName('');
     setPassword('');
     setError('');
-    navigation.navigate('VerifyMFA')
+    navigation.navigate('Dashboard')
   };
 
   const validateInput = () => {

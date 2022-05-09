@@ -15,6 +15,7 @@ import themeType from './src/types/theme';
 import ForgotPassword from './src/screens/Auth/ForgotPassword/ForgotPassword';
 import VerifyMFA from './src/screens/Auth/VerifyMFA/VerifyMFA';
 import ForgotUsername from './src/screens/Auth/ForgotUsername/ForgotUsername';
+import Dashboard from './src/screens/Dashboard/Dashoard';
 
 LogBox.ignoreAllLogs(true);
 
@@ -85,6 +86,11 @@ const App: () => ReactNode = () => {
             <Stack.Screen
               name="VerifyMFA"
               component={VerifyMFA}
+              options={{headerShown: false}}
+            />
+            <Stack.Screen
+              name="Dashboard"
+              component={Dashboard}
               options={{headerShown: false}}
             />
           </Stack.Navigator>
