@@ -20,7 +20,8 @@ export default StyleSheet.create({
     },
     buttonContent: {
       width: '100%',
-      fontSize: 24, color: 'white', fontWeight: 'bold'
+      fontSize: 24, color: 'white', 
+      fontWeight: 'bold'
     },
     image: {
       height: 200,

@@ -16,6 +16,7 @@ import ForgotPassword from './src/screens/Auth/ForgotPassword/ForgotPassword';
 import VerifyMFA from './src/screens/Auth/VerifyMFA/VerifyMFA';
 import ForgotUsername from './src/screens/Auth/ForgotUsername/ForgotUsername';
 import Dashboard from './src/screens/Dashboard/Dashoard';
+import WalletDetails from './src/screens/Dashboard/WalletDetails/WalletDetails';
 
 LogBox.ignoreAllLogs(true);
 
@@ -91,6 +92,11 @@ const App: () => ReactNode = () => {
             <Stack.Screen
               name="Dashboard"
               component={Dashboard}
+              options={{headerShown: false}}
+            />
+            <Stack.Screen
+              name="WalletDetails"
+              component={WalletDetails}
               options={{headerShown: false}}
             />
           </Stack.Navigator>

@@ -20,6 +20,7 @@
     "@types/react-native-dotenv": "^0.2.0",
     "axios": "^0.24.0",
     "babel-plugin-optional-require": "^0.3.1",
+    "currency-symbol-map": "^5.0.1",
     "fix": "^0.0.6",
     "jwt-decode": "^3.1.2",
     "password-validator": "^5.2.1",

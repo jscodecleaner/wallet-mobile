@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { withTheme } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import FontAwesomeIcons from 'react-native-vector-icons/FontAwesome';
 import WalletListScreen from './WalletList/WalletList';
 import SettingsScreen from './Settings/Settings';
 import styles from './Dashboard.style';
@@ -78,7 +79,7 @@ const Dashboard = ({theme, navigation}) => {
         options={{
           tabBarLabel: "Send Money",
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="bell" color={color} size={size} />
+            <FontAwesomeIcons name="money" color={color} size={size} />
           ),
         }}
       />
