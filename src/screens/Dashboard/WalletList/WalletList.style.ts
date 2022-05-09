@@ -3,9 +3,11 @@ import { StyleSheet } from 'react-native';
 export default StyleSheet.create({
     container: {
       width: '100%',
-      alignItems: 'center',
+      // alignItems: 'center',
+    },
+    scrollViewStyle: {
+      width: '100%',
       paddingHorizontal: 15,
-      paddingTop: 20
     },
     card: {
       borderLeftWidth: 8,

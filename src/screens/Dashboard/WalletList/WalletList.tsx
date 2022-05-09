@@ -76,7 +76,7 @@ const WalletListScreen = ({theme, navigation}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={{width: '100%'}}>
+      <ScrollView style={styles.scrollViewStyle}>
         {accounts.map((walletAccount, index) => (
           <TouchableOpacity style={[styles.card, {borderLeftColor: theme.colors.primary,}]} onPress={()=>showDetails(index)} key={index}>
             <View style={{marginBottom: 30}}>
