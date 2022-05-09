@@ -44,51 +44,52 @@ const VerifyMFAScreen = ({theme, navigation}) => {
   const {loginData} = useSelector((state: any) => state.user);
 
   const verifyMFA = async () => {
-    if (progress === true) {
-      return;
-    }
-    setProgress(true);
+    navigation.navigate('Dashboard')
+    // if (progress === true) {
+    //   return;
+    // }
+    // setProgress(true);
 
-    const url = `${BASE_URL}/${ApiEndpoint.VERIFY_MFA_OTP}`;
-    const data = {
-      otp,
-      ...loginData
-    };
+    // const url = `${BASE_URL}/${ApiEndpoint.VERIFY_MFA_OTP}`;
+    // const data = {
+    //   otp,
+    //   ...loginData
+    // };
 
-    const response = await universalPostRequestWithData(url, data)
-    if (response && response.status === StatusCode.OKAY) {
-      const data: LoginData = response.data.data
-      data['expiry_time'] = Date.now() + data.expires_in * 1000
-      data['login_time'] = Date.now()
+    // const response = await universalPostRequestWithData(url, data)
+    // if (response && response.status === StatusCode.OKAY) {
+    //   const data: LoginData = response.data.data
+    //   data['expiry_time'] = Date.now() + data.expires_in * 1000
+    //   data['login_time'] = Date.now()
 
-      const newData = { ...data, access_token: data.access_token, ...getLoginDataFromToken(data.id_token) }
+    //   const newData = { ...data, access_token: data.access_token, ...getLoginDataFromToken(data.id_token) }
 
-      if (CORP_WALLET_USER_PROFILE_LIST.includes(newData.current_profile)) {
-        AsyncStorage.setItem('loginData', JSON.stringify(newData))
-        dispatch(Login(newData));
+    //   if (CORP_WALLET_USER_PROFILE_LIST.includes(newData.current_profile)) {
+    //     AsyncStorage.setItem('loginData', JSON.stringify(newData))
+    //     dispatch(Login(newData));
   
-        navigation.navigate('Home')
-      } else {
-        setOtp('');
+    //     navigation.navigate('Dashboard')
+    //   } else {
+    //     setOtp('');
 
-        Popup.show({
-          type: 'warning',
-          title: 'Invalid Login',
-          textBody: 'Your account is not enabled for native mobile access. Please login via pc or tablet.',
-          buttonText: 'OK',
-          callback: () => {
-            Popup.hide();
-            dispatch(Logout());
-            navigation.navigate('Login');
-          },
-          confirmButtonStyle: {display: 'none'}
-        })
-      }
-    } else {
-      setError(response.data.message)
-    }
+    //     Popup.show({
+    //       type: 'warning',
+    //       title: 'Invalid Login',
+    //       textBody: 'Your account is not enabled for native mobile access. Please login via pc or tablet.',
+    //       buttonText: 'OK',
+    //       callback: () => {
+    //         Popup.hide();
+    //         dispatch(Logout());
+    //         navigation.navigate('Login');
+    //       },
+    //       confirmButtonStyle: {display: 'none'}
+    //     })
+    //   }
+    // } else {
+    //   setError(response.data.message)
+    // }
 
-    setProgress(false);
+    // setProgress(false);
   };
 
   const backToLogin = () => {

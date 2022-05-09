@@ -69,14 +69,6 @@ const LoginScreen = ({theme, navigation}) => {
     navigation.navigate('ForgotUsername')
   };
 
-  const signUp = () => {
-    setProgress(false);
-    setUserName('');
-    setPassword('');
-    setError('');
-    navigation.navigate('Dashboard')
-  };
-
   const validateInput = () => {
     if (username && password)
       return "normal";
@@ -135,9 +127,6 @@ const LoginScreen = ({theme, navigation}) => {
             Forgot Password?
           </Button>
         </View>
-      </View>
-      <View style={{height: 50}}>
-        <Button uppercase={false} onPress={signUp}>Don't have an account? Signup</Button>
       </View>
     </SafeAreaView>
   );

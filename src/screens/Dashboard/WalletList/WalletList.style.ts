@@ -5,8 +5,7 @@ export default StyleSheet.create({
       width: '100%',
       flex: 1,
       alignItems: 'center',
-      paddingLeft: 20,
-      paddingRight: 20,
+      paddingHorizontal: 15,
       paddingTop: 20
     },
     card: {
