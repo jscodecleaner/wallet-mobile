@@ -92,12 +92,12 @@ const App: () => ReactNode = () => {
             <Stack.Screen
               name="Dashboard"
               component={Dashboard}
-              options={{headerShown: false}}
+              options={{headerShown: true}}
             />
             <Stack.Screen
               name="WalletDetails"
               component={WalletDetails}
-              options={{headerShown: false}}
+              options={{headerShown: true}}
             />
           </Stack.Navigator>
         </PaperProvider>

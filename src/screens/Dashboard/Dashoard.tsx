@@ -81,6 +81,7 @@ const Dashboard = ({theme, navigation}) => {
           tabBarIcon: ({ color, size }) => (
             <FontAwesomeIcons name="money" color={color} size={size} />
           ),
+          headerShown: false,
         }}
       />
       <Tab.Screen 
@@ -90,6 +91,7 @@ const Dashboard = ({theme, navigation}) => {
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="account" color={color} size={size} />
           ),
+          headerShown: false,
         }} 
       />
     </Tab.Navigator>
