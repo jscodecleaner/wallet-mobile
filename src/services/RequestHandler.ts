@@ -7,7 +7,7 @@ export const universalGetRequestWithParams = async (url: string, params: {} = {}
         params: params,
         headers: headers,
     }
-    const loginData = getLoginData()
+    const loginData = await getLoginData()
     config.headers['Authorization'] = `Bearer ${loginData?.access_token || ''}`
 
     try {
@@ -27,7 +27,7 @@ export const universalPostRequestWithData = async (url: string, data: {} = {}, h
         headers: headers,
     }
 
-    const loginData = getLoginData()
+    const loginData = await getLoginData()
     config.headers['Authorization'] = `Bearer ${loginData?.access_token || ''}`
 
     try {
@@ -46,7 +46,7 @@ export const universalPutRequestWithData = async (url: string, data: {} = {}, he
         headers: headers,
     }
 
-    const loginData = getLoginData()
+    const loginData = await getLoginData()
     config.headers['Authorization'] = `Bearer ${loginData?.access_token || ''}`
 
     try {
@@ -65,7 +65,7 @@ export const universalDeleteRequestWithData = async (url: string, data: {} = {},
         headers: headers,
     }
 
-    const loginData = getLoginData()
+    const loginData = await getLoginData()
     config.headers['Authorization'] = `Bearer ${loginData?.access_token || ''}`
 
     try {

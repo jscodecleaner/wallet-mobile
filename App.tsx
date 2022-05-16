@@ -46,7 +46,7 @@ const App: () => ReactNode = () => {
   const getNavigationScreen = () => {
     if (authenticated) {
       if (loginData.is_mfa_active) {
-        return 'Home';
+        return 'Dashboard';
       } else {
         return 'VerifyMFA'
       }

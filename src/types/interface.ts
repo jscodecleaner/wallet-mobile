@@ -36,7 +36,6 @@ export interface WalletAccountInterface {
     accountType: string
     iBan: string
     currencyData: {
-        isoCode: string,
         currencyName: string
         fundsAvailable: number
         reservedBalance: string

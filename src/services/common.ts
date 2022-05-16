@@ -17,3 +17,13 @@ export const getLoginData = async () => {
     }
     return JSON.parse(loginDataString) as LoginData
 }
+
+export const getIsoCodeFromCurrencyName = (currencyName: string) => {
+    if (currencyName == 'USD') {
+        return 'us';
+    } else if (currencyName == 'GBP') {
+        return 'gb';
+    } else {
+        return 'eu'
+    }
+}
