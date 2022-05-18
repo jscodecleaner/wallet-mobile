@@ -42,3 +42,27 @@ export interface WalletAccountInterface {
         accountBalance: number
     }
 }
+
+export interface CurrencyInterface {
+    currencyName: string
+    fundsAvailable: number
+    reservedBalance: number
+    accountBalance: number
+}
+
+export interface AccountDataInterface {
+    accountName: string
+    accountId: string
+    accountHolderName: string
+    iBan: string
+    currencyData: CurrencyInterface
+    accountNumber: number
+    accountType: string
+    paymentMethod: string
+    sortCode: number
+    feeDepositeAccountId: number
+    feeDepositOwnerName?: string
+    feeDepositAccountIBan: string
+    pAndTType: string
+    providerName: string
+}

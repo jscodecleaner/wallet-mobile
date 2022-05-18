@@ -86,7 +86,6 @@ const WalletListScreen = ({theme, navigation}) => {
 
         if (response.status === StatusCode.OKAY) {
             const data = response.data.data
-            console.log(data)
             setAccounts(data)
         }
 

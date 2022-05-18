@@ -58,7 +58,7 @@ const LoginScreen = ({theme, navigation}) => {
     setUserName('');
     setPassword('');
     setError('');
-    navigation.navigate('ForgotPassword')
+    navigation.navigate('EuroTransfer')
   };
 
   const forgotUsername = () => {
