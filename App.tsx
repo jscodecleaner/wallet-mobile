@@ -18,6 +18,7 @@ import ForgotUsername from './src/screens/Auth/ForgotUsername/ForgotUsername';
 import Dashboard from './src/screens/Dashboard/Dashoard';
 import WalletDetails from './src/screens/Dashboard/WalletDetails/WalletDetails';
 import EuroTransfer from './src/screens/PaymentTransfer/EuroTransfer/EuroTransfer';
+import UkTransfer from './src/screens/PaymentTransfer/UkTransfer/UkTransfer';
 
 LogBox.ignoreAllLogs(true);
 
@@ -103,6 +104,11 @@ const App: () => ReactNode = () => {
             <Stack.Screen
               name="EuroTransfer"
               component={EuroTransfer}
+              options={{headerShown: true}}
+            />
+            <Stack.Screen
+              name="UkTransfer"
+              component={UkTransfer}
               options={{headerShown: true}}
             />
           </Stack.Navigator>

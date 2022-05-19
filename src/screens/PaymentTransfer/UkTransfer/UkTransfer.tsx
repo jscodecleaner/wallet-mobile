@@ -10,7 +10,7 @@ import { Collapse, CollapseHeader, CollapseBody } from 'accordion-collapse-react
 import CountryFlag from "react-native-country-flag";
 import getSymbolFromCurrency from 'currency-symbol-map';
 
-import { useStyles } from './EuroTransfer.style';
+import { useStyles } from './UkTransfer.style';
 import Error from '../../../components/error';
 import { ApiEndpoint, StatusCode } from '../../../types/enum';
 import { BASE_URL, getProxyUrl } from '../../../services/common';
@@ -27,27 +27,32 @@ const paymentMethodList = [
   "SEPA-SCT",
 ];
 
-const EuroTransferScreen = ({theme, navigation}) => {
+const UkTransferScreen = ({theme, navigation}) => {
   const styles = useStyles(theme);
   const dispatch = useDispatch();
 
   const [progress, setProgress] = useState(false);
-  const [collapsed, setCollapsed] = useState(false);
+  const [addressCollapsed, setAddressCollapsed] = useState(false);
+  const [bankCollapsed, setBankCollapsed] = useState(false);
 
   const [accountList, setAccountList] = useState([] as AccountDataInterface[]);
   const [currency, setCurrency] = useState('');
+  const [bankName, setBankName] = useState('');
   const [accountHolderName, setAccountHolderName] = useState('');
-  const [iBanNumber, setIBanNumber] = useState('');
-  const [bicCode, setBicCode] = useState('');
-  const [address, setAddress] = useState('');
-  const [city, setCity] = useState('');
-  const [state, setState] = useState('');
-  const [country, setCountry] = useState('');
-  const [postalCode, setPostalCode] = useState('');
+  const [sortCode, setSortCode] = useState('');
+  const [accountNumber, setAccountNumber] = useState('');
   const [type, setType] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('');
   const [description, setDescription] = useState('');
   const [paymentDetails, setPaymentDetails] = useState('');
+  const [recipientAddress1, setRecipientAddress1] = useState('');
+  const [recipientAddress2, setRecipientAddress2] = useState('');
+  const [recipientPostalCode, setRecipientPostalCode] = useState('');
+  const [recipientCountry, setRecipientCountry] = useState('');
+  const [bankAddress1, setBankAddress1] = useState('');
+  const [bankAddress2, setBankAddress2] = useState('');
+  const [bankPostalCode, setBankPostalCode] = useState('');
+  const [bankCountry, setBankCountry] = useState('');
   const [amount, setAmount] = useState('');
   const [fee, setFee] = useState('');
 
@@ -127,8 +132,6 @@ const EuroTransferScreen = ({theme, navigation}) => {
   const validateInput = () => {
     if (currency.length > 0 && 
       accountHolderName.length > 0 && 
-      iBanNumber.length > 0 &&
-      bicCode.length > 0 &&
       description.length > 0 &&
       paymentDetails.length > 0 &&
       amount.length > 0
@@ -139,7 +142,7 @@ const EuroTransferScreen = ({theme, navigation}) => {
   }
 
   const calculateFee = () => {
-
+    
   }
 
   return (
@@ -195,6 +198,16 @@ const EuroTransferScreen = ({theme, navigation}) => {
                 autoCapitalize="none"
                 outlineColor={theme.colors.background}
                 style={styles.input}
+                label="Bank name"
+                value={bankName}
+                onChangeText={text => setBankName(text)}
+              />
+          </View>
+          <View>
+            <TextInput
+                autoCapitalize="none"
+                outlineColor={theme.colors.background}
+                style={styles.input}
                 label="Account holder's name"
                 value={accountHolderName}
                 onChangeText={text => setAccountHolderName(text)}
@@ -205,101 +218,11 @@ const EuroTransferScreen = ({theme, navigation}) => {
                 autoCapitalize="none"
                 outlineColor={theme.colors.background}
                 style={styles.input}
-                label="IBAN Number"
-                value={iBanNumber}
-                onChangeText={text => setIBanNumber(text)}
+                label="Sort Code"
+                value={sortCode}
+                onChangeText={text => setSortCode(text)}
               />
           </View>
-          <View>
-            <TextInput
-                autoCapitalize="none"
-                outlineColor={theme.colors.background}
-                style={styles.input}
-                label="BIC Code"
-                value={bicCode}
-                onChangeText={text => setBicCode(text)}
-              />
-          </View>
-        </View>
-        
-        <Collapse style={{marginTop: 20}} onToggle={setCollapsed}>
-          <CollapseHeader>
-            <View style={{flexDirection: "row", justifyContent: "space-between"}}>
-              <Text style={{fontSize: 20, fontWeight: 'bold'}}>Recipient address</Text>
-              <FontAwesomeIcons name={collapsed ? "chevron-up" : "chevron-down"} color={theme.colors.text} size={18} />
-            </View>
-          </CollapseHeader>
-          <CollapseBody>
-            <View>
-              <TextInput
-                  autoCapitalize="none"
-                  outlineColor={theme.colors.background}
-                  style={styles.input}
-                  label="Address"
-                  value={address}
-                  onChangeText={text => setAddress(text)}
-                />
-            </View>
-            <View>
-              <TextInput
-                  autoCapitalize="none"
-                  outlineColor={theme.colors.background}
-                  style={styles.input}
-                  label="City"
-                  value={city}
-                  onChangeText={text => setCity(text)}
-                />
-            </View>
-            <View>
-              <TextInput
-                  autoCapitalize="none"
-                  outlineColor={theme.colors.background}
-                  style={styles.input}
-                  label="State"
-                  value={state}
-                  onChangeText={text => setState(text)}
-                />
-            </View>
-            <SelectDropdown
-              data={listOfCountry}
-              onSelect={(selectedItem, index) => {
-                setCountry(selectedItem.value)
-              }}
-              buttonStyle={styles.countryDropdownBtnStyle}
-              renderCustomizedButtonChild={(selectedItem, index) => {
-                return (
-                  <View style={styles.countryDropdownBtnChildStyle}>
-                    <Text style={styles.countryDropdownBtnTxt}>{selectedItem ? selectedItem.label : 'Country'}</Text>
-                    <FontAwesomeIcons name="chevron-down" color={theme.colors.text} size={14} />
-                  </View>
-                )
-              }}
-              dropdownOverlayColor="transparent"
-              dropdownStyle={styles.countryDropdownDropdownStyle}
-              rowStyle={styles.countryDropdownRowStyle}
-              renderCustomizedRowChild={(item, index) => {
-                return (
-                  <View style={styles.countryDropdownRowChildStyle}>
-                    <CountryFlag isoCode={item.value} size={25} />
-                    <Text style={styles.countryDropdownRowTxt}>{item.label}</Text>
-                  </View>
-                );
-              }}
-            />
-            <View>
-              <TextInput
-                  autoCapitalize="none"
-                  outlineColor={theme.colors.background}
-                  style={styles.input}
-                  label="Postal Code"
-                  value={postalCode}
-                  onChangeText={text => setPostalCode(text)}
-                />
-            </View>
-          </CollapseBody>
-        </Collapse>
-        
-        <View style={{marginTop: 20}}>
           <View>
             <SelectDropdown
               data={transferTypeList}
@@ -374,6 +297,143 @@ const EuroTransferScreen = ({theme, navigation}) => {
                 onChangeText={text => setPaymentDetails(text)}
               />
           </View>
+        </View>
+        
+        <Collapse style={{marginTop: 20}} onToggle={setAddressCollapsed}>
+          <CollapseHeader>
+            <View style={{flexDirection: "row", justifyContent: "space-between"}}>
+              <Text style={{fontSize: 20, fontWeight: 'bold'}}>Recipient's address</Text>
+              <FontAwesomeIcons name={addressCollapsed ? "chevron-up" : "chevron-down"} color={theme.colors.text} size={18} />
+            </View>
+          </CollapseHeader>
+          <CollapseBody>
+            <View>
+              <TextInput
+                  autoCapitalize="none"
+                  outlineColor={theme.colors.background}
+                  style={styles.input}
+                  label="Address 1"
+                  value={recipientAddress1}
+                  onChangeText={text => setRecipientAddress1(text)}
+                />
+            </View>
+            <View>
+              <TextInput
+                  autoCapitalize="none"
+                  outlineColor={theme.colors.background}
+                  style={styles.input}
+                  label="Address 2"
+                  value={recipientAddress2}
+                  onChangeText={text => setRecipientAddress2(text)}
+                />
+            </View>
+            <View>
+              <TextInput
+                  autoCapitalize="none"
+                  outlineColor={theme.colors.background}
+                  style={styles.input}
+                  label="Postal Code"
+                  value={recipientPostalCode}
+                  onChangeText={text => setRecipientPostalCode(text)}
+                />
+            </View>
+            <SelectDropdown
+              data={listOfCountry}
+              onSelect={(selectedItem, index) => {
+                setRecipientCountry(selectedItem.value)
+              }}
+              buttonStyle={styles.countryDropdownBtnStyle}
+              renderCustomizedButtonChild={(selectedItem, index) => {
+                return (
+                  <View style={styles.countryDropdownBtnChildStyle}>
+                    <Text style={styles.countryDropdownBtnTxt}>{selectedItem ? selectedItem.label : 'Country'}</Text>
+                    <FontAwesomeIcons name="chevron-down" color={theme.colors.text} size={14} />
+                  </View>
+                )
+              }}
+              dropdownOverlayColor="transparent"
+              dropdownStyle={styles.countryDropdownDropdownStyle}
+              rowStyle={styles.countryDropdownRowStyle}
+              renderCustomizedRowChild={(item, index) => {
+                return (
+                  <View style={styles.countryDropdownRowChildStyle}>
+                    <CountryFlag isoCode={item.value} size={25} />
+                    <Text style={styles.countryDropdownRowTxt}>{item.label}</Text>
+                  </View>
+                );
+              }}
+            />
+          </CollapseBody>
+        </Collapse>
+
+        <Collapse style={{marginTop: 20}} onToggle={setBankCollapsed}>
+          <CollapseHeader>
+            <View style={{flexDirection: "row", justifyContent: "space-between"}}>
+              <Text style={{fontSize: 20, fontWeight: 'bold'}}>Recipient's bank address</Text>
+              <FontAwesomeIcons name={bankCollapsed ? "chevron-up" : "chevron-down"} color={theme.colors.text} size={18} />
+            </View>
+          </CollapseHeader>
+          <CollapseBody>
+            <View>
+              <TextInput
+                  autoCapitalize="none"
+                  outlineColor={theme.colors.background}
+                  style={styles.input}
+                  label="Address 1"
+                  value={bankAddress1}
+                  onChangeText={text => setBankAddress1(text)}
+                />
+            </View>
+            <View>
+              <TextInput
+                  autoCapitalize="none"
+                  outlineColor={theme.colors.background}
+                  style={styles.input}
+                  label="Address 2"
+                  value={bankAddress2}
+                  onChangeText={text => setBankAddress2(text)}
+                />
+            </View>
+            <View>
+              <TextInput
+                  autoCapitalize="none"
+                  outlineColor={theme.colors.background}
+                  style={styles.input}
+                  label="Postal Code"
+                  value={bankPostalCode}
+                  onChangeText={text => setBankPostalCode(text)}
+                />
+            </View>
+            <SelectDropdown
+              data={listOfCountry}
+              onSelect={(selectedItem, index) => {
+                setBankCountry(selectedItem.value)
+              }}
+              buttonStyle={styles.countryDropdownBtnStyle}
+              renderCustomizedButtonChild={(selectedItem, index) => {
+                return (
+                  <View style={styles.countryDropdownBtnChildStyle}>
+                    <Text style={styles.countryDropdownBtnTxt}>{selectedItem ? selectedItem.label : 'Country'}</Text>
+                    <FontAwesomeIcons name="chevron-down" color={theme.colors.text} size={14} />
+                  </View>
+                )
+              }}
+              dropdownOverlayColor="transparent"
+              dropdownStyle={styles.countryDropdownDropdownStyle}
+              rowStyle={styles.countryDropdownRowStyle}
+              renderCustomizedRowChild={(item, index) => {
+                return (
+                  <View style={styles.countryDropdownRowChildStyle}>
+                    <CountryFlag isoCode={item.value} size={25} />
+                    <Text style={styles.countryDropdownRowTxt}>{item.label}</Text>
+                  </View>
+                );
+              }}
+            />
+          </CollapseBody>
+        </Collapse>
+        
+        <View style={{marginTop: 20}}>
           <View>
             <TextInput
                 autoCapitalize="none"
@@ -404,4 +464,4 @@ const EuroTransferScreen = ({theme, navigation}) => {
   )
 };
 
-export default withTheme(EuroTransferScreen);
+export default withTheme(UkTransferScreen);
