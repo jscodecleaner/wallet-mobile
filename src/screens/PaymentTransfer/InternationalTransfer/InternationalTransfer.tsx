@@ -10,7 +10,7 @@ import { Collapse, CollapseHeader, CollapseBody } from 'accordion-collapse-react
 import CountryFlag from "react-native-country-flag";
 import getSymbolFromCurrency from 'currency-symbol-map';
 
-import { useStyles } from './UkTransfer.style';
+import { useStyles } from './InternationalTransfer.style';
 import Error from '../../../components/error';
 import { ApiEndpoint, StatusCode } from '../../../types/enum';
 import { BASE_URL, getProxyUrl } from '../../../services/common';
@@ -24,37 +24,46 @@ const transferTypeList = [
   "Business"
 ];
 const paymentMethodList = [
-  "FPS",
-  "CHAPS",
-  "BACS",
+  "SEPA-SCT",
 ];
 
-const UkTransferScreen = ({theme, navigation}) => {
+const InternationalTransferScreen = ({theme, navigation}) => {
   const styles = useStyles(theme);
   const dispatch = useDispatch();
 
   const [progress, setProgress] = useState(false);
   const [addressCollapsed, setAddressCollapsed] = useState(false);
   const [bankCollapsed, setBankCollapsed] = useState(false);
+  const [intermediaryCollapsed, setIntermediaryCollapsed] = useState(false);
 
   const [accountList, setAccountList] = useState([] as AccountDataInterface[]);
   const [currency, setCurrency] = useState('');
-  const [bankName, setBankName] = useState('');
-  const [accountHolderName, setAccountHolderName] = useState('');
-  const [sortCode, setSortCode] = useState('');
   const [accountNumber, setAccountNumber] = useState('');
+  const [sortCode, setSortCode] = useState('');
   const [type, setType] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('');
   const [description, setDescription] = useState('');
   const [paymentDetails, setPaymentDetails] = useState('');
+  const [recipientName, setRecipientName] = useState('');
   const [recipientAddress1, setRecipientAddress1] = useState('');
   const [recipientAddress2, setRecipientAddress2] = useState('');
-  const [recipientPostalCode, setRecipientPostalCode] = useState('');
+  const [recipientCity, setRecipientCity] = useState('');
+  const [recipientState, setRecipientState] = useState('');
   const [recipientCountry, setRecipientCountry] = useState('');
+  const [recipientPostcode, setRecipientPostcode] = useState('');
+  const [bankName, setBankName] = useState('');
   const [bankAddress1, setBankAddress1] = useState('');
   const [bankAddress2, setBankAddress2] = useState('');
-  const [bankPostalCode, setBankPostalCode] = useState('');
+  const [bankCodeType, setBankCodeType] = useState('');
+  const [bankPostcode, setBankPostcode] = useState('');
   const [bankCountry, setBankCountry] = useState('');
+  const [intermediaryName, setIntermediaryName] = useState('');
+  const [intermediaryAddress1, setIntermediaryAddress1] = useState('');
+  const [intermediaryAddress2, setIntermediaryAddress2] = useState('');
+  const [intermediaryCodeType, setIntermediaryCodeType] = useState('');
+  const [intermediaryPostcode, setIntermediaryPostcode] = useState('');
+  const [intermediaryCountry, setIntermediaryCountry] = useState('');
+  
   const [amount, setAmount] = useState('');
   const [fee, setFee] = useState('');
 
@@ -200,29 +209,9 @@ const UkTransferScreen = ({theme, navigation}) => {
                 autoCapitalize="none"
                 outlineColor={theme.colors.background}
                 style={styles.input}
-                label="Bank name"
-                value={bankName}
-                onChangeText={text => setBankName(text)}
-              />
-          </View>
-          <View>
-            <TextInput
-                autoCapitalize="none"
-                outlineColor={theme.colors.background}
-                style={styles.input}
-                label="Account holder's name"
-                value={accountHolderName}
-                onChangeText={text => setAccountHolderName(text)}
-              />
-          </View>
-          <View>
-            <TextInput
-                autoCapitalize="none"
-                outlineColor={theme.colors.background}
-                style={styles.input}
-                label="Sort Code"
-                value={sortCode}
-                onChangeText={text => setSortCode(text)}
+                label="Account number"
+                value={accountNumber}
+                onChangeText={text => setAccountNumber(text)}
               />
           </View>
           <View>
@@ -251,6 +240,16 @@ const UkTransferScreen = ({theme, navigation}) => {
                 );
               }}
             />
+          </View>
+          <View>
+            <TextInput
+                autoCapitalize="none"
+                outlineColor={theme.colors.background}
+                style={styles.input}
+                label="Sort Code"
+                value={sortCode}
+                onChangeText={text => setSortCode(text)}
+              />
           </View>
           <View>
             <SelectDropdown
@@ -304,11 +303,21 @@ const UkTransferScreen = ({theme, navigation}) => {
         <Collapse style={{marginTop: 20}} onToggle={setAddressCollapsed}>
           <CollapseHeader>
             <View style={{flexDirection: "row", justifyContent: "space-between"}}>
-              <Text style={{fontSize: 20, fontWeight: 'bold'}}>Recipient's address</Text>
+              <Text style={{fontSize: 20, fontWeight: 'bold'}}>Recipient's details</Text>
               <FontAwesomeIcons name={addressCollapsed ? "chevron-up" : "chevron-down"} color={theme.colors.text} size={18} />
             </View>
           </CollapseHeader>
           <CollapseBody>
+            <View>
+              <TextInput
+                  autoCapitalize="none"
+                  outlineColor={theme.colors.background}
+                  style={styles.input}
+                  label="Name"
+                  value={recipientName}
+                  onChangeText={text => setRecipientName(text)}
+                />
+            </View>
             <View>
               <TextInput
                   autoCapitalize="none"
@@ -334,9 +343,19 @@ const UkTransferScreen = ({theme, navigation}) => {
                   autoCapitalize="none"
                   outlineColor={theme.colors.background}
                   style={styles.input}
-                  label="Postal Code"
-                  value={recipientPostalCode}
-                  onChangeText={text => setRecipientPostalCode(text)}
+                  label="City"
+                  value={recipientCity}
+                  onChangeText={text => setRecipientCity(text)}
+                />
+            </View>
+            <View>
+              <TextInput
+                  autoCapitalize="none"
+                  outlineColor={theme.colors.background}
+                  style={styles.input}
+                  label="State"
+                  value={recipientState}
+                  onChangeText={text => setRecipientState(text)}
                 />
             </View>
             <SelectDropdown
@@ -365,6 +384,16 @@ const UkTransferScreen = ({theme, navigation}) => {
                 );
               }}
             />
+            <View>
+              <TextInput
+                  autoCapitalize="none"
+                  outlineColor={theme.colors.background}
+                  style={styles.input}
+                  label="Postcode"
+                  value={recipientPostcode}
+                  onChangeText={text => setRecipientPostcode(text)}
+                />
+            </View>
           </CollapseBody>
         </Collapse>
 
@@ -376,6 +405,16 @@ const UkTransferScreen = ({theme, navigation}) => {
             </View>
           </CollapseHeader>
           <CollapseBody>
+          <View>
+              <TextInput
+                  autoCapitalize="none"
+                  outlineColor={theme.colors.background}
+                  style={styles.input}
+                  label="Name"
+                  value={bankName}
+                  onChangeText={text => setBankName(text)}
+                />
+            </View>
             <View>
               <TextInput
                   autoCapitalize="none"
@@ -397,19 +436,150 @@ const UkTransferScreen = ({theme, navigation}) => {
                 />
             </View>
             <View>
+              <SelectDropdown
+                data={transferTypeList}
+                onSelect={(selectedItem, index) => {
+                  setType(selectedItem)
+                }}
+                buttonStyle={styles.dropdownBtnStyle}
+                renderCustomizedButtonChild={(selectedItem, index) => {
+                  return (
+                    <View style={styles.dropdownBtnChildStyle}>
+                      <Text style={styles.dropdownBtnTxt}>{selectedItem ? selectedItem : 'Bank Code Type'}</Text>
+                      <FontAwesomeIcons name="chevron-down" color={theme.colors.text} size={14} />
+                    </View>
+                  )
+                }}
+                dropdownOverlayColor="transparent"
+                dropdownStyle={styles.dropdownDropdownStyle}
+                rowStyle={styles.dropdownRowStyle}
+                renderCustomizedRowChild={(item, index) => {
+                  return (
+                    <View style={styles.dropdownRowChildStyle}>
+                      <Text style={styles.dropdownRowTxt}>{item}</Text>
+                    </View>
+                  );
+                }}
+              />
+            </View>
+            <View>
               <TextInput
                   autoCapitalize="none"
                   outlineColor={theme.colors.background}
                   style={styles.input}
-                  label="Postal Code"
-                  value={bankPostalCode}
-                  onChangeText={text => setBankPostalCode(text)}
+                  label="Bank Postcode"
+                  value={bankPostcode}
+                  onChangeText={text => setBankPostcode(text)}
                 />
             </View>
             <SelectDropdown
               data={listOfCountry}
               onSelect={(selectedItem, index) => {
                 setBankCountry(selectedItem.value)
+              }}
+              buttonStyle={styles.countryDropdownBtnStyle}
+              renderCustomizedButtonChild={(selectedItem, index) => {
+                return (
+                  <View style={styles.countryDropdownBtnChildStyle}>
+                    <Text style={styles.countryDropdownBtnTxt}>{selectedItem ? selectedItem.label : 'Country'}</Text>
+                    <FontAwesomeIcons name="chevron-down" color={theme.colors.text} size={14} />
+                  </View>
+                )
+              }}
+              dropdownOverlayColor="transparent"
+              dropdownStyle={styles.countryDropdownDropdownStyle}
+              rowStyle={styles.countryDropdownRowStyle}
+              renderCustomizedRowChild={(item, index) => {
+                return (
+                  <View style={styles.countryDropdownRowChildStyle}>
+                    <CountryFlag isoCode={item.value} size={25} />
+                    <Text style={styles.countryDropdownRowTxt}>{item.label}</Text>
+                  </View>
+                );
+              }}
+            />
+          </CollapseBody>
+        </Collapse>
+        
+        <Collapse style={{marginTop: 20}} onToggle={setIntermediaryCollapsed}>
+          <CollapseHeader>
+            <View style={{flexDirection: "row", justifyContent: "space-between"}}>
+              <Text style={{fontSize: 20, fontWeight: 'bold'}}>Intermediary bank address</Text>
+              <FontAwesomeIcons name={intermediaryCollapsed ? "chevron-up" : "chevron-down"} color={theme.colors.text} size={18} />
+            </View>
+          </CollapseHeader>
+          <CollapseBody>
+          <View>
+              <TextInput
+                  autoCapitalize="none"
+                  outlineColor={theme.colors.background}
+                  style={styles.input}
+                  label="Name"
+                  value={intermediaryName}
+                  onChangeText={text => setIntermediaryName(text)}
+                />
+            </View>
+            <View>
+              <TextInput
+                  autoCapitalize="none"
+                  outlineColor={theme.colors.background}
+                  style={styles.input}
+                  label="Address 1"
+                  value={intermediaryAddress1}
+                  onChangeText={text => setIntermediaryAddress1(text)}
+                />
+            </View>
+            <View>
+              <TextInput
+                  autoCapitalize="none"
+                  outlineColor={theme.colors.background}
+                  style={styles.input}
+                  label="Address 2"
+                  value={intermediaryAddress2}
+                  onChangeText={text => setIntermediaryAddress2(text)}
+                />
+            </View>
+            <View>
+              <SelectDropdown
+                data={transferTypeList}
+                onSelect={(selectedItem, index) => {
+                  setType(selectedItem)
+                }}
+                buttonStyle={styles.dropdownBtnStyle}
+                renderCustomizedButtonChild={(selectedItem, index) => {
+                  return (
+                    <View style={styles.dropdownBtnChildStyle}>
+                      <Text style={styles.dropdownBtnTxt}>{selectedItem ? selectedItem : 'Bank Code Type'}</Text>
+                      <FontAwesomeIcons name="chevron-down" color={theme.colors.text} size={14} />
+                    </View>
+                  )
+                }}
+                dropdownOverlayColor="transparent"
+                dropdownStyle={styles.dropdownDropdownStyle}
+                rowStyle={styles.dropdownRowStyle}
+                renderCustomizedRowChild={(item, index) => {
+                  return (
+                    <View style={styles.dropdownRowChildStyle}>
+                      <Text style={styles.dropdownRowTxt}>{item}</Text>
+                    </View>
+                  );
+                }}
+              />
+            </View>
+            <View>
+              <TextInput
+                  autoCapitalize="none"
+                  outlineColor={theme.colors.background}
+                  style={styles.input}
+                  label="Bank Postcode"
+                  value={intermediaryPostcode}
+                  onChangeText={text => setIntermediaryPostcode(text)}
+                />
+            </View>
+            <SelectDropdown
+              data={listOfCountry}
+              onSelect={(selectedItem, index) => {
+                setIntermediaryCountry(selectedItem.value)
               }}
               buttonStyle={styles.countryDropdownBtnStyle}
               renderCustomizedButtonChild={(selectedItem, index) => {
@@ -466,4 +636,4 @@ const UkTransferScreen = ({theme, navigation}) => {
   )
 };
 
-export default withTheme(UkTransferScreen);
+export default withTheme(InternationalTransferScreen);
