@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { SafeAreaView, View, ScrollView } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { Button, Text, TextInput, withTheme } from 'react-native-paper';
@@ -9,6 +9,7 @@ import countryList from 'react-select-country-list'
 import { Collapse, CollapseHeader, CollapseBody } from 'accordion-collapse-react-native';
 import CountryFlag from "react-native-country-flag";
 import getSymbolFromCurrency from 'currency-symbol-map';
+import SelectDropdown from 'react-native-select-dropdown';
 
 import { useStyles } from './ToMyOtherAccount.style';
 import Error from '../../../components/error';
@@ -16,15 +17,12 @@ import { ApiEndpoint, StatusCode } from '../../../types/enum';
 import { BASE_URL, getProxyUrl } from '../../../services/common';
 import { universalPostRequestWithData } from '../../../services/RequestHandler';
 import CustomButton from '../../../components/CustomButton/CustomButton';
-import SelectDropdown from 'react-native-select-dropdown';
 import { AccountDataInterface } from '../../../types/interface';
+import { handleFetchAccountList, getPaymentMethodList, getAvailableBalance, getTransactionFee, stringToFloat } from '../../../services/utility';
 
 const transferTypeList = [
   "Personal",
   "Business"
-];
-const paymentMethodList = [
-  "SEPA-SCT",
 ];
 
 const ToMyOtherAccountScreen = ({theme, navigation}) => {
@@ -32,10 +30,11 @@ const ToMyOtherAccountScreen = ({theme, navigation}) => {
   const dispatch = useDispatch();
 
   const [progress, setProgress] = useState(false);
-  const [collapsed, setCollapsed] = useState(false);
 
-  const [fromAccountList, setFromAccountList] = useState([] as AccountDataInterface[]);
+  const [accountList, setAccountList] = useState([] as AccountDataInterface[]);
   const [toAccountList, setToAccountList] = useState([] as AccountDataInterface[]);
+  const [fromAccount, setFromAccount] = useState('');
+  const [toAccount, setToAccount] = useState('');
   const [fromCurrency, setFromCurrency] = useState('');
   const [toCurrency, setToCurrency] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('');
@@ -44,158 +43,70 @@ const ToMyOtherAccountScreen = ({theme, navigation}) => {
   const [amount, setAmount] = useState('');
   const [fee, setFee] = useState('');
 
-  const listOfCountry = useMemo(() => countryList().getData(), [])
+  const [paymentMethodList, setPaymentMethodList] = useState([] as string[])
+
+  const {loginData} = useSelector((state: any) => state.user);
 
   useEffect(() => {
-    setFromAccountList([
-      {
-        accountName: 'James',
-        accountId: '111',
-        accountHolderName: 'holder1',
-        iBan: 'GB57CLRB04045220015144',
-        currencyData: {
-          currencyName: 'GBP',
-          fundsAvailable: 100.00,
-          reservedBalance: 0.00,
-          accountBalance: 100.00
-        },
-        accountNumber: 123456,
-        accountType: 'AAA',
-        paymentMethod: 'paymentMethod1',
-        sortCode: 123,
-        feeDepositeAccountId: 234,
-        feeDepositOwnerName: 'depositOwner',
-        feeDepositAccountIBan: 'depositiban',
-        pAndTType: 'pandt',
-        providerName: 'provider1'
-      },
-      {
-        accountName: 'name2',
-        accountId: '222',
-        accountHolderName: 'holder2',
-        iBan: 'GB57CLRB04045220015144',
-        currencyData: {
-          currencyName: 'GBP',
-          fundsAvailable: 200.00,
-          reservedBalance: 0.00,
-          accountBalance: 200.00
-        },
-        accountNumber: 123456,
-        accountType: 'BBB',
-        paymentMethod: 'paymentMethod2',
-        sortCode: 123,
-        feeDepositeAccountId: 234,
-        feeDepositOwnerName: 'depositOwner2',
-        feeDepositAccountIBan: 'depositiban2',
-        pAndTType: 'pandt2',
-        providerName: 'provider2'
-      },
-      {
-        accountName: 'name3',
-        accountId: '333',
-        accountHolderName: 'holder3',
-        iBan: 'GB57CLRB04045220015144',
-        currencyData: {
-          currencyName: 'GBP',
-          fundsAvailable: 300.00,
-          reservedBalance: 0.00,
-          accountBalance: 300.00
-        },
-        accountNumber: 123456,
-        accountType: 'CCC',
-        paymentMethod: 'paymentMethod3',
-        sortCode: 123,
-        feeDepositeAccountId: 234,
-        feeDepositOwnerName: 'depositOwner3',
-        feeDepositAccountIBan: 'depositiban3',
-        pAndTType: 'pandt3',
-        providerName: 'provider3'
-      }
-    ]);
-
-    setToAccountList([
-      {
-        accountName: 'James',
-        accountId: '111',
-        accountHolderName: 'holder1',
-        iBan: 'GB57CLRB04045220015144',
-        currencyData: {
-          currencyName: 'GBP',
-          fundsAvailable: 100.00,
-          reservedBalance: 0.00,
-          accountBalance: 100.00
-        },
-        accountNumber: 123456,
-        accountType: 'AAA',
-        paymentMethod: 'paymentMethod1',
-        sortCode: 123,
-        feeDepositeAccountId: 234,
-        feeDepositOwnerName: 'depositOwner',
-        feeDepositAccountIBan: 'depositiban',
-        pAndTType: 'pandt',
-        providerName: 'provider1'
-      },
-      {
-        accountName: 'name2',
-        accountId: '222',
-        accountHolderName: 'holder2',
-        iBan: 'GB57CLRB04045220015144',
-        currencyData: {
-          currencyName: 'GBP',
-          fundsAvailable: 200.00,
-          reservedBalance: 0.00,
-          accountBalance: 200.00
-        },
-        accountNumber: 123456,
-        accountType: 'BBB',
-        paymentMethod: 'paymentMethod2',
-        sortCode: 123,
-        feeDepositeAccountId: 234,
-        feeDepositOwnerName: 'depositOwner2',
-        feeDepositAccountIBan: 'depositiban2',
-        pAndTType: 'pandt2',
-        providerName: 'provider2'
-      },
-      {
-        accountName: 'name3',
-        accountId: '333',
-        accountHolderName: 'holder3',
-        iBan: 'GB57CLRB04045220015144',
-        currencyData: {
-          currencyName: 'GBP',
-          fundsAvailable: 300.00,
-          reservedBalance: 0.00,
-          accountBalance: 300.00
-        },
-        accountNumber: 123456,
-        accountType: 'CCC',
-        paymentMethod: 'paymentMethod3',
-        sortCode: 123,
-        feeDepositeAccountId: 234,
-        feeDepositOwnerName: 'depositOwner3',
-        feeDepositAccountIBan: 'depositiban3',
-        pAndTType: 'pandt3',
-        providerName: 'provider3'
-      }
-    ])
+    handleFetchAccountList(loginData.entity_id, loginData.access_token, setAccountList)
   }, []);
-  // const backToLogin = () => {
-  //   navigation.navigate('Login')
-  // }
 
   const validateInput = () => {
     if (
+      fromAccount.length > 0 &&
+      toAccount.length > 0 &&
+      paymentMethod.length > 0 &&
       description.length > 0 &&
       paymentDetails.length > 0 &&
-      amount.length > 0
+      amount.length > 0 && amountCheck() == true
     )
       return "normal";
     else
       return "disabled";
+  };
+
+  const amountCheck = () => {
+    return Number(parseFloat(amount==''?'0':amount).toFixed(2)) <= getAvailableBalance(accountList, fromAccount)
   }
 
-  const calculateFee = () => {
+  const getAccountFromAccountID = (accountList: AccountDataInterface[], accountId: string) => {
+    return accountList.find((account) => account.accountId === accountId) || ({} as AccountDataInterface)
+  }
 
+  const handleFetchTransactionFee = async () => {
+    setProgress(true)
+    const response = await getTransactionFee(
+      loginData.accessToken, 
+      getAccountFromAccountID(accountList, fromAccount).providerName, 
+      {
+        currentProfile: loginData.current_profile, 
+        amount: Number(parseFloat(amount==''?'0':amount).toFixed(2)), 
+        paymentMethod, 
+        currencyName: fromCurrency, 
+        pAndTType: 'to-my-other-account', 
+      }
+    )
+
+    // if (!response) {
+    //     setProgress(false)
+    //     return
+    // }
+    // const { transactionFee, preApprovalAmount, preApprovalTxnCount } = response
+    // setFee(parseFloat(transactionFee))
+    // const isFundsAvailable = amount + transactionFee <= getAvailableBalance(accountList, fromAccount)
+    // if (isFundsAvailable) {
+    //     popupNotification('Funds available. You may proceed.', true)
+    //     setFundsAvailable(true)
+    //     setPreApprovalAmount(preApprovalAmount)
+    //     setPreApprovalTxnCount(preApprovalTxnCount)
+    // } else {
+    //     popupNotification('Not enough funds.', false)
+    // }
+
+    setProgress(false)
+  }
+
+  const numberInput = (value: string) => {
   }
 
   return (
@@ -211,9 +122,20 @@ const ToMyOtherAccountScreen = ({theme, navigation}) => {
         <View style={{marginTop: 10}}>
           <View>
             <SelectDropdown
-              data={fromAccountList}
+              data={accountList}
               onSelect={(selectedItem, index) => {
-                setFromCurrency(selectedItem.currencyData.currencyName)
+                setFromAccount(selectedItem.accountId);
+                setFromCurrency(selectedItem.currencyData.currencyName);
+                const methodList = getPaymentMethodList(accountList, selectedItem.accountId);
+                setPaymentMethodList(methodList);
+                methodList.length > 0 && setPaymentMethod(methodList[0]);
+
+                const toAccountList = accountList
+                  .filter((account) => account.accountId !== selectedItem.accountId)
+                  .filter((account) => account.currencyData.currencyName === selectedItem.currencyData.currencyName);
+                setToAccountList(toAccountList);
+                setToAccount('');
+                setToCurrency('');
               }}
               buttonStyle={styles.dropdownBtnStyle}
               renderCustomizedButtonChild={(selectedItem, index) => {
@@ -251,12 +173,13 @@ const ToMyOtherAccountScreen = ({theme, navigation}) => {
               data={toAccountList}
               onSelect={(selectedItem, index) => {
                 setToCurrency(selectedItem.currencyData.currencyName)
+                setToAccount(selectedItem.accountId)
               }}
               buttonStyle={styles.dropdownBtnStyle}
               renderCustomizedButtonChild={(selectedItem, index) => {
                 return (
                   <View style={styles.dropdownBtnChildStyle}>
-                    <Text style={styles.dropdownBtnTxt}>{selectedItem ? selectedItem.accountName : 'From Account'}</Text>
+                    <Text style={styles.dropdownBtnTxt}>{selectedItem && selectedItem.accountId === toAccount ? selectedItem.accountName : 'To Account'}</Text>
                     <FontAwesomeIcons name="chevron-down" color={theme.colors.text} size={14} />
                   </View>
                 )
@@ -298,6 +221,7 @@ const ToMyOtherAccountScreen = ({theme, navigation}) => {
                   </View>
                 )
               }}
+              defaultValue={paymentMethod}
               dropdownOverlayColor="transparent"
               dropdownStyle={styles.dropdownDropdownStyle}
               rowStyle={styles.dropdownRowStyle}
@@ -323,7 +247,6 @@ const ToMyOtherAccountScreen = ({theme, navigation}) => {
           <View>
             <TextInput
                 autoCapitalize="none"
-                outlineColor={theme.colors.background}
                 style={styles.input}
                 label="Payment details"
                 value={paymentDetails}
@@ -332,13 +255,14 @@ const ToMyOtherAccountScreen = ({theme, navigation}) => {
           </View>
           <View>
             <TextInput
-                autoCapitalize="none"
-                outlineColor={theme.colors.background}
                 style={styles.input}
-                label={"You send " + getSymbolFromCurrency("EUR")}
+                keyboardType='numeric'
+                label={"You send " + `${fromCurrency && getSymbolFromCurrency(fromCurrency)}`}
                 value={amount}
                 onChangeText={text => setAmount(text)}
+                error={!amountCheck()}
               />
+            <Text>{fromCurrency && `Available balance: ${getSymbolFromCurrency(fromCurrency)} ${getAvailableBalance(accountList, fromAccount)}`}</Text>
           </View>
           <View>
             <TextInput
@@ -353,7 +277,7 @@ const ToMyOtherAccountScreen = ({theme, navigation}) => {
         </View>
         
         <View style={{width: '100%', marginTop: 20, marginBottom: 15}}>
-          <CustomButton theme={theme} name="Calculate Fee" onClick={calculateFee} state={validateInput()} />
+          <CustomButton theme={theme} name="Calculate Fee" onClick={handleFetchTransactionFee} state={validateInput()} />
         </View>
       </ScrollView>
     </SafeAreaView>

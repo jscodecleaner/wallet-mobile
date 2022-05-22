@@ -22,6 +22,22 @@ const WalletDetailsScreen = ({theme, navigation, route}) => {
       return "disabled";
   }
 
+  const onEuroTransfer = () => {
+    navigation.navigate('EuroTransfer')
+  }
+
+  const onInternational = () => {
+    navigation.navigate('InternationalTransfer')
+  }
+
+  const onUkTransfer = () => {
+    navigation.navigate('UkTransfer')
+  }
+
+  const onToMyOtherAccount = () => {
+    navigation.navigate('ToMyOtherAccount')
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={{marginBottom: 20}}>
@@ -29,10 +45,30 @@ const WalletDetailsScreen = ({theme, navigation, route}) => {
         <Text>Currency: {walletDetails.currencyData.currencyName}</Text>
       </View>
       <View>
-        <CustomButton theme={theme} name="Transfer to Other Account" state={validateButton("ALL", walletDetails.currencyData.currencyName)} />
-        <CustomButton theme={theme} name="Euro Transfer" state={validateButton("EUR", walletDetails.currencyData.currencyName)} />
-        <CustomButton theme={theme} name="International" state={validateButton("ALL", walletDetails.currencyData.currencyName)} />
-        <CustomButton theme={theme} name="UK Transfer" state={validateButton("GBP", walletDetails.currencyData.currencyName)} />
+        <CustomButton 
+          theme={theme} 
+          name="Transfer to Other Account" 
+          state={validateButton("ALL", walletDetails.currencyData.currencyName)} 
+          onClick={onToMyOtherAccount} 
+        />
+        <CustomButton 
+          theme={theme} 
+          name="Euro Transfer" 
+          state={validateButton("EUR", walletDetails.currencyData.currencyName)} 
+          onClick={onEuroTransfer} 
+        />
+        <CustomButton 
+          theme={theme} 
+          name="International" 
+          state={validateButton("ALL", walletDetails.currencyData.currencyName)} 
+          onClick={onInternational} 
+        />
+        <CustomButton 
+          theme={theme} 
+          name="UK Transfer" 
+          state={validateButton("GBP", walletDetails.currencyData.currencyName)} 
+          onClick={onUkTransfer}
+        />
       </View>
     </SafeAreaView>
   );

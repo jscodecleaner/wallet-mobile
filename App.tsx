@@ -27,7 +27,7 @@ LogBox.ignoreAllLogs(true);
 declare global {
   namespace ReactNativePaper {
     interface ThemeColors {
-      background: string;
+      error: string;
     }
   }
 }
@@ -41,6 +41,7 @@ const theme: themeType = {
     primary: '#3f51b5',
     accent: 'yellow',
     background: '#DFEAED',
+    error: 'red'
   },
 };
 
