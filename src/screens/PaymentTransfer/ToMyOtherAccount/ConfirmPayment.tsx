@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 import CustomButton from '../../../components/CustomButton/CustomButton';
 import { useStyles } from '../PaymentTransfer.style';
 import { BASE_URL, getProxyUrl } from '../../../services/common';
-import { ApiEndpoint, StatusCode } from '../../../types/enum';\
+import { ApiEndpoint, StatusCode } from '../../../types/enum';
 import { universalPostRequestWithData } from '../../../services/RequestHandler';
 
 const ConfirmPayment = ({theme, navigation, route}) => {
@@ -23,7 +23,7 @@ const ConfirmPayment = ({theme, navigation, route}) => {
 
   }, [])
 
-  const onConfirm = () => {
+  const onConfirm = async () => {
     setProgress(true)
     const url = `${BASE_URL}/${ApiEndpoint.CREATE_TRANSACTION_TO_SELF}`
     const headers = {
