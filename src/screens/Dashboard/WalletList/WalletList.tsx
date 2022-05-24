@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Text, Button, withTheme } from 'react-native-paper';
+import { Text, withTheme } from 'react-native-paper';
 import Spinner from 'react-native-loading-spinner-overlay';
-import { View, SafeAreaView, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
-import { useDispatch, useSelector } from 'react-redux';
+import { View, SafeAreaView, TouchableOpacity, ScrollView } from 'react-native';
+import { useSelector } from 'react-redux';
 import getSymbolFromCurrency from 'currency-symbol-map';
 import CountryFlag from "react-native-country-flag";
 import styles from './WalletList.style';
@@ -13,66 +12,11 @@ import { ApiEndpoint, StatusCode } from '../../../types/enum';
 import { universalGetRequestWithParams } from '../../../services/RequestHandler';
 
 const WalletListScreen = ({theme, navigation}) => {
-  const dispatch = useDispatch();
   const [progress, setProgress] = useState(true);
   const {loginData} = useSelector((state: any) => state.user);
   const [accounts, setAccounts] = useState([] as WalletAccountInterface[]);
 
   useEffect(() => {
-    // setAccounts([
-    //   {
-    //     accountId: '111',
-    //     accountName: 'James',
-    //     accountType: 'AAA',
-    //     iBan: 'GB57CLRB04045220015144',
-    //     currencyData: {
-    //       isoCode: 'gb',
-    //       currencyName: 'GBP',
-    //       fundsAvailable: 0.00,
-    //       reservedBalance: '0.00',
-    //       accountBalance: 0.00,
-    //     },
-    //   },
-    //   {
-    //     accountId: '222',
-    //     accountName: 'Second',
-    //     accountType: 'BBB',
-    //     iBan: 'GB93CFZZ00994300700716',
-    //     currencyData: {
-    //       isoCode: 'eu',
-    //       currencyName: 'EUR',
-    //       fundsAvailable: 0.00,
-    //       reservedBalance: '0.00',
-    //       accountBalance: 0.00,
-    //     }
-    //   },
-    //   {
-    //     accountId: '333',
-    //     accountName: 'GBP test',
-    //     accountType: 'CCC',
-    //     iBan: 'GB29CLRB04045220015454',
-    //     currencyData: {
-    //       isoCode: 'gb',
-    //       currencyName: 'GBP',
-    //       fundsAvailable: 0.00,
-    //       reservedBalance: '0.00',
-    //       accountBalance: 0.00,
-    //     }
-    //   },
-    //   {
-    //     accountId: '444',
-    //     accountName: 'EUR card',
-    //     accountType: 'DDD',
-    //     iBan: 'GB66CFZZ00994300700717',
-    //     currencyData: {
-    //       isoCode: 'eu',
-    //       currencyName: 'EUR',
-    //       fundsAvailable: 0.00,
-    //       reservedBalance: '0.00',
-    //       accountBalance: 0.00,
-    //     }
-    //   }
-    // ]);
       const getPendingAccounts = async () => {
         const url = `${BASE_URL}/${ApiEndpoint.GET_BALANCES_BYACCT_BYCURRENCY}`
         const params = {

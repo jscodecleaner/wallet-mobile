@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Text, Button, withTheme } from 'react-native-paper';
-import { View, SafeAreaView, StyleSheet, TouchableOpacity } from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
-import { useDispatch, useSelector } from 'react-redux';
+import { Text, withTheme } from 'react-native-paper';
+import { View, SafeAreaView } from 'react-native';
 import CountryFlag from "react-native-country-flag";
+import getSymbolFromCurrency from 'currency-symbol-map';
+
 import styles from './WalletDetails.style';
-import { WalletAccountInterface } from '../../../types/interface';
+import { getIsoCodeFromCurrencyName } from '../../../services/common';
 import CustomButton from '../../../components/CustomButton/CustomButton';
 
 const WalletDetailsScreen = ({theme, navigation, route}) => {
-  const dispatch = useDispatch();
-  const {loginData} = useSelector((state: any) => state.user);
   const {walletDetails} = route.params;
 
   const validateButton = (acceptable: string, currencyName: string) => {
@@ -40,9 +38,38 @@ const WalletDetailsScreen = ({theme, navigation, route}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={{marginBottom: 20}}>
-        <Text>IBAN: {walletDetails.iBan}</Text>
-        <Text>Currency: {walletDetails.currencyData.currencyName}</Text>
+      <View style={[styles.card, {borderLeftColor: theme.colors.primary,}]}>
+        <View style={{marginBottom: 30}}>
+          <View style={{flexDirection: 'row'}}>
+            <Text style={styles.fontBold}>Account name: </Text>
+            <Text>{walletDetails.currencyData.currencyName} card</Text>
+          </View>
+          <View style={{flexDirection: 'row'}}>
+            <Text style={styles.fontBold}>IBAN: </Text>
+            <Text>{walletDetails.iBan}</Text>
+          </View>
+        </View>
+        <View style ={{flexDirection: 'row', justifyContent: 'space-between'}}>
+          <View style={{alignItems: 'center', marginLeft: 10}}>
+            <CountryFlag isoCode={getIsoCodeFromCurrencyName(walletDetails.currencyData.currencyName)} size={25} />
+            <View style={{flexDirection: 'row'}}>
+              <Text style={styles.fontBold}>Currency </Text>
+              <Text>{walletDetails.currencyData.currencyName}</Text>
+            </View>
+          </View>
+          <View style={{flexDirection: 'row'}}>
+            <View style={{alignItems: 'flex-end'}}>
+              <Text style={styles.fontBold}>Funds available </Text>
+              <Text style={styles.fontBold}>Reserved available </Text>
+              <Text style={styles.fontBold}>Account available </Text>
+            </View>
+            <View>
+              <Text>{getSymbolFromCurrency(walletDetails.currencyData.currencyName)}{walletDetails.currencyData.fundsAvailable}</Text>
+              <Text>{getSymbolFromCurrency(walletDetails.currencyData.currencyName)}{walletDetails.currencyData.reservedBalance}</Text>
+              <Text>{getSymbolFromCurrency(walletDetails.currencyData.currencyName)}{walletDetails.currencyData.accountBalance}</Text>
+            </View>
+          </View>
+        </View>
       </View>
       <View>
         <CustomButton 
