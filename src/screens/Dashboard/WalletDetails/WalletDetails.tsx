@@ -74,7 +74,7 @@ const WalletDetailsScreen = ({theme, navigation, route}) => {
       <View>
         <CustomButton 
           theme={theme} 
-          name="Transfer to Other Account" 
+          name="Transfer between my accounts" 
           state={validateButton("ALL", walletDetails.currencyData.currencyName)} 
           onClick={onToMyOtherAccount} 
         />
