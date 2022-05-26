@@ -16,3 +16,9 @@ export const validateEmail = (email: string) => {
 
   return re.test(String(email).toLowerCase())
 }
+
+export const validateName = (name: string) => {
+  const regex = /^[a-z\d\-\s]+$/i
+
+  return regex.test(name)
+}

@@ -3,11 +3,13 @@ import { LoginData } from '../../types/interface';
 
 interface UserState {
   authenticated: boolean;
+  mfaVerified: boolean;
   loginData: LoginData;
 }
 
 const initialState: UserState = {
   authenticated: false,
+  mfaVerified: false,
   loginData: {
     access_token: '',
     refresh_token: '',
@@ -47,15 +49,22 @@ export const userSlice = createSlice({
   reducers: {
     Login: (state, action: PayloadAction<LoginData>) => {
       state.authenticated = true;
+      state.mfaVerified = false;
+      state.loginData = action.payload;
+    },
+    MfaVerify: (state, action: PayloadAction<LoginData>) => {
+      state.authenticated = true;
+      state.mfaVerified = true;
       state.loginData = action.payload;
     },
     Logout: state => {
       state.authenticated = false;
+      state.mfaVerified = false;
       state.loginData = initialState.loginData;
     },
   },
 });
 
-export const {Login, Logout} = userSlice.actions;
+export const {Login, MfaVerify, Logout} = userSlice.actions;
 
 export default userSlice.reducer;

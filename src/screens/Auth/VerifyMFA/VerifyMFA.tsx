@@ -14,7 +14,7 @@ import { universalPostRequestWithData } from '../../../services/RequestHandler';
 import { LoginData } from '../../../types/interface';
 import CustomButton from '../../../components/CustomButton/CustomButton';
 import AsyncStorage from '@react-native-community/async-storage';
-import { Login, Logout } from '../../../redux/slices/userSlice';
+import { MfaVerify, Logout } from '../../../redux/slices/userSlice';
 
 const getLoginDataFromToken = (token: string) => {
   if (!token) return {}
@@ -65,7 +65,7 @@ const VerifyMFAScreen = ({theme, navigation}) => {
 
       if (CORP_WALLET_USER_PROFILE_LIST.includes(newData.current_profile)) {
         AsyncStorage.setItem('loginData', JSON.stringify(newData))
-        dispatch(Login(newData));
+        dispatch(MfaVerify(newData));
   
         navigation.navigate('Dashboard')
       } else {

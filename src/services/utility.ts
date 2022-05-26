@@ -59,6 +59,7 @@ export const getTransactionFee = async (token: string, providerName: string, par
 }
 
 export const stringToFloat = (string: string) => {
+  if (string == '') return Number(0.00)
   return Number(parseFloat(string).toFixed(2))
 }
 

@@ -13,6 +13,7 @@ import { useStyles } from './ToMyOtherAccount.style';
 import CustomButton from '../../../components/CustomButton/CustomButton';
 import { AccountDataInterface } from '../../../types/interface';
 import { handleFetchAccountList, getPaymentMethodList, getAvailableBalance, getTransactionFee, stringToFloat, floatToString } from '../../../services/utility';
+import { validateName } from '../../../services/validators';
 
 
 const ToMyOtherAccountScreen = ({theme, navigation}) => {
@@ -20,16 +21,18 @@ const ToMyOtherAccountScreen = ({theme, navigation}) => {
 
   const [accountList, setAccountList] = useState([] as AccountDataInterface[]);
   const [toAccountList, setToAccountList] = useState([] as AccountDataInterface[]);
+  const [paymentMethodList, setPaymentMethodList] = useState([] as string[])
   const [fromAccount, setFromAccount] = useState('');
   const [toAccount, setToAccount] = useState('');
   const [fromCurrency, setFromCurrency] = useState('');
   const [toCurrency, setToCurrency] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('');
-  const [description, setDescription] = useState('');
-  const [paymentDetails, setPaymentDetails] = useState('');
+  const [paymentReference, setPaymentReference] = useState('');
+  const [notes, setNotes] = useState('');
   const [amount, setAmount] = useState('');
   const [fee, setFee] = useState('');
-  const [paymentMethodList, setPaymentMethodList] = useState([] as string[])
+  const [preApprovalAmount, setPreApprovalAmount] = useState(0)
+  const [preApprovalTxnCount, setPreApprovalTxnCount] = useState(0)
 
   const [calculatingFee, setCalculatingFee] = useState(false);
   const [fundsavailable, setFundsAvailable] = useState(false);
@@ -46,8 +49,8 @@ const ToMyOtherAccountScreen = ({theme, navigation}) => {
       fromAccount.length > 0 &&
       toAccount.length > 0 &&
       paymentMethod.length > 0 &&
-      description.length > 0 &&
-      paymentDetails.length > 0 &&
+      paymentReference.length > 0 &&
+      notes.length > 0 && validateName(notes) &&
       amount.length > 0 && amountCheck() == true
     )
       return "normal";
@@ -95,8 +98,8 @@ const ToMyOtherAccountScreen = ({theme, navigation}) => {
         position: 'top',
       })
       setFundsAvailable(true)
-      // setPreApprovalAmount(preApprovalAmount)
-      // setPreApprovalTxnCount(preApprovalTxnCount)
+      setPreApprovalAmount(preApprovalAmount)
+      setPreApprovalTxnCount(preApprovalTxnCount)
     } else {
       Toast.show({
         title: 'Not available',
@@ -113,12 +116,34 @@ const ToMyOtherAccountScreen = ({theme, navigation}) => {
   }
 
   const toConfirm = () => {
+    const fromAcc = getAccountFromAccountID(accountList, fromAccount);
+    const toAcc = getAccountFromAccountID(accountList, fromAccount);
+
     const transactionDetails = {
-      fromAccountName: getAccountFromAccountID(accountList, fromAccount).accountName,
-      toAccountName: getAccountFromAccountID(accountList, toAccount).accountName,
-      amount: amount,
+      accountId: fromAccount,
+      currentProfile: loginData.current_profile,
+      fromAccountName: fromAcc.accountName,
+      fromAccountNo: fromAcc.accountNumber,
+      fromAccountHolderName: fromAcc.accountHolderName,
       fromCurrency: fromCurrency,
-      feeAmout: fee,
+      fromAccountIban: fromAcc.iBan,
+      providerName: fromAcc.providerName,
+      amount: stringToFloat(amount),
+      toAccountName: toAcc.accountName,
+      toAccountNo: toAcc.accountNumber,
+      toAccountHolderName: toAcc.accountHolderName,
+      toCurrency: toCurrency,
+      toAccountIban: toAcc.iBan,
+      toSortCode: toAcc.sortCode,
+      paymentReference,
+      notes,
+      paymentMethod,
+      feeAmout: stringToFloat(fee),
+      preApprovalAmount,
+      preApprovalTxnCount,
+      feeDepositAccountId: fromAcc.feeDepositeAccountId,
+      feeDepositOwnerName: fromAcc.feeDepositOwnerName,
+      feeDepositAccountIBan: fromAcc.feeDepositAccountIBan,
       details: "Transfer between own accounts",
     }
     navigation.navigate('ToMyOtherAccountConfirm', {transactionDetails: transactionDetails});
@@ -151,6 +176,7 @@ const ToMyOtherAccountScreen = ({theme, navigation}) => {
                 setToAccountList(toAccountList);
                 setToAccount('');
                 setToCurrency('');
+                setFundsAvailable(false);
               }}
               buttonStyle={styles.dropdownBtnStyle}
               renderCustomizedButtonChild={(selectedItem, index) => {
@@ -255,8 +281,8 @@ const ToMyOtherAccountScreen = ({theme, navigation}) => {
                 outlineColor={theme.colors.background}
                 style={styles.input}
                 label="Add description"
-                value={description}
-                onChangeText={text => setDescription(text)}
+                value={paymentReference}
+                onChangeText={text => setPaymentReference(text)}
               />
           </View>
           <View>
@@ -264,8 +290,10 @@ const ToMyOtherAccountScreen = ({theme, navigation}) => {
                 autoCapitalize="none"
                 style={styles.input}
                 label="Payment details"
-                value={paymentDetails}
-                onChangeText={text => setPaymentDetails(text)}
+                value={notes}
+                onChangeText={text => setNotes(text)}
+                maxLength={35}
+                error={notes && !validateName(notes)}
               />
           </View>
           <View>

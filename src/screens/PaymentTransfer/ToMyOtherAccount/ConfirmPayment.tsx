@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch } from "react-redux";
 import { SafeAreaView, View } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
-import { Button, Text, TextInput, withTheme } from 'react-native-paper';
+import { Text, withTheme } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 
 import CustomButton from '../../../components/CustomButton/CustomButton';
@@ -10,18 +10,15 @@ import { useStyles } from '../PaymentTransfer.style';
 import { BASE_URL, getProxyUrl } from '../../../services/common';
 import { ApiEndpoint, StatusCode } from '../../../types/enum';
 import { universalPostRequestWithData } from '../../../services/RequestHandler';
+import { stringToFloat } from '../../../services/utility';
 
 const ConfirmPayment = ({theme, navigation, route}) => {
   const {loginData} = useSelector((state: any) => state.user);
   
-  const [progress, setProgress] = useState(true);
+  const [progress, setProgress] = useState(false);
 
   const styles = useStyles(theme);
   const {transactionDetails} = route.params;
-
-  useEffect(() => {
-
-  }, [])
 
   const onConfirm = async () => {
     setProgress(true)
@@ -29,13 +26,16 @@ const ConfirmPayment = ({theme, navigation, route}) => {
     const headers = {
         Authorization: `Bearer ${loginData.access_token}`,
     }
-    const data = { ...transactionDetails }
+    const data = { ...transactionDetails, 'white-label': getProxyUrl() }
+    console.log(data)
 
     const response = await universalPostRequestWithData(url, data, headers)
     if (response && response.status === StatusCode.OKAY) {
+      console.log(response.data)
         // popupNotification(response.data.message, true)
         // setActiveStep(activeStep + 1)
     } else {
+      console.log(response)
         // popupNotification(response.data.message, false)
     }
 
@@ -70,19 +70,19 @@ const ConfirmPayment = ({theme, navigation, route}) => {
         </View>
         <View style={styles.row}>
           <Text style={styles.leftText}>Amount</Text>
-          <Text style={styles.rightText}>{transactionDetails.amount}</Text>
+          <Text style={styles.rightText}>{transactionDetails.amount} {transactionDetails.fromCurrency}</Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.leftText}>Transfer fee</Text>
-          <Text style={styles.rightText}>{transactionDetails.feeAmount}</Text>
+          <Text style={styles.rightText}>{transactionDetails.feeAmount} {transactionDetails.fromCurrency}</Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.leftText}>To be credited</Text>
-          <Text style={styles.rightText}>{transactionDetails.amount}</Text>
+          <Text style={styles.rightText}>{transactionDetails.amount} {transactionDetails.fromCurrency}</Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.leftText}>To be debited</Text>
-          <Text style={styles.rightText}>{transactionDetails.amount}</Text>
+          <Text style={styles.rightText}>{transactionDetails.amount} {transactionDetails.fromCurrency}</Text>
         </View>
       </View>
       <View style={styles.actionsContainer}>
