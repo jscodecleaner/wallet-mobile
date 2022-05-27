@@ -16,13 +16,15 @@ import { handleFetchAccountList, getPaymentMethodList, getAvailableBalance, getT
 import { validateName } from '../../../services/validators';
 
 
-const ToMyOtherAccountScreen = ({theme, navigation}) => {
+const ToMyOtherAccountScreen = ({theme, navigation, route}) => {
+  const {fromAccount} = route.params;
+
   const styles = useStyles(theme);
 
   const [accountList, setAccountList] = useState([] as AccountDataInterface[]);
   const [toAccountList, setToAccountList] = useState([] as AccountDataInterface[]);
   const [paymentMethodList, setPaymentMethodList] = useState([] as string[])
-  const [fromAccount, setFromAccount] = useState('');
+  const [fromAccountName, setFromAccountName] = useState('');
   const [toAccount, setToAccount] = useState('');
   const [fromCurrency, setFromCurrency] = useState('');
   const [toCurrency, setToCurrency] = useState('');
@@ -34,15 +36,38 @@ const ToMyOtherAccountScreen = ({theme, navigation}) => {
   const [preApprovalAmount, setPreApprovalAmount] = useState(0)
   const [preApprovalTxnCount, setPreApprovalTxnCount] = useState(0)
 
-  const [calculatingFee, setCalculatingFee] = useState(false);
+  const [progress, setProgress] = useState(true);
   const [fundsavailable, setFundsAvailable] = useState(false);
 
   const {loginData} = useSelector((state: any) => state.user);
 
   useEffect(() => {
-    setFundsAvailable(false)
-    handleFetchAccountList(loginData.entity_id, loginData.access_token, setAccountList)
+    const getAccountList = async () => {
+      await handleFetchAccountList(loginData.entity_id, loginData.access_token, setAccountList)
+    };
+
+    getAccountList();
   }, []);
+
+  useEffect(() => {
+    if (accountList.length > 0) {
+      const selectedItem = getAccountFromAccountID(accountList, fromAccount);
+  
+      setFromAccountName(selectedItem.accountName);
+      setFromCurrency(selectedItem.currencyData.currencyName);
+      const methodList = getPaymentMethodList(accountList, selectedItem.accountId);
+      setPaymentMethodList(methodList);
+      methodList.length > 0 && setPaymentMethod(methodList[0]);
+  
+      const toAccountList = accountList
+        .filter((account) => account.accountId !== selectedItem.accountId)
+        .filter((account) => account.currencyData.currencyName === selectedItem.currencyData.currencyName);
+      setToAccountList(toAccountList);
+    }
+
+    setFundsAvailable(false);
+    setProgress(false)
+  }, [accountList])
 
   const validateInput = () => {
     if (
@@ -67,7 +92,7 @@ const ToMyOtherAccountScreen = ({theme, navigation}) => {
   }
 
   const handleFetchTransactionFee = async () => {
-    setCalculatingFee(true)
+    setProgress(true)
     const response = await getTransactionFee(
       loginData.accessToken, 
       getAccountFromAccountID(accountList, fromAccount).providerName, 
@@ -81,7 +106,7 @@ const ToMyOtherAccountScreen = ({theme, navigation}) => {
     )
 
     if (!response) {
-      setCalculatingFee(false)
+      setProgress(false)
       return
     }
     const { transactionFee, preApprovalAmount, preApprovalTxnCount } = response
@@ -112,7 +137,7 @@ const ToMyOtherAccountScreen = ({theme, navigation}) => {
       })
     }
 
-    setCalculatingFee(false)
+    setProgress(false)
   }
 
   const toConfirm = () => {
@@ -153,7 +178,7 @@ const ToMyOtherAccountScreen = ({theme, navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
       <Spinner
-          visible={calculatingFee}
+          visible={progress}
           textContent={'Loading...'}
           textStyle={{
             color: '#FFF',
@@ -162,47 +187,16 @@ const ToMyOtherAccountScreen = ({theme, navigation}) => {
       <ScrollView style={styles.scrollViewStyle}>
         <View style={{marginTop: 10}}>
           <View>
-            <SelectDropdown
-              data={accountList}
-              onSelect={(selectedItem, index) => {
-                setFromAccount(selectedItem.accountId);
-                setFromCurrency(selectedItem.currencyData.currencyName);
-                const methodList = getPaymentMethodList(accountList, selectedItem.accountId);
-                setPaymentMethodList(methodList);
-                methodList.length > 0 && setPaymentMethod(methodList[0]);
-
-                const toAccountList = accountList
-                  .filter((account) => account.accountId !== selectedItem.accountId)
-                  .filter((account) => account.currencyData.currencyName === selectedItem.currencyData.currencyName);
-                setToAccountList(toAccountList);
-                setToAccount('');
-                setToCurrency('');
-                setFundsAvailable(false);
-              }}
-              buttonStyle={styles.dropdownBtnStyle}
-              renderCustomizedButtonChild={(selectedItem, index) => {
-                return (
-                  <View style={styles.dropdownBtnChildStyle}>
-                    <Text style={styles.dropdownBtnTxt}>{selectedItem ? selectedItem.accountName : 'From Account'}</Text>
-                    <FontAwesomeIcons name="chevron-down" color={theme.colors.text} size={14} />
-                  </View>
-                )
-              }}
-              dropdownOverlayColor="transparent"
-              dropdownStyle={styles.dropdownDropdownStyle}
-              rowStyle={styles.dropdownRowStyle}
-              renderCustomizedRowChild={(item, index) => {
-                return (
-                  <View style={styles.dropdownRowChildStyle}>
-                    <Text style={styles.dropdownRowTxt}>{item.accountName}</Text>
-                  </View>
-                );
-              }}
+            <TextInput
+              outlineColor={theme.colors.background}
+              style={styles.input}
+              label="From Account"
+              value={fromAccountName}
+              disabled={true}
             />
           </View>
           <View>
             <TextInput
-              autoCapitalize="none"
               outlineColor={theme.colors.background}
               style={styles.input}
               label="Currency"

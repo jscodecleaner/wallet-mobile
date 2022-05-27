@@ -20,6 +20,8 @@ export const handleFetchAccountList = async (
   if (response && response.status === StatusCode.OKAY) {
       const data: AccountDataInterface[] = response.data.data
       stateToSet(data)
+  } else {
+    stateToSet([])
   }
 }
 

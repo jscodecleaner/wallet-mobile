@@ -33,7 +33,7 @@ const WalletDetailsScreen = ({theme, navigation, route}) => {
   }
 
   const onToMyOtherAccount = () => {
-    navigation.navigate('ToMyOtherAccount')
+    navigation.navigate('ToMyOtherAccount', {fromAccount: walletDetails.accountId})
   }
 
   return (
