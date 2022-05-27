@@ -4,6 +4,7 @@ import { SafeAreaView, View } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { Text, withTheme } from 'react-native-paper';
 import { useSelector } from 'react-redux';
+import { Popup } from 'react-native-popup-confirm-toast';
 
 import CustomButton from '../../../components/CustomButton/CustomButton';
 import { useStyles } from '../PaymentTransfer.style';
@@ -27,16 +28,20 @@ const ConfirmPayment = ({theme, navigation, route}) => {
         Authorization: `Bearer ${loginData.access_token}`,
     }
     const data = { ...transactionDetails, 'white-label': getProxyUrl() }
-    console.log(data)
 
     const response = await universalPostRequestWithData(url, data, headers)
     if (response && response.status === StatusCode.OKAY) {
       console.log(response.data)
-        // popupNotification(response.data.message, true)
-        // setActiveStep(activeStep + 1)
-    } else {
-      console.log(response)
-        // popupNotification(response.data.message, false)
+      Popup.show({
+        type: 'success',
+        title: 'Transfer completed',
+        textBody: response.data.message,
+        buttonText: 'To Dashboard',
+        callback: () => {
+          Popup.hide();
+          navigation.navigate('Dashboard');
+        },
+      })
     }
 
     setProgress(false)

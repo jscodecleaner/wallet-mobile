@@ -138,13 +138,14 @@ const ToMyOtherAccountScreen = ({theme, navigation}) => {
       paymentReference,
       notes,
       paymentMethod,
-      feeAmout: stringToFloat(fee),
+      feeAmount: stringToFloat(fee),
       preApprovalAmount,
       preApprovalTxnCount,
       feeDepositAccountId: fromAcc.feeDepositeAccountId,
       feeDepositOwnerName: fromAcc.feeDepositOwnerName,
       feeDepositAccountIBan: fromAcc.feeDepositAccountIBan,
       details: "Transfer between own accounts",
+      pAndTType: 'to-my-other-account',
     }
     navigation.navigate('ToMyOtherAccountConfirm', {transactionDetails: transactionDetails});
   }
