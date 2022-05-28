@@ -30,19 +30,6 @@ export interface LoginData {
     entity_name: string
 }
 
-export interface WalletAccountInterface {
-    accountId: string
-    accountName: string
-    accountType: string
-    iBan: string
-    currencyData: {
-        currencyName: string
-        fundsAvailable: number
-        reservedBalance: string
-        accountBalance: number
-    }
-}
-
 export interface CurrencyInterface {
     currencyName: string
     fundsAvailable: number

@@ -12,7 +12,7 @@ import { Toast } from 'react-native-popup-confirm-toast'
 import { useStyles } from './ToMyOtherAccount.style';
 import CustomButton from '../../../components/CustomButton/CustomButton';
 import { AccountDataInterface } from '../../../types/interface';
-import { handleFetchAccountList, getPaymentMethodList, getAvailableBalance, getTransactionFee, stringToFloat, floatToString } from '../../../services/utility';
+import { getPaymentMethodList, getAvailableBalance, getTransactionFee, stringToFloat, floatToString } from '../../../services/utility';
 import { validateName } from '../../../services/validators';
 
 
@@ -21,7 +21,6 @@ const ToMyOtherAccountScreen = ({theme, navigation, route}) => {
 
   const styles = useStyles(theme);
 
-  const [accountList, setAccountList] = useState([] as AccountDataInterface[]);
   const [toAccountList, setToAccountList] = useState([] as AccountDataInterface[]);
   const [paymentMethodList, setPaymentMethodList] = useState([] as string[])
   const [fromAccountName, setFromAccountName] = useState('');
@@ -40,13 +39,9 @@ const ToMyOtherAccountScreen = ({theme, navigation, route}) => {
   const [fundsavailable, setFundsAvailable] = useState(false);
 
   const {loginData} = useSelector((state: any) => state.user);
+  const {accountList} = useSelector((state: any) => state.accounts);
 
   useEffect(() => {
-    const getAccountList = async () => {
-      await handleFetchAccountList(loginData.entity_id, loginData.access_token, setAccountList)
-    };
-
-    getAccountList();
   }, []);
 
   useEffect(() => {

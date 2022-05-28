@@ -2,45 +2,37 @@ import React, { useEffect, useState } from 'react';
 import { Text, withTheme } from 'react-native-paper';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { View, SafeAreaView, TouchableOpacity, ScrollView } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import getSymbolFromCurrency from 'currency-symbol-map';
 import CountryFlag from "react-native-country-flag";
+import { useIsFocused } from '@react-navigation/native';
+
 import styles from './WalletList.style';
-import { WalletAccountInterface } from '../../../types/interface';
-import { BASE_URL, getProxyUrl, getIsoCodeFromCurrencyName } from '../../../services/common';
-import { ApiEndpoint, StatusCode } from '../../../types/enum';
-import { universalGetRequestWithParams } from '../../../services/RequestHandler';
+import { getIsoCodeFromCurrencyName } from '../../../services/common';
+import { handleFetchAccountList } from '../../../services/utility';
+import { AccountDataInterface } from '../../../types/interface';
+import { setAccountList } from '../../../redux/slices/accounts';
 
 const WalletListScreen = ({theme, navigation}) => {
+  const isFocused = useIsFocused();
   const [progress, setProgress] = useState(true);
+
   const {loginData} = useSelector((state: any) => state.user);
-  const [accounts, setAccounts] = useState([] as WalletAccountInterface[]);
+  const {accountList} = useSelector((state: any) => state.accounts);
+  const dispatch = useDispatch();
+
+  const getAccountList = async () => {
+    const fetchedAccountList = await handleFetchAccountList(loginData.entity_id, loginData.access_token)
+    dispatch(setAccountList(fetchedAccountList))
+    setProgress(false)
+  };
 
   useEffect(() => {
-      const getPendingAccounts = async () => {
-        const url = `${BASE_URL}/${ApiEndpoint.GET_BALANCES_BYACCT_BYCURRENCY}`
-        const params = {
-            entityId: loginData.entity_id,
-            'white-label': getProxyUrl(),
-        }
-        const headers = {
-            Authorization: `Bearer ${loginData.access_token}`,
-        }
-        const response: any = await universalGetRequestWithParams(url, params, headers)
-
-        if (response.status === StatusCode.OKAY) {
-            const data = response.data.data
-            setAccounts(data)
-        }
-
-        setProgress(false)
-      }
-
-      getPendingAccounts();
-  }, []);
+    isFocused && getAccountList();
+  }, [isFocused]);
 
   const showDetails = (index: number) => {
-    navigation.navigate('WalletDetails', {walletDetails: accounts[index]})
+    navigation.navigate('WalletDetails', { walletDetails: accountList[index] })
   }
 
   return (
@@ -53,7 +45,7 @@ const WalletListScreen = ({theme, navigation}) => {
         }}
       />
       <ScrollView style={styles.scrollViewStyle}>
-        {accounts.map((walletAccount, index) => (
+        {accountList.map((walletAccount: AccountDataInterface, index: number) => (
           <TouchableOpacity style={[styles.card, {borderLeftColor: theme.colors.primary,}]} onPress={()=>showDetails(index)} key={index}>
             <View style={{marginBottom: 30}}>
               <View style={{flexDirection: 'row'}}>

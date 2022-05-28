@@ -6,7 +6,6 @@ import { universalGetRequestWithParams } from "./RequestHandler";
 export const handleFetchAccountList = async (
   entityId: number,
   token: string,
-  stateToSet: React.Dispatch<React.SetStateAction<AccountDataInterface[]>>
 ) => {
   const url = `${BASE_URL}/${ApiEndpoint.GET_BALANCES_BYACCT_BYCURRENCY}`
   const params = {
@@ -18,10 +17,10 @@ export const handleFetchAccountList = async (
 
   const response = await universalGetRequestWithParams(url, params, headers)
   if (response && response.status === StatusCode.OKAY) {
-      const data: AccountDataInterface[] = response.data.data
-      stateToSet(data)
+    const data: AccountDataInterface[] = response.data.data
+    return data
   } else {
-    stateToSet([])
+    return []
   }
 }
 

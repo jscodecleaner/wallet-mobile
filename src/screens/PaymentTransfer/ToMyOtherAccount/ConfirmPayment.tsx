@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from "react-redux";
 import { SafeAreaView, View } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { Text, withTheme } from 'react-native-paper';
@@ -11,15 +10,14 @@ import { useStyles } from '../PaymentTransfer.style';
 import { BASE_URL, getProxyUrl } from '../../../services/common';
 import { ApiEndpoint, StatusCode } from '../../../types/enum';
 import { universalPostRequestWithData } from '../../../services/RequestHandler';
-import { stringToFloat } from '../../../services/utility';
 
 const ConfirmPayment = ({theme, navigation, route}) => {
   const {loginData} = useSelector((state: any) => state.user);
+  const {transactionDetails} = route.params;
   
   const [progress, setProgress] = useState(false);
 
   const styles = useStyles(theme);
-  const {transactionDetails} = route.params;
 
   const onConfirm = async () => {
     setProgress(true)
@@ -31,7 +29,6 @@ const ConfirmPayment = ({theme, navigation, route}) => {
 
     const response = await universalPostRequestWithData(url, data, headers)
     if (response && response.status === StatusCode.OKAY) {
-      console.log(response.data)
       Popup.show({
         type: 'success',
         title: 'Transfer completed',
