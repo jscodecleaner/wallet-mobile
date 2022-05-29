@@ -52,7 +52,10 @@ const VerifyMFAScreen = ({theme, navigation}) => {
     const url = `${BASE_URL}/${ApiEndpoint.VERIFY_MFA_OTP}`;
     const data = {
       otp,
-      ...loginData
+      is_first_login: loginData['is_first_login'],
+      is_mfa_active: loginData['is_mfa_active'],
+      session_key: loginData['session_key'],
+      username: loginData['username'],
     };
 
     const response = await universalPostRequestWithData(url, data)

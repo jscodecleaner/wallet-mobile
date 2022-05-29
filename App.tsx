@@ -10,12 +10,11 @@ import {useSelector} from 'react-redux';
 import { Root } from 'react-native-popup-confirm-toast'
 
 import Login from './src/screens/Auth/Login/Login';
-import Home from './src/screens/Home/Home';
 import themeType from './src/types/theme';
 import ForgotPassword from './src/screens/Auth/ForgotPassword/ForgotPassword';
 import VerifyMFA from './src/screens/Auth/VerifyMFA/VerifyMFA';
 import ForgotUsername from './src/screens/Auth/ForgotUsername/ForgotUsername';
-import Dashboard from './src/screens/Dashboard/Dashoard';
+import Dashboard from './src/screens/Dashboard/Home';
 import WalletDetails from './src/screens/Dashboard/WalletDetails/WalletDetails';
 import EuroTransfer from './src/screens/PaymentTransfer/EuroTransfer/EuroTransfer';
 import UkTransfer from './src/screens/PaymentTransfer/UkTransfer/UkTransfer';
@@ -76,11 +75,6 @@ const App: () => ReactNode = () => {
               component={Login}
             />
             <Stack.Screen
-              name="Home"
-              component={Home}
-              options={{headerShown: false}}
-            />
-            <Stack.Screen
               name="ForgotPassword"
               component={ForgotPassword}
               options={{headerShown: false}}
@@ -98,7 +92,7 @@ const App: () => ReactNode = () => {
             <Stack.Screen
               name="Dashboard"
               component={Dashboard}
-              options={{headerShown: true}}
+              options={{headerShown: false}}
             />
             <Stack.Screen
               name="WalletDetails"
