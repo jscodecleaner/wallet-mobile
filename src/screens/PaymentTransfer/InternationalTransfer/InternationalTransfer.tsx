@@ -13,16 +13,12 @@ import getSymbolFromCurrency from 'currency-symbol-map';
 import { useStyles } from './InternationalTransfer.style';
 import Error from '../../../components/error';
 import { ApiEndpoint, StatusCode } from '../../../types/enum';
-import { BASE_URL, getProxyUrl } from '../../../services/common';
+import { BASE_URL, getProxyUrl, transferTypeList } from '../../../services/common';
 import { universalPostRequestWithData } from '../../../services/RequestHandler';
 import CustomButton from '../../../components/CustomButton/CustomButton';
 import SelectDropdown from 'react-native-select-dropdown';
 import { AccountDataInterface } from '../../../types/interface';
 
-const transferTypeList = [
-  "Personal",
-  "Business"
-];
 const paymentMethodList = [
   "SEPA-SCT",
 ];

@@ -15,7 +15,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { useStyles } from './EuroTransfer.style';
 import Error from '../../../components/error';
 import { ApiEndpoint, StatusCode } from '../../../types/enum';
-import { BASE_URL, getProxyUrl } from '../../../services/common';
+import { BASE_URL, getProxyUrl, transferTypeList } from '../../../services/common';
 import { universalPostRequestWithData } from '../../../services/RequestHandler';
 import CustomButton from '../../../components/CustomButton/CustomButton';
 import SelectDropdown from 'react-native-select-dropdown';
@@ -23,10 +23,6 @@ import { AccountDataInterface } from '../../../types/interface';
 import { getPaymentMethodList, getAccountFromAccountID, getAvailableBalance, getTransactionFee, floatToString, stringToFloat } from '../../../services/utility';
 import { validateName } from '../../../services/validators';
 
-const transferTypeList = [
-  "Personal",
-  "Business"
-];
 const pAndTType = 'euro-transfer';
 
 const EuroTransferScreen = ({theme, navigation, route}) => {

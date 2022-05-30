@@ -18,12 +18,24 @@ export const getLoginData = async () => {
     return JSON.parse(loginDataString) as LoginData
 }
 
+export const transferTypeList = [
+    "Personal",
+    "Business"
+]
+
+const isoList = {
+    USD: 'us',
+    GBP: 'gb',
+    EUR: 'eu',
+    SEK: 'se',
+    HUF: 'hu',
+    CZK: 'cz',
+    DKK: 'dk',
+    NOK: 'no',
+    PLN: 'pl',
+    RON: 'ro',
+}
+
 export const getIsoCodeFromCurrencyName = (currencyName: string) => {
-    if (currencyName == 'USD') {
-        return 'us';
-    } else if (currencyName == 'GBP') {
-        return 'gb';
-    } else {
-        return 'eu'
-    }
+    return currencyName.substring(0, 2).toLowerCase()
 }
