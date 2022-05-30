@@ -21,7 +21,7 @@ const ConfirmPayment = ({theme, navigation, route}) => {
 
   const onConfirm = async () => {
     setProgress(true)
-    const url = `${BASE_URL}/${ApiEndpoint.CREATE_TRANSACTION_TO_SELF}`
+    const url = `${BASE_URL}/${ApiEndpoint.EURO_TRANSACTION}`
     const headers = {
         Authorization: `Bearer ${loginData.access_token}`,
     }
@@ -45,7 +45,7 @@ const ConfirmPayment = ({theme, navigation, route}) => {
   }
 
   const onEdit = () => {
-    navigation.navigate("ToMyOtherAccount")
+    navigation.navigate("EuroTransfer")
   }
 
   return (
@@ -59,16 +59,28 @@ const ConfirmPayment = ({theme, navigation, route}) => {
       />
       <View style={styles.transactionContainer}>
         <View style={styles.row}>
+          <Text style={styles.leftText}>Details</Text>
+          <Text style={styles.rightText}>Euro Transfer</Text>
+        </View>
+        <View style={styles.row}>
           <Text style={styles.leftText}>From</Text>
           <Text style={styles.rightText}>{transactionDetails.fromAccountName}</Text>
         </View>
         <View style={styles.row}>
-          <Text style={styles.leftText}>To</Text>
-          <Text style={styles.rightText}>{transactionDetails.toAccountName}</Text>
+          <Text style={styles.leftText}>From IBAN</Text>
+          <Text style={styles.rightText}>{transactionDetails.fromAccountIban}</Text>
         </View>
         <View style={styles.row}>
-          <Text style={styles.leftText}>Details</Text>
-          <Text style={styles.rightText}>{transactionDetails.details}</Text>
+          <Text style={styles.leftText}>Recipient name</Text>
+          <Text style={styles.rightText}>{transactionDetails.toAccountHolderName}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.leftText}>To IBAN</Text>
+          <Text style={styles.rightText}>{transactionDetails.toAccountIban}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.leftText}>To BIC</Text>
+          <Text style={styles.rightText}>{transactionDetails.bicCode}</Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.leftText}>Amount</Text>

@@ -14,13 +14,14 @@ import themeType from './src/types/theme';
 import ForgotPassword from './src/screens/Auth/ForgotPassword/ForgotPassword';
 import VerifyMFA from './src/screens/Auth/VerifyMFA/VerifyMFA';
 import ForgotUsername from './src/screens/Auth/ForgotUsername/ForgotUsername';
-import Dashboard from './src/screens/Dashboard/Home';
-import WalletDetails from './src/screens/Dashboard/WalletDetails/WalletDetails';
+import Home from './src/screens/Home/Home';
+import WalletDetails from './src/screens/Home/WalletDetails/WalletDetails';
 import EuroTransfer from './src/screens/PaymentTransfer/EuroTransfer/EuroTransfer';
 import UkTransfer from './src/screens/PaymentTransfer/UkTransfer/UkTransfer';
 import InternationalTransfer from './src/screens/PaymentTransfer/InternationalTransfer/InternationalTransfer';
 import ToMyOtherAccount from './src/screens/PaymentTransfer/ToMyOtherAccount/ToMyOtherAccount';
 import { default as ToMyOtherAccountConfirm } from './src/screens/PaymentTransfer/ToMyOtherAccount/ConfirmPayment';
+import { default as EuroTransferConfirm } from './src/screens/PaymentTransfer/EuroTransfer/ConfirmPayment';
 
 LogBox.ignoreAllLogs(true);
 
@@ -51,7 +52,7 @@ const App: () => ReactNode = () => {
   const getNavigationScreen = () => {
     if (authenticated) {
       if (mfaVerified) {
-        return 'Dashboard';
+        return 'Home';
       } else {
         return 'VerifyMFA'
       }
@@ -90,8 +91,8 @@ const App: () => ReactNode = () => {
               options={{headerShown: false}}
             />
             <Stack.Screen
-              name="Dashboard"
-              component={Dashboard}
+              name="Home"
+              component={Home}
               options={{headerShown: false}}
             />
             <Stack.Screen
@@ -102,6 +103,11 @@ const App: () => ReactNode = () => {
             <Stack.Screen
               name="EuroTransfer"
               component={EuroTransfer}
+              options={{headerShown: true}}
+            />
+            <Stack.Screen
+              name="EuroTransferConfirm"
+              component={EuroTransferConfirm}
               options={{headerShown: true}}
             />
             <Stack.Screen

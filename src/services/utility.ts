@@ -67,3 +67,7 @@ export const stringToFloat = (string: string) => {
 export const floatToString = (float: Number) => {
   return float.toFixed(2).toString()
 }
+
+export const getAccountFromAccountID = (accountList: AccountDataInterface[], accountId: string) => {
+  return accountList.find((account) => account.accountId === accountId) || ({} as AccountDataInterface)
+}

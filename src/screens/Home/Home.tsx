@@ -15,7 +15,7 @@ import styles from './Home.style';
 
 const Tab = createBottomTabNavigator();
 
-const Dashboard = ({theme, navigation}) => {
+const Home = ({theme, navigation}) => {
   const dispatch = useDispatch();
   const {mfaVerified} = useSelector((state: any) => state.user);
 
@@ -81,4 +81,4 @@ const Dashboard = ({theme, navigation}) => {
   );
 }
 
-export default withTheme(Dashboard);
+export default withTheme(Home);

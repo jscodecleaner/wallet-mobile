@@ -7,14 +7,15 @@ import FontAwesomeIcons from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import getSymbolFromCurrency from 'currency-symbol-map';
 import SelectDropdown from 'react-native-select-dropdown';
-import { Toast } from 'react-native-popup-confirm-toast'
+import { Toast } from 'react-native-popup-confirm-toast';
 
 import { useStyles } from './ToMyOtherAccount.style';
 import CustomButton from '../../../components/CustomButton/CustomButton';
 import { AccountDataInterface } from '../../../types/interface';
-import { getPaymentMethodList, getAvailableBalance, getTransactionFee, stringToFloat, floatToString } from '../../../services/utility';
+import { getPaymentMethodList, getAvailableBalance, getTransactionFee, stringToFloat, floatToString, getAccountFromAccountID } from '../../../services/utility';
 import { validateName } from '../../../services/validators';
 
+const pAndTType = 'to-my-other-account';
 
 const ToMyOtherAccountScreen = ({theme, navigation, route}) => {
   const {fromAccount} = route.params;
@@ -82,10 +83,6 @@ const ToMyOtherAccountScreen = ({theme, navigation, route}) => {
     return Number(parseFloat(amount==''?'0':amount).toFixed(2)) <= getAvailableBalance(accountList, fromAccount)
   }
 
-  const getAccountFromAccountID = (accountList: AccountDataInterface[], accountId: string) => {
-    return accountList.find((account) => account.accountId === accountId) || ({} as AccountDataInterface)
-  }
-
   const handleFetchTransactionFee = async () => {
     setProgress(true)
     const response = await getTransactionFee(
@@ -96,7 +93,7 @@ const ToMyOtherAccountScreen = ({theme, navigation, route}) => {
         amount: Number(parseFloat(amount==''?'0':amount).toFixed(2)), 
         paymentMethod, 
         currencyName: fromCurrency, 
-        pAndTType: 'to-my-other-account', 
+        pAndTType, 
       }
     )
 
@@ -137,7 +134,7 @@ const ToMyOtherAccountScreen = ({theme, navigation, route}) => {
 
   const toConfirm = () => {
     const fromAcc = getAccountFromAccountID(accountList, fromAccount);
-    const toAcc = getAccountFromAccountID(accountList, fromAccount);
+    const toAcc = getAccountFromAccountID(accountList, toAccount);
 
     const transactionDetails = {
       accountId: fromAccount,
@@ -165,7 +162,7 @@ const ToMyOtherAccountScreen = ({theme, navigation, route}) => {
       feeDepositOwnerName: fromAcc.feeDepositOwnerName,
       feeDepositAccountIBan: fromAcc.feeDepositAccountIBan,
       details: "Transfer between own accounts",
-      pAndTType: 'to-my-other-account',
+      pAndTType,
     }
     navigation.navigate('ToMyOtherAccountConfirm', {transactionDetails: transactionDetails});
   }
@@ -183,7 +180,7 @@ const ToMyOtherAccountScreen = ({theme, navigation, route}) => {
         <View style={{marginTop: 10}}>
           <View>
             <TextInput
-              outlineColor={theme.colors.background}
+              autoCapitalize="none"
               style={styles.input}
               label="From Account"
               value={fromAccountName}
@@ -192,7 +189,7 @@ const ToMyOtherAccountScreen = ({theme, navigation, route}) => {
           </View>
           <View>
             <TextInput
-              outlineColor={theme.colors.background}
+              autoCapitalize="none"
               style={styles.input}
               label="Currency"
               value={fromCurrency}
@@ -230,7 +227,6 @@ const ToMyOtherAccountScreen = ({theme, navigation, route}) => {
           <View>
             <TextInput
               autoCapitalize="none"
-              outlineColor={theme.colors.background}
               style={styles.input}
               label="Currency"
               value={toCurrency}
@@ -268,7 +264,6 @@ const ToMyOtherAccountScreen = ({theme, navigation, route}) => {
           <View>
             <TextInput
                 autoCapitalize="none"
-                outlineColor={theme.colors.background}
                 style={styles.input}
                 label="Add description"
                 value={paymentReference}
@@ -302,8 +297,6 @@ const ToMyOtherAccountScreen = ({theme, navigation, route}) => {
           </View>
           <View>
             <TextInput
-                autoCapitalize="none"
-                outlineColor={theme.colors.background}
                 style={styles.input}
                 label="Yet to calculate"
                 value={fee}

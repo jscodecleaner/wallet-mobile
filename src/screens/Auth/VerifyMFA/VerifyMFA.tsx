@@ -70,7 +70,7 @@ const VerifyMFAScreen = ({theme, navigation}) => {
         AsyncStorage.setItem('loginData', JSON.stringify(newData))
         dispatch(MfaVerify(newData));
   
-        navigation.navigate('Dashboard')
+        navigation.navigate('Home')
       } else {
         setOtp('');
 

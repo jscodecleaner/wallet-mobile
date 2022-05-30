@@ -21,15 +21,15 @@ const WalletDetailsScreen = ({theme, navigation, route}) => {
   }
 
   const onEuroTransfer = () => {
-    navigation.navigate('EuroTransfer')
+    navigation.navigate('EuroTransfer', {fromAccount: walletDetails.accountId})
   }
 
   const onInternational = () => {
-    navigation.navigate('InternationalTransfer')
+    navigation.navigate('InternationalTransfer', {fromAccount: walletDetails.accountId})
   }
 
   const onUkTransfer = () => {
-    navigation.navigate('UkTransfer')
+    navigation.navigate('UkTransfer', {fromAccount: walletDetails.accountId})
   }
 
   const onToMyOtherAccount = () => {
