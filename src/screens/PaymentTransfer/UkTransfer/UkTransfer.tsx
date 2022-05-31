@@ -52,10 +52,10 @@ const UkTransferScreen = ({theme, navigation, route}) => {
   const [bankCountry, setBankCountry] = useState('');
   const [amount, setAmount] = useState('');
   const [fee, setFee] = useState('');
-  const [preApprovalAmount, setPreApprovalAmount] = useState(0)
-  const [preApprovalTxnCount, setPreApprovalTxnCount] = useState(0)
+  const [preApprovalAmount, setPreApprovalAmount] = useState(0);
+  const [preApprovalTxnCount, setPreApprovalTxnCount] = useState(0);
 
-  const listOfCountry = useMemo(() => countryList().getData(), [])
+  const listOfCountry = useMemo(() => countryList().getData(), []);
 
   const {accountList} = useSelector((state: any) => state.accounts);
   const {loginData} = useSelector((state: any) => state.user);
