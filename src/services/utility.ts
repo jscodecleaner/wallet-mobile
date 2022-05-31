@@ -71,3 +71,8 @@ export const floatToString = (float: Number) => {
 export const getAccountFromAccountID = (accountList: AccountDataInterface[], accountId: string) => {
   return accountList.find((account) => account.accountId === accountId) || ({} as AccountDataInterface)
 }
+
+export const amountToBeDebited = (sendAmount: number, transFee: number) => {
+  if (!transFee) return sendAmount
+  return sendAmount + transFee
+}

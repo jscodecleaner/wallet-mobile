@@ -14,6 +14,7 @@ export const useStyles = theme => (StyleSheet.create({
     leftText: {
       width: '40%',
       fontSize: 18,
+      marginRight: 10
     },
     rightText: {
       width: '60%',

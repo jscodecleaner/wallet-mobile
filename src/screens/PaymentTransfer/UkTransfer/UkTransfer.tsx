@@ -1,48 +1,47 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { SafeAreaView, View, ScrollView } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { Button, Text, TextInput, withTheme } from 'react-native-paper';
 import FontAwesomeIcons from 'react-native-vector-icons/FontAwesome';
-import { Popup } from 'react-native-popup-confirm-toast';
 import countryList from 'react-select-country-list'
 import { Collapse, CollapseHeader, CollapseBody } from 'accordion-collapse-react-native';
 import CountryFlag from "react-native-country-flag";
 import getSymbolFromCurrency from 'currency-symbol-map';
+import SelectDropdown from 'react-native-select-dropdown';
+import { Toast } from 'react-native-popup-confirm-toast';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { useStyles } from './UkTransfer.style';
-import Error from '../../../components/error';
-import { ApiEndpoint, StatusCode } from '../../../types/enum';
-import { BASE_URL, getProxyUrl, transferTypeList } from '../../../services/common';
-import { universalPostRequestWithData } from '../../../services/RequestHandler';
+import { transferTypeList } from '../../../services/common';
 import CustomButton from '../../../components/CustomButton/CustomButton';
-import SelectDropdown from 'react-native-select-dropdown';
-import { AccountDataInterface } from '../../../types/interface';
+import { getAccountFromAccountID, getPaymentMethodList, getTransactionFee, getAvailableBalance, stringToFloat, floatToString } from '../../../services/utility';
+import { validateName } from '../../../services/validators';
 
-const paymentMethodList = [
-  "FPS",
-  "CHAPS",
-  "BACS",
-];
+const pAndTType = 'uk-domestic-transfer';
 
-const UkTransferScreen = ({theme, navigation}) => {
+const UkTransferScreen = ({theme, navigation, route}) => {
+  const {fromAccount} = route.params;
+
   const styles = useStyles(theme);
   const dispatch = useDispatch();
 
+  const [fundsavailable, setFundsAvailable] = useState(false);
   const [progress, setProgress] = useState(false);
   const [addressCollapsed, setAddressCollapsed] = useState(false);
   const [bankCollapsed, setBankCollapsed] = useState(false);
 
-  const [accountList, setAccountList] = useState([] as AccountDataInterface[]);
+  const [fromAccountName, setFromAccountName] = useState('');
+  const [paymentMethodList, setPaymentMethodList] = useState([] as string[])
   const [currency, setCurrency] = useState('');
   const [bankName, setBankName] = useState('');
   const [accountHolderName, setAccountHolderName] = useState('');
   const [sortCode, setSortCode] = useState('');
   const [accountNumber, setAccountNumber] = useState('');
-  const [type, setType] = useState('');
+  const [transType, setTransType] = useState('Personal');
   const [paymentMethod, setPaymentMethod] = useState('');
-  const [description, setDescription] = useState('');
-  const [paymentDetails, setPaymentDetails] = useState('');
+  const [paymentReference, setPaymentReference] = useState('');
+  const [notes, setNotes] = useState('');
   const [recipientAddress1, setRecipientAddress1] = useState('');
   const [recipientAddress2, setRecipientAddress2] = useState('');
   const [recipientPostalCode, setRecipientPostalCode] = useState('');
@@ -53,94 +52,138 @@ const UkTransferScreen = ({theme, navigation}) => {
   const [bankCountry, setBankCountry] = useState('');
   const [amount, setAmount] = useState('');
   const [fee, setFee] = useState('');
+  const [preApprovalAmount, setPreApprovalAmount] = useState(0)
+  const [preApprovalTxnCount, setPreApprovalTxnCount] = useState(0)
 
   const listOfCountry = useMemo(() => countryList().getData(), [])
 
+  const {accountList} = useSelector((state: any) => state.accounts);
+  const {loginData} = useSelector((state: any) => state.user);
+
   useEffect(() => {
-    setAccountList([
-      {
-        accountName: 'James',
-        accountId: '111',
-        accountHolderName: 'holder1',
-        iBan: 'GB57CLRB04045220015144',
-        currencyData: {
-          currencyName: 'GBP',
-          fundsAvailable: 100.00,
-          reservedBalance: 0.00,
-          accountBalance: 100.00
-        },
-        accountNumber: 123456,
-        accountType: 'AAA',
-        paymentMethod: 'paymentMethod1',
-        sortCode: 123,
-        feeDepositeAccountId: 234,
-        feeDepositOwnerName: 'depositOwner',
-        feeDepositAccountIBan: 'depositiban',
-        pAndTType: 'pandt',
-        providerName: 'provider1'
-      },
-      {
-        accountName: 'name2',
-        accountId: '222',
-        accountHolderName: 'holder2',
-        iBan: 'GB57CLRB04045220015144',
-        currencyData: {
-          currencyName: 'GBP',
-          fundsAvailable: 200.00,
-          reservedBalance: 0.00,
-          accountBalance: 200.00
-        },
-        accountNumber: 123456,
-        accountType: 'BBB',
-        paymentMethod: 'paymentMethod2',
-        sortCode: 123,
-        feeDepositeAccountId: 234,
-        feeDepositOwnerName: 'depositOwner2',
-        feeDepositAccountIBan: 'depositiban2',
-        pAndTType: 'pandt2',
-        providerName: 'provider2'
-      },
-      {
-        accountName: 'name3',
-        accountId: '333',
-        accountHolderName: 'holder3',
-        iBan: 'GB57CLRB04045220015144',
-        currencyData: {
-          currencyName: 'GBP',
-          fundsAvailable: 300.00,
-          reservedBalance: 0.00,
-          accountBalance: 300.00
-        },
-        accountNumber: 123456,
-        accountType: 'CCC',
-        paymentMethod: 'paymentMethod3',
-        sortCode: 123,
-        feeDepositeAccountId: 234,
-        feeDepositOwnerName: 'depositOwner3',
-        feeDepositAccountIBan: 'depositiban3',
-        pAndTType: 'pandt3',
-        providerName: 'provider3'
-      }
-    ])
   }, []);
-  // const backToLogin = () => {
-  //   navigation.navigate('Login')
-  // }
+
+  useEffect(() => {
+    if (accountList.length > 0) {
+      const selectedItem = getAccountFromAccountID(accountList, fromAccount);
+  
+      setFromAccountName(selectedItem.accountName);
+      setCurrency(selectedItem.currencyData.currencyName);
+      const methodList = getPaymentMethodList(accountList, selectedItem.accountId);
+      setPaymentMethodList(methodList);
+      methodList.length > 0 && setPaymentMethod(methodList[0]);
+    }
+
+    setFundsAvailable(false);
+    setProgress(false)
+  }, [accountList]);
+
+  const amountCheck = () => {
+    return Number(parseFloat(amount==''?'0':amount).toFixed(2)) <= getAvailableBalance(accountList, fromAccount)
+  }
 
   const validateInput = () => {
     if (currency.length > 0 && 
+      fromAccount.length > 0 &&
       accountHolderName.length > 0 && 
-      description.length > 0 &&
-      paymentDetails.length > 0 &&
-      amount.length > 0
+      paymentReference.length > 0 &&
+      notes.length > 0 && validateName(notes) &&
+      amount.length > 0 && amountCheck() == true
     )
       return "normal";
     else
       return "disabled";
   }
 
-  const calculateFee = () => {
-    
+  const handleFetchTransactionFee = async () => {
+    setProgress(true)
+    const response = await getTransactionFee(
+      loginData.accessToken, 
+      getAccountFromAccountID(accountList, fromAccount).providerName, 
+      {
+        currentProfile: loginData.current_profile, 
+        amount: Number(parseFloat(amount==''?'0':amount).toFixed(2)), 
+        paymentMethod, 
+        currencyName: currency, 
+        pAndTType, 
+        sortCode: parseInt(sortCode)
+      }
+    )
+
+    if (!response) {
+      setProgress(false)
+      return
+    }
+    const { transactionFee, preApprovalAmount, preApprovalTxnCount } = response
+    setFee(floatToString(transactionFee))
+    const isFundsAvailable = stringToFloat(amount) + stringToFloat(transactionFee) <= getAvailableBalance(accountList, fromAccount)
+    if (isFundsAvailable) {
+      Toast.show({
+        title: 'Available',
+        text: 'Funds available. You may proceed.',
+        color: theme.colors.notification,
+        timeColor: theme.colors.primary,
+        timing: 3000,
+        icon: <MaterialCommunityIcons name='check' color={theme.colors.background} size={30}/>,
+        position: 'top',
+      })
+      setFundsAvailable(true)
+      setPreApprovalAmount(preApprovalAmount)
+      setPreApprovalTxnCount(preApprovalTxnCount)
+    } else {
+      Toast.show({
+        title: 'Not available',
+        text: 'Not enough funds.',
+        color: theme.colors.error,
+        timeColor: theme.colors.primary,
+        timing: 3000,
+        icon: <MaterialCommunityIcons name='danger' color={theme.colors.background} size={30}/>,
+        position: 'top',
+      })
+    }
+
+    setProgress(false)
+  }
+
+  const toConfirm = () => {
+    const fromAcc = getAccountFromAccountID(accountList, fromAccount);
+
+    const transactionDetails = {
+      accountId: fromAccount,
+      currentProfile: loginData.current_profile,
+      fromAccountName: fromAcc.accountName,
+      fromAccountNo: fromAcc.accountNumber,
+      fromAccountHolderName: fromAcc.accountHolderName,
+      fromCurrency: currency,
+      fromAccountIban: fromAcc.iBan,
+      providerName: fromAcc.providerName,
+      toAccountHolderName: accountHolderName,
+      toAccountNo: accountNumber,
+      toCurrency: currency,
+      toSortCode: sortCode,
+      amount: stringToFloat(amount),
+      feeAmount: stringToFloat(fee),
+      paymentMethod,
+      paymentReference,
+      notes,
+      feeDepositAccountId: fromAcc.feeDepositeAccountId,
+      feeDepositOwnerName: fromAcc.feeDepositOwnerName,
+      feeDepositAccountIBan: fromAcc.feeDepositAccountIBan,
+      preApprovalAmount,
+      preApprovalTxnCount,
+      beneficiaryAddr1: recipientAddress1,
+      beneficiaryAddr2: recipientAddress2,
+      beneficiaryPostCode: recipientPostalCode,
+      beneficiaryCountry: recipientCountry,
+      beneficiaryBankAddr1: bankAddress1,
+      beneficiaryBankAddr2: bankAddress2,
+      beneficiaryBankPostCode: bankPostalCode,
+      beneficiaryBankCountry: bankCountry,
+      bankName,
+      transType,
+      pAndTType,
+    }
+    navigation.navigate('UkTransferConfirm', {transactionDetails: transactionDetails});
   }
 
   return (
@@ -155,36 +198,17 @@ const UkTransferScreen = ({theme, navigation}) => {
       <ScrollView style={styles.scrollViewStyle}>
         <View style={{marginTop: 10}}>
           <View>
-            <SelectDropdown
-              data={accountList}
-              onSelect={(selectedItem, index) => {
-                setCurrency(selectedItem.currencyData.currencyName)
-              }}
-              buttonStyle={styles.dropdownBtnStyle}
-              renderCustomizedButtonChild={(selectedItem, index) => {
-                return (
-                  <View style={styles.dropdownBtnChildStyle}>
-                    <Text style={styles.dropdownBtnTxt}>{selectedItem ? selectedItem.accountName : 'From Account'}</Text>
-                    <FontAwesomeIcons name="chevron-down" color={theme.colors.text} size={14} />
-                  </View>
-                )
-              }}
-              dropdownOverlayColor="transparent"
-              dropdownStyle={styles.dropdownDropdownStyle}
-              rowStyle={styles.dropdownRowStyle}
-              renderCustomizedRowChild={(item, index) => {
-                return (
-                  <View style={styles.dropdownRowChildStyle}>
-                    <Text style={styles.dropdownRowTxt}>{item.accountName}</Text>
-                  </View>
-                );
-              }}
+            <TextInput
+              autoCapitalize="none"
+              style={styles.input}
+              label="From Account"
+              value={fromAccountName}
+              disabled={true}
             />
           </View>
           <View>
             <TextInput
               autoCapitalize="none"
-              outlineColor={theme.colors.background}
               style={styles.input}
               label="Currency"
               value={currency}
@@ -194,7 +218,6 @@ const UkTransferScreen = ({theme, navigation}) => {
           <View>
             <TextInput
                 autoCapitalize="none"
-                outlineColor={theme.colors.background}
                 style={styles.input}
                 label="Bank name"
                 value={bankName}
@@ -204,7 +227,6 @@ const UkTransferScreen = ({theme, navigation}) => {
           <View>
             <TextInput
                 autoCapitalize="none"
-                outlineColor={theme.colors.background}
                 style={styles.input}
                 label="Account holder's name"
                 value={accountHolderName}
@@ -214,18 +236,27 @@ const UkTransferScreen = ({theme, navigation}) => {
           <View>
             <TextInput
                 autoCapitalize="none"
-                outlineColor={theme.colors.background}
                 style={styles.input}
+                keyboardType='numeric'
                 label="Sort Code"
                 value={sortCode}
                 onChangeText={text => setSortCode(text)}
               />
           </View>
           <View>
+            <TextInput
+                autoCapitalize="none"
+                style={styles.input}
+                label="Account number"
+                value={accountNumber}
+                onChangeText={text => setAccountNumber(text)}
+              />
+          </View>
+          <View>
             <SelectDropdown
               data={transferTypeList}
               onSelect={(selectedItem, index) => {
-                setType(selectedItem)
+                setTransType(selectedItem)
               }}
               buttonStyle={styles.dropdownBtnStyle}
               renderCustomizedButtonChild={(selectedItem, index) => {
@@ -236,6 +267,7 @@ const UkTransferScreen = ({theme, navigation}) => {
                   </View>
                 )
               }}
+              defaultValue={transType}
               dropdownOverlayColor="transparent"
               dropdownStyle={styles.dropdownDropdownStyle}
               rowStyle={styles.dropdownRowStyle}
@@ -278,21 +310,21 @@ const UkTransferScreen = ({theme, navigation}) => {
           <View>
             <TextInput
                 autoCapitalize="none"
-                outlineColor={theme.colors.background}
                 style={styles.input}
                 label="Add description"
-                value={description}
-                onChangeText={text => setDescription(text)}
+                value={paymentReference}
+                onChangeText={text => setPaymentReference(text)}
               />
           </View>
           <View>
             <TextInput
                 autoCapitalize="none"
-                outlineColor={theme.colors.background}
                 style={styles.input}
                 label="Payment details"
-                value={paymentDetails}
-                onChangeText={text => setPaymentDetails(text)}
+                value={notes}
+                maxLength={35}
+                onChangeText={text => setNotes(text)}
+                error={notes && !validateName(notes)}
               />
           </View>
         </View>
@@ -308,7 +340,6 @@ const UkTransferScreen = ({theme, navigation}) => {
             <View>
               <TextInput
                   autoCapitalize="none"
-                  outlineColor={theme.colors.background}
                   style={styles.input}
                   label="Address 1"
                   value={recipientAddress1}
@@ -318,7 +349,6 @@ const UkTransferScreen = ({theme, navigation}) => {
             <View>
               <TextInput
                   autoCapitalize="none"
-                  outlineColor={theme.colors.background}
                   style={styles.input}
                   label="Address 2"
                   value={recipientAddress2}
@@ -328,7 +358,6 @@ const UkTransferScreen = ({theme, navigation}) => {
             <View>
               <TextInput
                   autoCapitalize="none"
-                  outlineColor={theme.colors.background}
                   style={styles.input}
                   label="Postal Code"
                   value={recipientPostalCode}
@@ -375,7 +404,6 @@ const UkTransferScreen = ({theme, navigation}) => {
             <View>
               <TextInput
                   autoCapitalize="none"
-                  outlineColor={theme.colors.background}
                   style={styles.input}
                   label="Address 1"
                   value={bankAddress1}
@@ -385,7 +413,6 @@ const UkTransferScreen = ({theme, navigation}) => {
             <View>
               <TextInput
                   autoCapitalize="none"
-                  outlineColor={theme.colors.background}
                   style={styles.input}
                   label="Address 2"
                   value={bankAddress2}
@@ -395,7 +422,6 @@ const UkTransferScreen = ({theme, navigation}) => {
             <View>
               <TextInput
                   autoCapitalize="none"
-                  outlineColor={theme.colors.background}
                   style={styles.input}
                   label="Postal Code"
                   value={bankPostalCode}
@@ -435,7 +461,7 @@ const UkTransferScreen = ({theme, navigation}) => {
           <View>
             <TextInput
                 autoCapitalize="none"
-                outlineColor={theme.colors.background}
+                keyboardType='numeric'
                 style={styles.input}
                 label={"You send " + getSymbolFromCurrency("EUR")}
                 value={amount}
@@ -445,7 +471,6 @@ const UkTransferScreen = ({theme, navigation}) => {
           <View>
             <TextInput
                 autoCapitalize="none"
-                outlineColor={theme.colors.background}
                 style={styles.input}
                 label="Yet to calculate"
                 value={fee}
@@ -455,7 +480,8 @@ const UkTransferScreen = ({theme, navigation}) => {
         </View>
 
         <View style={{width: '100%', marginTop: 20, marginBottom: 15}}>
-          <CustomButton theme={theme} name="Calculate Fee" onClick={calculateFee} state={validateInput()} />
+          {fundsavailable && <CustomButton theme={theme} name="Continue" onClick={toConfirm} state={validateInput()} />}
+          {!fundsavailable && <CustomButton theme={theme} name="Calculate Fee" onClick={handleFetchTransactionFee} state={validateInput()} />}
         </View>
       </ScrollView>
     </SafeAreaView>

@@ -22,6 +22,7 @@ import InternationalTransfer from './src/screens/PaymentTransfer/InternationalTr
 import ToMyOtherAccount from './src/screens/PaymentTransfer/ToMyOtherAccount/ToMyOtherAccount';
 import { default as ToMyOtherAccountConfirm } from './src/screens/PaymentTransfer/ToMyOtherAccount/ConfirmPayment';
 import { default as EuroTransferConfirm } from './src/screens/PaymentTransfer/EuroTransfer/ConfirmPayment';
+import { default as UkTransferConfirm } from './src/screens/PaymentTransfer/UkTransfer/ConfirmPayment';
 
 LogBox.ignoreAllLogs(true);
 
@@ -113,6 +114,11 @@ const App: () => ReactNode = () => {
             <Stack.Screen
               name="UkTransfer"
               component={UkTransfer}
+              options={{headerShown: true}}
+            />
+            <Stack.Screen
+              name="UkTransferConfirm"
+              component={UkTransferConfirm}
               options={{headerShown: true}}
             />
             <Stack.Screen

@@ -13,13 +13,9 @@ import { Toast } from 'react-native-popup-confirm-toast';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { useStyles } from './EuroTransfer.style';
-import Error from '../../../components/error';
-import { ApiEndpoint, StatusCode } from '../../../types/enum';
-import { BASE_URL, getProxyUrl, transferTypeList } from '../../../services/common';
-import { universalPostRequestWithData } from '../../../services/RequestHandler';
+import { transferTypeList } from '../../../services/common';
 import CustomButton from '../../../components/CustomButton/CustomButton';
 import SelectDropdown from 'react-native-select-dropdown';
-import { AccountDataInterface } from '../../../types/interface';
 import { getPaymentMethodList, getAccountFromAccountID, getAvailableBalance, getTransactionFee, floatToString, stringToFloat } from '../../../services/utility';
 import { validateName } from '../../../services/validators';
 
@@ -29,7 +25,6 @@ const EuroTransferScreen = ({theme, navigation, route}) => {
   const {fromAccount} = route.params;
 
   const styles = useStyles(theme);
-  const dispatch = useDispatch();
 
   const [fundsavailable, setFundsAvailable] = useState(false);
   const [progress, setProgress] = useState(false);

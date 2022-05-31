@@ -22,7 +22,7 @@ const ConfirmPayment = ({theme, navigation, route}) => {
 
   const onConfirm = async () => {
     setProgress(true)
-    const url = `${BASE_URL}/${ApiEndpoint.CREATE_TRANSACTION_TO_SELF}`
+    const url = `${BASE_URL}/${ApiEndpoint.CREATE_TRANSACTION_TO_UK_DOMESTIC}`
     const headers = {
         Authorization: `Bearer ${loginData.access_token}`,
     }
@@ -46,7 +46,7 @@ const ConfirmPayment = ({theme, navigation, route}) => {
   }
 
   const onEdit = () => {
-    navigation.navigate("ToMyOtherAccount")
+    navigation.navigate("UkTransfer")
   }
 
   return (
@@ -59,17 +59,29 @@ const ConfirmPayment = ({theme, navigation, route}) => {
         }}
       />
       <View style={styles.transactionContainer}>
+      <View style={styles.row}>
+          <Text style={styles.leftText}>Details</Text>
+          <Text style={styles.rightText}>UK domestic transfer</Text>
+        </View>
         <View style={styles.row}>
-          <Text style={styles.leftText}>From</Text>
+          <Text style={styles.leftText}>From account name</Text>
           <Text style={styles.rightText}>{transactionDetails.fromAccountName}</Text>
         </View>
         <View style={styles.row}>
-          <Text style={styles.leftText}>To</Text>
-          <Text style={styles.rightText}>{transactionDetails.toAccountName}</Text>
+          <Text style={styles.leftText}>From account number</Text>
+          <Text style={styles.rightText}>{transactionDetails.fromAccountNo}</Text>
         </View>
         <View style={styles.row}>
-          <Text style={styles.leftText}>Details</Text>
-          <Text style={styles.rightText}>{transactionDetails.details}</Text>
+          <Text style={styles.leftText}>Recipient name</Text>
+          <Text style={styles.rightText}>{transactionDetails.toAccountHolderName}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.leftText}>Recipient bank name</Text>
+          <Text style={styles.rightText}>{transactionDetails.bankName}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.leftText}>Recipient account number</Text>
+          <Text style={styles.rightText}>{transactionDetails.toAccountNo}</Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.leftText}>Amount</Text>
@@ -78,10 +90,6 @@ const ConfirmPayment = ({theme, navigation, route}) => {
         <View style={styles.row}>
           <Text style={styles.leftText}>Transfer fee</Text>
           <Text style={styles.rightText}>{transactionDetails.feeAmount} {transactionDetails.fromCurrency}</Text>
-        </View>
-        <View style={styles.row}>
-          <Text style={styles.leftText}>To be credited</Text>
-          <Text style={styles.rightText}>{transactionDetails.amount} {transactionDetails.fromCurrency}</Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.leftText}>To be debited</Text>
