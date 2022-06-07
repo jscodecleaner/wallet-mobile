@@ -615,7 +615,7 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
                 autoCapitalize="none"
                 keyboardType="numeric"
                 style={styles.input}
-                label={"You send " + getSymbolFromCurrency("EUR")}
+                label={"You send " + `${currency && getSymbolFromCurrency(currency)}`}
                 value={amount}
                 onChangeText={text => setAmount(text)}
               />

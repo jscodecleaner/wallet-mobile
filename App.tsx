@@ -104,37 +104,58 @@ const App: () => ReactNode = () => {
             <Stack.Screen
               name="EuroTransfer"
               component={EuroTransfer}
-              options={{headerShown: true}}
+              options={{
+                headerShown: true,
+                title: "Euro Transfer"
+              }}
             />
             <Stack.Screen
               name="EuroTransferConfirm"
               component={EuroTransferConfirm}
-              options={{headerShown: true}}
+              options={{
+                headerShown: true,
+                title: "Confirm Euro Transfer"
+              }}
             />
             <Stack.Screen
               name="UkTransfer"
               component={UkTransfer}
-              options={{headerShown: true}}
+              options={{
+                headerShown: true,
+                title: 'UK Transfer'
+              }}
             />
             <Stack.Screen
               name="UkTransferConfirm"
               component={UkTransferConfirm}
-              options={{headerShown: true}}
+              options={{
+                headerShown: true,
+                title: "Confirm UK Transfer"
+              }}
             />
             <Stack.Screen
               name="InternationalTransfer"
               component={InternationalTransfer}
-              options={{headerShown: true}}
+              options={{
+                headerShown: true,
+                title: "International Transfer"
+              }}
             />
             <Stack.Screen
               name="ToMyOtherAccount"
               component={ToMyOtherAccount}
-              options={{headerShown: true}}
+              options={{
+                headerShown: true,
+                title: "Transfer between my accounts"
+              }}
             />
             <Stack.Screen
               name="ToMyOtherAccountConfirm"
               component={ToMyOtherAccountConfirm}
-              options={{headerShown: true}}
+              options={{
+                headerShown: true,
+                title: "Confirm to my other accounts"
+              }}
             />
           </Stack.Navigator>
         </PaperProvider>

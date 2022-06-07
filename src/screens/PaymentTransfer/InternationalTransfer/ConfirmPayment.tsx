@@ -46,7 +46,7 @@ const ConfirmPayment = ({theme, navigation, route}) => {
   }
 
   const onEdit = () => {
-    navigation.navigate("UkTransfer")
+    navigation.navigate("InternationalTransfer")
   }
 
   return (
