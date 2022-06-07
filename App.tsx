@@ -23,6 +23,8 @@ import ToMyOtherAccount from './src/screens/PaymentTransfer/ToMyOtherAccount/ToM
 import { default as ToMyOtherAccountConfirm } from './src/screens/PaymentTransfer/ToMyOtherAccount/ConfirmPayment';
 import { default as EuroTransferConfirm } from './src/screens/PaymentTransfer/EuroTransfer/ConfirmPayment';
 import { default as UkTransferConfirm } from './src/screens/PaymentTransfer/UkTransfer/ConfirmPayment';
+import Settings from './src/screens/Home/Settings/Settings';
+import ChangeEmail from './src/screens/Settings/ChangeEmail';
 
 LogBox.ignoreAllLogs(true);
 
@@ -155,6 +157,18 @@ const App: () => ReactNode = () => {
               options={{
                 headerShown: true,
                 title: "Confirm to my other accounts"
+              }}
+            />
+            <Stack.Screen
+              name="Settings"
+              component={Settings}
+            />
+            <Stack.Screen
+              name="ChangeEmail"
+              component={ChangeEmail}
+              options={{
+                headerShown: true,
+                title: "Change Email"
               }}
             />
           </Stack.Navigator>

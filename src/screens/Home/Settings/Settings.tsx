@@ -1,14 +1,54 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, withTheme } from 'react-native-paper';
-import { SafeAreaView } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
+import { View, SafeAreaView } from 'react-native';
+
 import styles from './Settings.style';
+import CustomButton from '../../../components/CustomButton/CustomButton';
 
 const SettingsScreen = ({theme, navigation}) => {
+  const onChangeEmail = () => {
+    navigation.navigate('ChangeEmail')
+  }
+
+  const onChangePassword = () => {
+    navigation.navigate('ChangePassword')
+  }
+
+  const onChangePhone = () => {
+    navigation.navigate('ChangePhone')
+  }
+
+  const onChangePersonalInfo = () => {
+    navigation.navigate('ChangePersonalInfo')
+  }
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text>Welcome</Text>
+      <View style={{marginBottom: 30}}>
+        <Text style={styles.fontBold}>Welcome! You can choose menu from below list to get started.</Text>
+      </View>
+      <View>
+        <CustomButton 
+          theme={theme} 
+          name="Change email" 
+          onClick={onChangeEmail} 
+        />
+        <CustomButton 
+          theme={theme} 
+          name="Chnage password" 
+          onClick={onChangePassword} 
+        />
+        <CustomButton 
+          theme={theme} 
+          name="Change phone" 
+          onClick={onChangePhone} 
+        />
+        <CustomButton 
+          theme={theme} 
+          name="Chnage personal info" 
+          onClick={onChangePersonalInfo}
+        />
+      </View>
     </SafeAreaView>
   );
 };
