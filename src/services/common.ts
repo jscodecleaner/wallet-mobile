@@ -23,19 +23,6 @@ export const transferTypeList = [
     "Business"
 ]
 
-const isoList = {
-    USD: 'us',
-    GBP: 'gb',
-    EUR: 'eu',
-    SEK: 'se',
-    HUF: 'hu',
-    CZK: 'cz',
-    DKK: 'dk',
-    NOK: 'no',
-    PLN: 'pl',
-    RON: 'ro',
-}
-
 export const getIsoCodeFromCurrencyName = (currencyName: string) => {
     return currencyName.substring(0, 2).toLowerCase()
 }

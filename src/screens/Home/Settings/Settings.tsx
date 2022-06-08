@@ -25,7 +25,8 @@ const SettingsScreen = ({theme, navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={{marginBottom: 30}}>
-        <Text style={styles.fontBold}>Welcome! You can choose menu from below list to get started.</Text>
+        <Text style={styles.fontBold}>Welcome!</Text>
+        <Text>You can choose menu from below list to get started.</Text>
       </View>
       <View>
         <CustomButton 

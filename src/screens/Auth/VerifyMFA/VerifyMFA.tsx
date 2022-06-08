@@ -5,6 +5,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import { Button, TextInput, withTheme } from 'react-native-paper';
 import jwt_decode from "jwt-decode";
 import { Popup } from 'react-native-popup-confirm-toast';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import styles from './VerifyMFA.style';
 import Error from '../../../components/error';
@@ -13,7 +14,6 @@ import { ApiEndpoint, StatusCode } from '../../../types/enum';
 import { universalPostRequestWithData } from '../../../services/RequestHandler';
 import { LoginData } from '../../../types/interface';
 import CustomButton from '../../../components/CustomButton/CustomButton';
-import AsyncStorage from '@react-native-community/async-storage';
 import { MfaVerify, Logout } from '../../../redux/slices/userSlice';
 
 const getLoginDataFromToken = (token: string) => {
@@ -73,7 +73,8 @@ const VerifyMFAScreen = ({theme, navigation}) => {
         navigation.navigate('Home')
       } else {
         setOtp('');
-
+        
+        await AsyncStorage.clear();
         Popup.show({
           type: 'warning',
           title: 'Invalid Login',
@@ -86,6 +87,7 @@ const VerifyMFAScreen = ({theme, navigation}) => {
           },
           confirmButtonStyle: {display: 'none'}
         })
+        
       }
     } else {
       setError(response.data.message)
