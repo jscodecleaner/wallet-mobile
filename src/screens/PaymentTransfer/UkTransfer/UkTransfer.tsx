@@ -20,8 +20,8 @@ import { validateName } from '../../../services/validators';
 
 const pAndTType = 'uk-domestic-transfer';
 
-const UkTransferScreen = ({theme, navigation, route}) => {
-  const {fromAccount} = route.params;
+const UkTransferScreen = ({ theme, navigation, route }) => {
+  const { fromAccount } = route.params;
 
   const styles = useStyles(theme);
   const dispatch = useDispatch();
@@ -38,7 +38,7 @@ const UkTransferScreen = ({theme, navigation, route}) => {
   const [accountHolderName, setAccountHolderName] = useState('');
   const [sortCode, setSortCode] = useState('');
   const [accountNumber, setAccountNumber] = useState('');
-  const [transType, setTransType] = useState('Personal');
+  const [transType,] = useState('Personal');
   const [paymentMethod, setPaymentMethod] = useState('');
   const [paymentReference, setPaymentReference] = useState('');
   const [notes, setNotes] = useState('');
@@ -57,8 +57,8 @@ const UkTransferScreen = ({theme, navigation, route}) => {
 
   const listOfCountry = useMemo(() => countryList().getData(), []);
 
-  const {accountList} = useSelector((state: any) => state.accounts);
-  const {loginData} = useSelector((state: any) => state.user);
+  const { accountList } = useSelector((state: any) => state.accounts);
+  const { loginData } = useSelector((state: any) => state.user);
 
   useEffect(() => {
   }, []);
@@ -66,7 +66,7 @@ const UkTransferScreen = ({theme, navigation, route}) => {
   useEffect(() => {
     if (accountList.length > 0) {
       const selectedItem = getAccountFromAccountID(accountList, fromAccount);
-  
+
       setFromAccountName(selectedItem.accountName);
       setCurrency(selectedItem.currencyData.currencyName);
       const methodList = getPaymentMethodList(accountList, selectedItem.accountId);
@@ -79,13 +79,13 @@ const UkTransferScreen = ({theme, navigation, route}) => {
   }, [accountList]);
 
   const amountCheck = () => {
-    return Number(parseFloat(amount==''?'0':amount).toFixed(2)) <= getAvailableBalance(accountList, fromAccount)
+    return Number(parseFloat(amount == '' ? '0' : amount).toFixed(2)) <= getAvailableBalance(accountList, fromAccount)
   }
 
   const validateInput = () => {
-    if (currency.length > 0 && 
+    if (currency.length > 0 &&
       fromAccount.length > 0 &&
-      accountHolderName.length > 0 && 
+      accountHolderName.length > 0 &&
       paymentReference.length > 0 &&
       notes.length > 0 && validateName(notes) &&
       amount.length > 0 && amountCheck() == true
@@ -98,14 +98,14 @@ const UkTransferScreen = ({theme, navigation, route}) => {
   const handleFetchTransactionFee = async () => {
     setProgress(true)
     const response = await getTransactionFee(
-      loginData.accessToken, 
-      getAccountFromAccountID(accountList, fromAccount).providerName, 
+      loginData.accessToken,
+      getAccountFromAccountID(accountList, fromAccount).providerName,
       {
-        currentProfile: loginData.current_profile, 
-        amount: Number(parseFloat(amount==''?'0':amount).toFixed(2)), 
-        paymentMethod, 
-        currencyName: currency, 
-        pAndTType, 
+        currentProfile: loginData.current_profile,
+        amount: Number(parseFloat(amount == '' ? '0' : amount).toFixed(2)),
+        paymentMethod,
+        currencyName: currency,
+        pAndTType,
         sortCode: parseInt(sortCode)
       }
     )
@@ -124,7 +124,7 @@ const UkTransferScreen = ({theme, navigation, route}) => {
         color: theme.colors.notification,
         timeColor: theme.colors.primary,
         timing: 3000,
-        icon: <MaterialCommunityIcons name='check' color={theme.colors.background} size={30}/>,
+        icon: <MaterialCommunityIcons name='check' color={theme.colors.background} size={30} />,
         position: 'top',
       })
       setFundsAvailable(true)
@@ -137,7 +137,7 @@ const UkTransferScreen = ({theme, navigation, route}) => {
         color: theme.colors.error,
         timeColor: theme.colors.primary,
         timing: 3000,
-        icon: <MaterialCommunityIcons name='danger' color={theme.colors.background} size={30}/>,
+        icon: <MaterialCommunityIcons name='danger' color={theme.colors.background} size={30} />,
         position: 'top',
       })
     }
@@ -183,20 +183,20 @@ const UkTransferScreen = ({theme, navigation, route}) => {
       transType,
       pAndTType,
     }
-    navigation.navigate('UkTransferConfirm', {transactionDetails: transactionDetails});
+    navigation.navigate('UkTransferConfirm', { transactionDetails: transactionDetails });
   }
 
   return (
     <SafeAreaView style={styles.container}>
       <Spinner
-          visible={progress}
-          textContent={'Loading...'}
-          textStyle={{
-            color: '#FFF',
+        visible={progress}
+        textContent={'Loading...'}
+        textStyle={{
+          color: '#FFF',
         }}
       />
       <ScrollView style={styles.scrollViewStyle}>
-        <View style={{marginTop: 10}}>
+        <View style={{ marginTop: 10 }}>
           <View>
             <TextInput
               autoCapitalize="none"
@@ -217,40 +217,40 @@ const UkTransferScreen = ({theme, navigation, route}) => {
           </View>
           <View>
             <TextInput
-                autoCapitalize="none"
-                style={styles.input}
-                label="Bank name"
-                value={bankName}
-                onChangeText={text => setBankName(text)}
-              />
+              autoCapitalize="none"
+              style={styles.input}
+              label="Bank name"
+              value={bankName}
+              onChangeText={text => setBankName(text)}
+            />
           </View>
           <View>
             <TextInput
-                autoCapitalize="none"
-                style={styles.input}
-                label="Account holder's name"
-                value={accountHolderName}
-                onChangeText={text => setAccountHolderName(text)}
-              />
+              autoCapitalize="none"
+              style={styles.input}
+              label="Account holder's name"
+              value={accountHolderName}
+              onChangeText={text => setAccountHolderName(text)}
+            />
           </View>
           <View>
             <TextInput
-                autoCapitalize="none"
-                style={styles.input}
-                keyboardType='numeric'
-                label="Sort Code"
-                value={sortCode}
-                onChangeText={text => setSortCode(text)}
-              />
+              autoCapitalize="none"
+              style={styles.input}
+              keyboardType='numeric'
+              label="Sort Code"
+              value={sortCode}
+              onChangeText={text => setSortCode(text)}
+            />
           </View>
           <View>
             <TextInput
-                autoCapitalize="none"
-                style={styles.input}
-                label="Account number"
-                value={accountNumber}
-                onChangeText={text => setAccountNumber(text)}
-              />
+              autoCapitalize="none"
+              style={styles.input}
+              label="Account number"
+              value={accountNumber}
+              onChangeText={text => setAccountNumber(text)}
+            />
           </View>
           <View>
             <SelectDropdown
@@ -309,60 +309,60 @@ const UkTransferScreen = ({theme, navigation, route}) => {
           </View>
           <View>
             <TextInput
-                autoCapitalize="none"
-                style={styles.input}
-                label="Add description"
-                value={paymentReference}
-                onChangeText={text => setPaymentReference(text)}
-              />
+              autoCapitalize="none"
+              style={styles.input}
+              label="Add description"
+              value={paymentReference}
+              onChangeText={text => setPaymentReference(text)}
+            />
           </View>
           <View>
             <TextInput
-                autoCapitalize="none"
-                style={styles.input}
-                label="Payment details"
-                value={notes}
-                maxLength={35}
-                onChangeText={text => setNotes(text)}
-                error={notes && !validateName(notes)}
-              />
+              autoCapitalize="none"
+              style={styles.input}
+              label="Payment details"
+              value={notes}
+              maxLength={35}
+              onChangeText={text => setNotes(text)}
+              error={notes && !validateName(notes)}
+            />
           </View>
         </View>
-        
-        <Collapse style={{marginTop: 20}} onToggle={setAddressCollapsed}>
+
+        <Collapse style={{ marginTop: 20 }} onToggle={setAddressCollapsed}>
           <CollapseHeader>
-            <View style={{flexDirection: "row", justifyContent: "space-between"}}>
-              <Text style={{fontSize: 20, fontWeight: 'bold'}}>Recipient's address</Text>
+            <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+              <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Recipient's address</Text>
               <FontAwesomeIcons name={addressCollapsed ? "chevron-up" : "chevron-down"} color={theme.colors.text} size={18} />
             </View>
           </CollapseHeader>
           <CollapseBody>
             <View>
               <TextInput
-                  autoCapitalize="none"
-                  style={styles.input}
-                  label="Address 1"
-                  value={recipientAddress1}
-                  onChangeText={text => setRecipientAddress1(text)}
-                />
+                autoCapitalize="none"
+                style={styles.input}
+                label="Address 1"
+                value={recipientAddress1}
+                onChangeText={text => setRecipientAddress1(text)}
+              />
             </View>
             <View>
               <TextInput
-                  autoCapitalize="none"
-                  style={styles.input}
-                  label="Address 2"
-                  value={recipientAddress2}
-                  onChangeText={text => setRecipientAddress2(text)}
-                />
+                autoCapitalize="none"
+                style={styles.input}
+                label="Address 2"
+                value={recipientAddress2}
+                onChangeText={text => setRecipientAddress2(text)}
+              />
             </View>
             <View>
               <TextInput
-                  autoCapitalize="none"
-                  style={styles.input}
-                  label="Postal Code"
-                  value={recipientPostalCode}
-                  onChangeText={text => setRecipientPostalCode(text)}
-                />
+                autoCapitalize="none"
+                style={styles.input}
+                label="Postal Code"
+                value={recipientPostalCode}
+                onChangeText={text => setRecipientPostalCode(text)}
+              />
             </View>
             <SelectDropdown
               data={listOfCountry}
@@ -393,40 +393,40 @@ const UkTransferScreen = ({theme, navigation, route}) => {
           </CollapseBody>
         </Collapse>
 
-        <Collapse style={{marginTop: 20}} onToggle={setBankCollapsed}>
+        <Collapse style={{ marginTop: 20 }} onToggle={setBankCollapsed}>
           <CollapseHeader>
-            <View style={{flexDirection: "row", justifyContent: "space-between"}}>
-              <Text style={{fontSize: 20, fontWeight: 'bold'}}>Recipient's bank address</Text>
+            <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+              <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Recipient's bank address</Text>
               <FontAwesomeIcons name={bankCollapsed ? "chevron-up" : "chevron-down"} color={theme.colors.text} size={18} />
             </View>
           </CollapseHeader>
           <CollapseBody>
             <View>
               <TextInput
-                  autoCapitalize="none"
-                  style={styles.input}
-                  label="Address 1"
-                  value={bankAddress1}
-                  onChangeText={text => setBankAddress1(text)}
-                />
+                autoCapitalize="none"
+                style={styles.input}
+                label="Address 1"
+                value={bankAddress1}
+                onChangeText={text => setBankAddress1(text)}
+              />
             </View>
             <View>
               <TextInput
-                  autoCapitalize="none"
-                  style={styles.input}
-                  label="Address 2"
-                  value={bankAddress2}
-                  onChangeText={text => setBankAddress2(text)}
-                />
+                autoCapitalize="none"
+                style={styles.input}
+                label="Address 2"
+                value={bankAddress2}
+                onChangeText={text => setBankAddress2(text)}
+              />
             </View>
             <View>
               <TextInput
-                  autoCapitalize="none"
-                  style={styles.input}
-                  label="Postal Code"
-                  value={bankPostalCode}
-                  onChangeText={text => setBankPostalCode(text)}
-                />
+                autoCapitalize="none"
+                style={styles.input}
+                label="Postal Code"
+                value={bankPostalCode}
+                onChangeText={text => setBankPostalCode(text)}
+              />
             </View>
             <SelectDropdown
               data={listOfCountry}
@@ -456,30 +456,30 @@ const UkTransferScreen = ({theme, navigation, route}) => {
             />
           </CollapseBody>
         </Collapse>
-        
-        <View style={{marginTop: 20}}>
+
+        <View style={{ marginTop: 20 }}>
           <View>
             <TextInput
-                autoCapitalize="none"
-                keyboardType='numeric'
-                style={styles.input}
-                label={"You send " + `${currency && getSymbolFromCurrency(currency)}`}
-                value={amount}
-                onChangeText={text => setAmount(text)}
-              />
+              autoCapitalize="none"
+              keyboardType='numeric'
+              style={styles.input}
+              label={"You send " + `${currency && getSymbolFromCurrency(currency)}`}
+              value={amount}
+              onChangeText={text => setAmount(text)}
+            />
           </View>
           <View>
             <TextInput
-                autoCapitalize="none"
-                style={styles.input}
-                label="Yet to calculate"
-                value={fee}
-                disabled={true}
-              />
+              autoCapitalize="none"
+              style={styles.input}
+              label="Yet to calculate"
+              value={fee}
+              disabled={true}
+            />
           </View>
         </View>
 
-        <View style={{width: '100%', marginTop: 20, marginBottom: 15}}>
+        <View style={{ width: '100%', marginTop: 20, marginBottom: 15 }}>
           {fundsavailable && <CustomButton theme={theme} name="Continue" onClick={toConfirm} state={validateInput()} />}
           {!fundsavailable && <CustomButton theme={theme} name="Calculate Fee" onClick={handleFetchTransactionFee} state={validateInput()} />}
         </View>
