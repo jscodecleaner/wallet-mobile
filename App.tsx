@@ -1,12 +1,12 @@
 import 'react-native-gesture-handler';
-import React, {useEffect} from 'react';
-import {LogBox} from 'react-native';
-import type {ReactNode} from 'react';
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
+import React, { useEffect } from 'react';
+import { LogBox } from 'react-native';
+import type { ReactNode } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import SplashScreen from 'react-native-splash-screen';
-import {useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Root } from 'react-native-popup-confirm-toast'
 
 import Login from './src/screens/Auth/Login/Login';
@@ -25,6 +25,9 @@ import { default as EuroTransferConfirm } from './src/screens/PaymentTransfer/Eu
 import { default as UkTransferConfirm } from './src/screens/PaymentTransfer/UkTransfer/ConfirmPayment';
 import Settings from './src/screens/Home/Settings/Settings';
 import ChangeEmail from './src/screens/Settings/ChangeEmail';
+import ChangePassword from './src/screens/Settings/ChangePassword';
+import ChangePhone from './src/screens/Settings/ChangePhone';
+import ChangePersonalInfo from './src/screens/Settings/ChangePersonalInfo';
 
 LogBox.ignoreAllLogs(true);
 
@@ -50,7 +53,7 @@ const theme: themeType = {
 };
 
 const App: () => ReactNode = () => {
-  const {authenticated, mfaVerified} = useSelector((state: any) => state.user);
+  const { authenticated, mfaVerified } = useSelector((state: any) => state.user);
 
   const getNavigationScreen = () => {
     if (authenticated) {
@@ -75,33 +78,33 @@ const App: () => ReactNode = () => {
           <Stack.Navigator initialRouteName={getNavigationScreen()}>
             <Stack.Screen
               name="Login"
-              options={{headerShown: false}}
+              options={{ headerShown: false }}
               component={Login}
             />
             <Stack.Screen
               name="ForgotPassword"
               component={ForgotPassword}
-              options={{headerShown: false}}
+              options={{ headerShown: false }}
             />
             <Stack.Screen
               name="ForgotUsername"
               component={ForgotUsername}
-              options={{headerShown: false}}
+              options={{ headerShown: false }}
             />
             <Stack.Screen
               name="VerifyMFA"
               component={VerifyMFA}
-              options={{headerShown: false}}
+              options={{ headerShown: false }}
             />
             <Stack.Screen
               name="Home"
               component={Home}
-              options={{headerShown: false}}
+              options={{ headerShown: false }}
             />
             <Stack.Screen
               name="WalletDetails"
               component={WalletDetails}
-              options={{headerShown: true}}
+              options={{ headerShown: true }}
             />
             <Stack.Screen
               name="EuroTransfer"
@@ -169,6 +172,30 @@ const App: () => ReactNode = () => {
               options={{
                 headerShown: true,
                 title: "Change Email"
+              }}
+            />
+            <Stack.Screen
+              name="ChangePassword"
+              component={ChangePassword}
+              options={{
+                headerShown: true,
+                title: "Change Password"
+              }}
+            />
+            <Stack.Screen
+              name="ChangePhone"
+              component={ChangePhone}
+              options={{
+                headerShown: true,
+                title: "Change Phone"
+              }}
+            />
+            <Stack.Screen
+              name="ChangePersonalInfo"
+              component={ChangePersonalInfo}
+              options={{
+                headerShown: true,
+                title: "Change personal Info"
               }}
             />
           </Stack.Navigator>
