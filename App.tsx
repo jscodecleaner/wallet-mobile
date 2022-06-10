@@ -6,28 +6,30 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import SplashScreen from 'react-native-splash-screen';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Root } from 'react-native-popup-confirm-toast'
 
-import Login from './src/screens/Auth/Login/Login';
 import themeType from './src/types/theme';
-import ForgotPassword from './src/screens/Auth/ForgotPassword/ForgotPassword';
-import VerifyMFA from './src/screens/Auth/VerifyMFA/VerifyMFA';
-import ForgotUsername from './src/screens/Auth/ForgotUsername/ForgotUsername';
-import Home from './src/screens/Home/Home';
-import WalletDetails from './src/screens/Home/WalletDetails/WalletDetails';
-import EuroTransfer from './src/screens/PaymentTransfer/EuroTransfer/EuroTransfer';
-import UkTransfer from './src/screens/PaymentTransfer/UkTransfer/UkTransfer';
-import InternationalTransfer from './src/screens/PaymentTransfer/InternationalTransfer/InternationalTransfer';
-import ToMyOtherAccount from './src/screens/PaymentTransfer/ToMyOtherAccount/ToMyOtherAccount';
-import { default as ToMyOtherAccountConfirm } from './src/screens/PaymentTransfer/ToMyOtherAccount/ConfirmPayment';
-import { default as EuroTransferConfirm } from './src/screens/PaymentTransfer/EuroTransfer/ConfirmPayment';
-import { default as UkTransferConfirm } from './src/screens/PaymentTransfer/UkTransfer/ConfirmPayment';
-import Settings from './src/screens/Home/Settings/Settings';
-import ChangeEmail from './src/screens/Settings/ChangeEmail';
-import ChangePassword from './src/screens/Settings/ChangePassword';
-import ChangePhone from './src/screens/Settings/ChangePhone';
-import ChangePersonalInfo from './src/screens/Settings/ChangePersonalInfo';
+import { refreshTheToken } from './src/services/utility';
+import { Login } from './src/redux/slices/userSlice';
+import LoginScreen from './src/screens/Auth/Login/Login';
+import ForgotPasswordScreen from './src/screens/Auth/ForgotPassword/ForgotPassword';
+import VerifyMFAScreen from './src/screens/Auth/VerifyMFA/VerifyMFA';
+import ForgotUsernameScreen from './src/screens/Auth/ForgotUsername/ForgotUsername';
+import HomeScreen from './src/screens/Home/Home';
+import WalletDetailsScreen from './src/screens/Home/WalletDetails/WalletDetails';
+import EuroTransferScreen from './src/screens/PaymentTransfer/EuroTransfer/EuroTransfer';
+import UkTransferScreen from './src/screens/PaymentTransfer/UkTransfer/UkTransfer';
+import InternationalTransferScreen from './src/screens/PaymentTransfer/InternationalTransfer/InternationalTransfer';
+import ToMyOtherAccountScreen from './src/screens/PaymentTransfer/ToMyOtherAccount/ToMyOtherAccount';
+import { default as ToMyOtherAccountConfirmScreen } from './src/screens/PaymentTransfer/ToMyOtherAccount/ConfirmPayment';
+import { default as EuroTransferConfirmScreen } from './src/screens/PaymentTransfer/EuroTransfer/ConfirmPayment';
+import { default as UkTransferConfirmScreen } from './src/screens/PaymentTransfer/UkTransfer/ConfirmPayment';
+import SettingsScreen from './src/screens/Home/Settings/Settings';
+import ChangeEmailScreen from './src/screens/Settings/ChangeEmail';
+import ChangePasswordScreen from './src/screens/Settings/ChangePassword';
+import ChangePhoneScreen from './src/screens/Settings/ChangePhone';
+import ChangePersonalInfoScreen from './src/screens/Settings/ChangePersonalInfo';
 
 LogBox.ignoreAllLogs(true);
 
@@ -53,7 +55,10 @@ const theme: themeType = {
 };
 
 const App: () => ReactNode = () => {
-  const { authenticated, mfaVerified } = useSelector((state: any) => state.user);
+  const { loginData, authenticated, mfaVerified } = useSelector((state: any) => state.user);
+  const dispatch = useDispatch();
+
+  const TIME_TICK = 20 * 1000;
 
   const getNavigationScreen = () => {
     if (authenticated) {
@@ -69,47 +74,56 @@ const App: () => ReactNode = () => {
 
   useEffect(() => {
     SplashScreen.hide();
+
+    const interval = setInterval(async () => {
+      const response: any = await refreshTheToken(loginData.username, loginData.refresh_token)
+      if (response) {
+        dispatch(Login({ ...loginData, ...response }));
+      }
+    }, TIME_TICK);
+  
+    return () => clearInterval(interval);
   }, []);
 
   return (
     <Root>
       <NavigationContainer>
         <PaperProvider theme={theme}>
-          {/* <Stack.Navigator initialRouteName='ChangePassword'> */}
+            {/* <Stack.Navigator initialRouteName='ChangePhone'> */}
             <Stack.Navigator initialRouteName={getNavigationScreen()}>
             <Stack.Screen
               name="Login"
               options={{ headerShown: false }}
-              component={Login}
+              component={LoginScreen}
             />
             <Stack.Screen
               name="ForgotPassword"
-              component={ForgotPassword}
+              component={ForgotPasswordScreen}
               options={{ headerShown: false }}
             />
             <Stack.Screen
               name="ForgotUsername"
-              component={ForgotUsername}
+              component={ForgotUsernameScreen}
               options={{ headerShown: false }}
             />
             <Stack.Screen
               name="VerifyMFA"
-              component={VerifyMFA}
+              component={VerifyMFAScreen}
               options={{ headerShown: false }}
             />
             <Stack.Screen
               name="Home"
-              component={Home}
+              component={HomeScreen}
               options={{ headerShown: false }}
             />
             <Stack.Screen
               name="WalletDetails"
-              component={WalletDetails}
+              component={WalletDetailsScreen}
               options={{ headerShown: true }}
             />
             <Stack.Screen
               name="EuroTransfer"
-              component={EuroTransfer}
+              component={EuroTransferScreen}
               options={{
                 headerShown: true,
                 title: "Euro Transfer"
@@ -117,7 +131,7 @@ const App: () => ReactNode = () => {
             />
             <Stack.Screen
               name="EuroTransferConfirm"
-              component={EuroTransferConfirm}
+              component={EuroTransferConfirmScreen}
               options={{
                 headerShown: true,
                 title: "Confirm Euro Transfer"
@@ -125,7 +139,7 @@ const App: () => ReactNode = () => {
             />
             <Stack.Screen
               name="UkTransfer"
-              component={UkTransfer}
+              component={UkTransferScreen}
               options={{
                 headerShown: true,
                 title: 'UK Transfer'
@@ -133,7 +147,7 @@ const App: () => ReactNode = () => {
             />
             <Stack.Screen
               name="UkTransferConfirm"
-              component={UkTransferConfirm}
+              component={UkTransferConfirmScreen}
               options={{
                 headerShown: true,
                 title: "Confirm UK Transfer"
@@ -141,7 +155,7 @@ const App: () => ReactNode = () => {
             />
             <Stack.Screen
               name="InternationalTransfer"
-              component={InternationalTransfer}
+              component={InternationalTransferScreen}
               options={{
                 headerShown: true,
                 title: "International Transfer"
@@ -149,7 +163,7 @@ const App: () => ReactNode = () => {
             />
             <Stack.Screen
               name="ToMyOtherAccount"
-              component={ToMyOtherAccount}
+              component={ToMyOtherAccountScreen}
               options={{
                 headerShown: true,
                 title: "Transfer between my accounts"
@@ -157,7 +171,7 @@ const App: () => ReactNode = () => {
             />
             <Stack.Screen
               name="ToMyOtherAccountConfirm"
-              component={ToMyOtherAccountConfirm}
+              component={ToMyOtherAccountConfirmScreen}
               options={{
                 headerShown: true,
                 title: "Confirm to my other accounts"
@@ -165,11 +179,11 @@ const App: () => ReactNode = () => {
             />
             <Stack.Screen
               name="Settings"
-              component={Settings}
+              component={SettingsScreen}
             />
             <Stack.Screen
               name="ChangeEmail"
-              component={ChangeEmail}
+              component={ChangeEmailScreen}
               options={{
                 headerShown: true,
                 title: "Change Email"
@@ -177,7 +191,7 @@ const App: () => ReactNode = () => {
             />
             <Stack.Screen
               name="ChangePassword"
-              component={ChangePassword}
+              component={ChangePasswordScreen}
               options={{
                 headerShown: true,
                 title: "Change Password"
@@ -185,7 +199,7 @@ const App: () => ReactNode = () => {
             />
             <Stack.Screen
               name="ChangePhone"
-              component={ChangePhone}
+              component={ChangePhoneScreen}
               options={{
                 headerShown: true,
                 title: "Change Phone"
@@ -193,7 +207,7 @@ const App: () => ReactNode = () => {
             />
             <Stack.Screen
               name="ChangePersonalInfo"
-              component={ChangePersonalInfo}
+              component={ChangePersonalInfoScreen}
               options={{
                 headerShown: true,
                 title: "Change personal Info"

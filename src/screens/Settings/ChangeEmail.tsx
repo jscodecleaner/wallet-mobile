@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Image, StatusBar, SafeAreaView, ScrollView} from 'react-native';
+import {View, SafeAreaView, ScrollView} from 'react-native';
 import {TextInput, Button, Text, HelperText, withTheme} from 'react-native-paper';
 import Spinner from 'react-native-loading-spinner-overlay';
 import {useSelector, useDispatch} from 'react-redux';
@@ -11,7 +11,6 @@ import { useStyles } from './Settings.style';
 import { universalPostRequestWithData } from '../../services/RequestHandler';
 import { BASE_URL, getProxyUrl } from '../../services/common';
 import { ApiEndpoint, StatusCode } from '../../types/enum';
-import { LoginData } from '../../types/interface';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import { Logout } from '../../redux/slices/userSlice';
 import { validateEmail, validatePassword } from '../../services/validators';
@@ -81,9 +80,6 @@ const ChangeEmailScreen = ({theme, navigation}) => {
         }}
       />
       <ScrollView style={{width: '100%', paddingHorizontal: 15}}>
-        <View style={{marginTop: 30, alignItems: 'center'}}>
-          <Text style={{fontSize: 20, fontWeight: 'bold'}}>Change email</Text>
-        </View>
         <View style={{width: '100%'}}>
           <TextInput
             autoCapitalize="none"

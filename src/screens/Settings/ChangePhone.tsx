@@ -1,13 +1,15 @@
 import React, { useState , useRef, useEffect} from 'react';
-import { View, Image, StatusBar, SafeAreaView, ScrollView } from 'react-native';
-import { TextInput, Button, Text, HelperText, withTheme } from 'react-native-paper';
+import { View, SafeAreaView, ScrollView } from 'react-native';
+import { Text, HelperText, withTheme } from 'react-native-paper';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { useSelector, useDispatch } from 'react-redux';
 import PhoneInput from "react-native-phone-number-input";
-import { Toast } from 'react-native-popup-confirm-toast';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { AsYouType } from 'libphonenumber-js';
+import { Popup } from 'react-native-popup-confirm-toast';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import Error from '../../components/error';
+import { Logout } from '../../redux/slices/userSlice';
 import { useStyles } from './Settings.style';
 import { universalPutRequestWithData } from '../../services/RequestHandler';
 import { BASE_URL, getProxyUrl } from '../../services/common';
@@ -18,6 +20,7 @@ const ChangePhoneScreen = ({ theme, navigation }) => {
     const styles = useStyles(theme);
 
     const {loginData} = useSelector((state: any) => state.user);
+    const dispatch = useDispatch();
 
     const [isValidMobilePhone, setIsValidMobilePhone] = useState(true)
     const [progress, setProgress] = useState(false);
@@ -35,27 +38,25 @@ const ChangePhoneScreen = ({ theme, navigation }) => {
         const url = `${BASE_URL}/${ApiEndpoint.UPDATE_USER_ATTRIBUTE}`;
         const data = {
             userAttributeName: 'phone_number',
-            userAttributeValue: newPhoneNumber,
+            userAttributeValue: newPhoneInput.current?.getCallingCode() + newPhoneNumber,
             'white-label': getProxyUrl(),
         };
 
-        const headers = {
-            Authorization: `Bearer ${loginData.access_token}`,
-        }
-
-        const response: any = await universalPutRequestWithData(url, data, headers);
+        const response: any = await universalPutRequestWithData(url, data);
 
         if (response && response.status === StatusCode.OKAY) {
-            Toast.show({
-                title: 'Change phone number',
-                text: response.data.message,
-                color: theme.colors.notification,
-                timeColor: theme.colors.primary,
-                timing: 3000,
-                icon: <MaterialCommunityIcons name='check' color={theme.colors.background} size={30}/>,
-                position: 'down',
+            await AsyncStorage.clear();
+            Popup.show({
+                type: 'success',
+                title: 'Change phone',
+                textBody: response.data.message,
+                buttonText: 'Login',
+                callback: () => {
+                    Popup.hide();
+                    dispatch(Logout());
+                    navigation.navigate('Login');
+                },
             })
-            
         } else {
             setError(response.data.message);
         }
@@ -70,9 +71,26 @@ const ChangePhoneScreen = ({ theme, navigation }) => {
             return "disabled";
     }
 
-    const getCountryCodeFromPhoneNumber = (phoneNumber) => {
-
+    const getCountryFromPhoneNumber = (phoneNumber) => {
+        const asYouType = new AsYouType()
+        asYouType.input(phoneNumber)
+        const result = asYouType.getNumber()
+        if (result)
+            return result.country
+        else
+            return 'US'
     }
+
+    const getNationalNumberFromPhoneNumber = (phoneNumber) => {
+        const asYouType = new AsYouType()
+        asYouType.input(phoneNumber)
+        const result = asYouType.getNumber()
+        if (result)
+            return result.nationalNumber
+        else
+            return ''
+    }
+
 
     return (
         <SafeAreaView style={styles.container}>
@@ -83,15 +101,12 @@ const ChangePhoneScreen = ({ theme, navigation }) => {
                     color: '#FFF',
                 }}
             />
-            <ScrollView style={{width: '100%', paddingHorizontal: 15}}>
-                <View style={{ marginTop: 30, alignItems: 'center' }}>
-                    <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Change phone</Text>
-                </View>
+            <View style={{width: '100%', paddingHorizontal: 15}}>
                 <View style={{ width: '100%', marginTop: 20 }}>
                     <Text>Current Phone Number</Text>
                     <PhoneInput
-                        defaultCode='US'
-                        defaultValue={loginData.phone_number}
+                        defaultCode={getCountryFromPhoneNumber(loginData.phone_number)}
+                        defaultValue={getNationalNumberFromPhoneNumber(loginData.phone_number)}
                         containerStyle={{ width: '100%', backgroundColor: 'transaprent' }}
                         textContainerStyle={{ backgroundColor: 'transaprent' }}
                         withDarkTheme
@@ -123,9 +138,9 @@ const ChangePhoneScreen = ({ theme, navigation }) => {
 
                 <Error error={error} />
                 <View style={{ width: '100%', marginTop: 30 }}>
-                    <CustomButton theme={theme} name="Change password" onClick={handleChangePhone} state={validateInput()} />
+                    <CustomButton theme={theme} name="Change phone" onClick={handleChangePhone} state={validateInput()} />
                 </View>
-            </ScrollView>
+            </View>
         </SafeAreaView>
     );
 };

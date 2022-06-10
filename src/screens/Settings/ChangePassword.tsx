@@ -81,9 +81,6 @@ const ChangePasswordScreen = ({ theme, navigation }) => {
                 }}
             />
             <ScrollView style={{width: '100%', paddingHorizontal: 15}}>
-                <View style={{ marginTop: 30, alignItems: 'center' }}>
-                    <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Change password</Text>
-                </View>
                 <View style={{ width: '100%' }}>
                     <TextInput
                         autoCapitalize="none"

@@ -11,6 +11,7 @@ import DatePicker from 'react-native-date-picker'
 import { Toast } from 'react-native-popup-confirm-toast';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useSelector, useDispatch } from "react-redux";
+import { AsYouType } from 'libphonenumber-js';
 
 import CustomButton from '../../components/CustomButton/CustomButton';
 import { BASE_URL, getProxyUrl } from '../../services/common';
@@ -40,11 +41,11 @@ const ChangePersonalInfo = ({ theme, navigation }) => {
   const [isValidHomePhone, setIsValidHomePhone] = useState(true)
   const [isValidWorkPhone, setIsValidWorkPhone] = useState(true)
 
+  const [mobilePhoneNumber, setMobilePhoneNumber] = useState('')
+
   const mobilePhoneInput = useRef<PhoneInput>(null);
   const homePhoneInput = useRef<PhoneInput>(null);
   const workPhoneInput = useRef<PhoneInput>(null);
-
-  const {loginData} = useSelector((state: any) => state.user);
 
   useEffect(() => {
     const getUserProfile = async () => {
@@ -55,6 +56,8 @@ const ChangePersonalInfo = ({ theme, navigation }) => {
       if (response.status === StatusCode.OKAY) {
           const userProfile = response.data.data
           setPageUserProfile(userProfile)
+
+          setMobilePhoneNumber(getNationalNumberFromPhoneNumber(userProfile.phone_number))
       }
 
       setProgress(false)
@@ -75,6 +78,32 @@ const ChangePersonalInfo = ({ theme, navigation }) => {
         validatePhone(pageUserProfile.phone_number) &&
         (validateAge(pageUserProfile.birthdate) > 18)
     )
+  }
+
+  const getCountryFromPhoneNumber = (phoneNumber) => {
+    if (!phoneNumber)
+      return 'US'
+    
+    const asYouType = new AsYouType()
+    asYouType.input(phoneNumber)
+    const result = asYouType.getNumber()
+    if (result)
+      return result.country
+    else
+      return 'US'
+  }
+  
+  const getNationalNumberFromPhoneNumber = (phoneNumber) => {
+    if (!phoneNumber)
+      return ''
+    
+    const asYouType = new AsYouType()
+    asYouType.input(phoneNumber)
+    const result = asYouType.getNumber()
+    if (result)
+      return result.nationalNumber
+    else
+      return ''
   }
 
   const handleSubmit = async () => {
@@ -317,9 +346,9 @@ const ChangePersonalInfo = ({ theme, navigation }) => {
           
           <PhoneInput
             ref={mobilePhoneInput}
-            defaultCode='US'
-            value={pageUserProfile.phone_number}
-            onChangeText={(value) => {
+            defaultCode={getCountryFromPhoneNumber(pageUserProfile.phone_number)}
+            value={mobilePhoneNumber}
+            onChangeFormattedText={(value) => {
               if (mobilePhoneInput.current?.isValidNumber(value)) {
                 setPageUserProfile({
                   ...pageUserProfile,
@@ -346,9 +375,9 @@ const ChangePersonalInfo = ({ theme, navigation }) => {
           
           <PhoneInput
             ref={homePhoneInput}
-            defaultCode="US"
-            value={pageUserProfile.home_phone}
-            onChangeText={(value) => {
+            defaultCode={getCountryFromPhoneNumber(pageUserProfile.home_phone)}
+            defaultValue={getNationalNumberFromPhoneNumber(pageUserProfile.home_phone)}
+            onChangeFormattedText={(value) => {
               if (homePhoneInput.current?.isValidNumber(value)) {
                 setPageUserProfile({
                   ...pageUserProfile,
@@ -375,9 +404,9 @@ const ChangePersonalInfo = ({ theme, navigation }) => {
           
           <PhoneInput
             ref={workPhoneInput}
-            defaultCode="US"
-            value={pageUserProfile.work_phone}
-            onChangeText={(value) => {
+            defaultCode={getCountryFromPhoneNumber(pageUserProfile.home_phone)}
+            defaultValue={getNationalNumberFromPhoneNumber(pageUserProfile.home_phone)}
+            onChangeFormattedText={(value) => {
               if (workPhoneInput.current?.isValidNumber(value)) {
                 setPageUserProfile({
                   ...pageUserProfile,

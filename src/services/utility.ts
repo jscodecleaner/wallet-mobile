@@ -1,7 +1,7 @@
 import { AccountDataInterface } from "../types/interface";
 import { BASE_URL } from "./common";
 import { ApiEndpoint, StatusCode } from "../types/enum";
-import { universalGetRequestWithParams } from "./RequestHandler";
+import { universalGetRequestWithParams, universalPostRequestWithData } from "./RequestHandler";
 
 export const handleFetchAccountList = async (
   entityId: number,
@@ -21,6 +21,27 @@ export const handleFetchAccountList = async (
     return data
   } else {
     return []
+  }
+}
+
+export const refreshTheToken = async (username: string, refresh_token: string) => {
+  const url = `${BASE_URL}/${ApiEndpoint.REFRESH_TOKEN}`
+  const data = {
+      username,
+      refresh_token,
+  }
+
+  try {
+      const response: any = await universalPostRequestWithData(url, data)
+      if (response.status === StatusCode.OKAY) {
+          const data = response.data.message
+          data['expiry_time'] = Date.now() + data.expires_in * 1000
+          data['login_time'] = Date.now()
+          return data
+      }
+      return null
+  } catch {
+      return null
   }
 }
 
