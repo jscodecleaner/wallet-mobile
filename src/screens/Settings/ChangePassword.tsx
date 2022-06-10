@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { View, Image, StatusBar, SafeAreaView } from 'react-native';
+import { View, Image, StatusBar, SafeAreaView, ScrollView } from 'react-native';
 import { TextInput, Button, Text, HelperText, withTheme } from 'react-native-paper';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { useSelector, useDispatch } from 'react-redux';
+import { Popup } from 'react-native-popup-confirm-toast';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import Error from '../../components/error';
 import { useStyles } from './Settings.style';
-import { universalPostRequestWithData } from '../../services/RequestHandler';
+import { universalPutRequestWithData } from '../../services/RequestHandler';
 import { BASE_URL, getProxyUrl } from '../../services/common';
 import { ApiEndpoint, StatusCode } from '../../types/enum';
 import { LoginData } from '../../types/interface';
@@ -40,11 +42,21 @@ const ChangePasswordScreen = ({ theme, navigation }) => {
             'white-label': getProxyUrl(),
         };
 
-        const response: any = await universalPostRequestWithData(url, data);
+        const response: any = await universalPutRequestWithData(url, data);
 
         if (response && response.status === StatusCode.OKAY) {
-            dispatch(Logout());
-            navigation.navigate('Login');
+            await AsyncStorage.clear();
+            Popup.show({
+                type: 'success',
+                title: 'Change password',
+                textBody: response.data.message,
+                buttonText: 'Login',
+                callback: () => {
+                    Popup.hide();
+                    dispatch(Logout());
+                    navigation.navigate('Login');
+                },
+            })
         } else {
             setError(response.data.message);
         }
@@ -68,7 +80,7 @@ const ChangePasswordScreen = ({ theme, navigation }) => {
                     color: '#FFF',
                 }}
             />
-            <View style={{ width: '100%', paddingHorizontal: 15 }}>
+            <ScrollView style={{width: '100%', paddingHorizontal: 15}}>
                 <View style={{ marginTop: 30, alignItems: 'center' }}>
                     <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Change password</Text>
                 </View>
@@ -106,7 +118,7 @@ const ChangePasswordScreen = ({ theme, navigation }) => {
                 <View style={{ width: '100%', marginTop: 30 }}>
                     <CustomButton theme={theme} name="Change password" onClick={handleChangePassword} state={validateInput()} />
                 </View>
-            </View>
+            </ScrollView>
         </SafeAreaView>
     );
 };

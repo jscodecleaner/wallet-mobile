@@ -75,8 +75,8 @@ const App: () => ReactNode = () => {
     <Root>
       <NavigationContainer>
         <PaperProvider theme={theme}>
-          <Stack.Navigator initialRouteName='ChangePersonalInfo'>
-            {/* <Stack.Navigator initialRouteName={getNavigationScreen()}> */}
+          {/* <Stack.Navigator initialRouteName='ChangePassword'> */}
+            <Stack.Navigator initialRouteName={getNavigationScreen()}>
             <Stack.Screen
               name="Login"
               options={{ headerShown: false }}

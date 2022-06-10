@@ -1,3 +1,4 @@
+import moment from 'moment'
 import passwordValidator from 'password-validator'
 
 export const validatePassword = (password: string) => {
@@ -21,4 +22,14 @@ export const validateName = (name: string) => {
   const regex = /^[a-z\d\-\s]+$/i
 
   return regex.test(name)
+}
+
+export const validateAge = (dob: string) => {
+  return moment().diff(dob, 'years')
+}
+
+export const validatePhone = (phone) => {
+  var regex = /^\+(?:[0-9] ?){6,14}[0-9]$/
+
+  return regex.test(phone)
 }

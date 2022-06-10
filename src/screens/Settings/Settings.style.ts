@@ -7,18 +7,20 @@ export const useStyles = theme => (StyleSheet.create({
   transactionContainer: {
     padding: 20
   },
-  row: {
+  radioOption: {
     flexDirection: 'row',
-    marginBottom: 10
+    alignItems: 'center',
   },
-  leftText: {
-    width: '40%',
-    fontSize: 18,
-    marginRight: 10
+  radioWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 10
   },
-  rightText: {
-    width: '60%',
-    fontSize: 18,
+  genderWrapper: {
+    padding: 10,
+    backgroundColor: "transparent",
+    borderBottomWidth: 1,
+    borderColor: theme.colors.text,
   },
   actionsContainer: {
     marginTop: 30,
@@ -29,6 +31,8 @@ export const useStyles = theme => (StyleSheet.create({
     marginVertical: 10,
     height: 50,
     backgroundColor: "transparent",
+  },
+  bottomLine: {
     borderBottomWidth: 1,
     borderColor: theme.colors.text,
   },

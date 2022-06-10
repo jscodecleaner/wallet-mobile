@@ -53,3 +53,35 @@ export interface AccountDataInterface {
     pAndTType: string
     providerName: string
 }
+
+export interface UserProfileInterface {
+    city: string
+    state: string
+    email: string
+    gender: string
+    user_id: number
+    country: string
+    username: string
+    zip_code: string
+    birthdate: string
+    entity_id: number
+    address_1: string
+    corporate: string
+    address_2: string
+    last_name: string
+    first_name: string
+    occupation: string
+    home_phone: string
+    work_phone: string
+    middle_name: string
+    'get-user': boolean
+    phone_number: string
+    owner_company: number
+    is_first_login: boolean
+    email_verified: boolean
+    white_label_url: string
+    self_registered: boolean
+    programme_manager: number
+    subprogramme_manager: number
+    phone_number_verified: boolean
+}
