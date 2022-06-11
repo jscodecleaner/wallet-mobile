@@ -1,5 +1,5 @@
 import { AccountDataInterface } from "../types/interface";
-import { BASE_URL } from "./common";
+import { BASE_URL, getProxyUrl } from "./common";
 import { ApiEndpoint, StatusCode } from "../types/enum";
 import { universalGetRequestWithParams, universalPostRequestWithData } from "./RequestHandler";
 
@@ -27,21 +27,22 @@ export const handleFetchAccountList = async (
 export const refreshTheToken = async (username: string, refresh_token: string) => {
   const url = `${BASE_URL}/${ApiEndpoint.REFRESH_TOKEN}`
   const data = {
-      username,
-      refresh_token,
+    username,
+    refresh_token,
+    'white-label': getProxyUrl(),
   }
 
   try {
-      const response: any = await universalPostRequestWithData(url, data)
-      if (response.status === StatusCode.OKAY) {
-          const data = response.data.message
-          data['expiry_time'] = Date.now() + data.expires_in * 1000
-          data['login_time'] = Date.now()
-          return data
-      }
-      return null
+    const response: any = await universalPostRequestWithData(url, data)
+    if (response.status === StatusCode.OKAY) {
+        const data = response.data.message
+        data['expiry_time'] = Date.now() + data.expires_in * 1000
+        data['login_time'] = Date.now()
+        return data
+    }
+    return null
   } catch {
-      return null
+    return null
   }
 }
 
@@ -77,6 +78,7 @@ export const getTransactionFee = async (token: string, providerName: string, par
   if (response && response.status === StatusCode.OKAY) {
       return response.data.data
   }
+  console.log(response)
   // popupNotification(response.data.message, false)
 }
 

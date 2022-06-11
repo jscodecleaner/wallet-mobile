@@ -75,14 +75,14 @@ const App: () => ReactNode = () => {
   useEffect(() => {
     SplashScreen.hide();
 
-    const interval = setInterval(async () => {
-      const response: any = await refreshTheToken(loginData.username, loginData.refresh_token)
-      if (response) {
-        dispatch(Login({ ...loginData, ...response }));
-      }
-    }, TIME_TICK);
+    // const interval = setInterval(async () => {
+    //   const response: any = await refreshTheToken(loginData.username, loginData.refresh_token)
+    //   if (response) {
+    //     dispatch(Login({ ...loginData, ...response }));
+    //   }
+    // }, TIME_TICK);
   
-    return () => clearInterval(interval);
+    // return () => clearInterval(interval);
   }, []);
 
   return (

@@ -38,7 +38,7 @@ const ChangePhoneScreen = ({ theme, navigation }) => {
         const url = `${BASE_URL}/${ApiEndpoint.UPDATE_USER_ATTRIBUTE}`;
         const data = {
             userAttributeName: 'phone_number',
-            userAttributeValue: newPhoneInput.current?.getCallingCode() + newPhoneNumber,
+            userAttributeValue: newPhoneNumber,
             'white-label': getProxyUrl(),
         };
 
@@ -65,7 +65,7 @@ const ChangePhoneScreen = ({ theme, navigation }) => {
     }
 
     const validateInput = () => {
-        if (newPhoneInput.current?.isValidNumber(newPhoneNumber))
+        if (newPhoneInput.current?.isValidNumber(getNationalNumberFromPhoneNumber(newPhoneNumber)))
             return "normal";
         else
             return "disabled";
@@ -119,10 +119,9 @@ const ChangePhoneScreen = ({ theme, navigation }) => {
                     <PhoneInput
                         ref={newPhoneInput}
                         defaultCode='US'
-                        value={newPhoneNumber}
                         onChangeFormattedText={(value) => {
                             setNewPhoneNumber(value)
-                            if (newPhoneInput.current?.isValidNumber(value)) {
+                            if (newPhoneInput.current?.isValidNumber(getNationalNumberFromPhoneNumber(value))) {
                                 setIsValidMobilePhone(true)
                             } else {
                                 setIsValidMobilePhone(false)
