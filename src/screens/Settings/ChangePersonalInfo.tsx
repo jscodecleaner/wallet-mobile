@@ -34,7 +34,7 @@ const ChangePersonalInfo = ({ theme, navigation }) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [error, setError] = useState('');
 
-  const listOfCountry = useMemo(() => countryList().getData(), []);
+  const listOfCountry = useMemo(() => countryList().getLabels(), []);
 
   // validation phone number
   const [isValidMobilePhone, setIsValidMobilePhone] = useState(true)
@@ -322,19 +322,20 @@ const ChangePersonalInfo = ({ theme, navigation }) => {
             renderCustomizedButtonChild={(selectedItem, index) => {
               return (
                 <View style={styles.countryDropdownBtnChildStyle}>
-                  <Text style={styles.countryDropdownBtnTxt}>{selectedItem ? selectedItem.label : 'Country'}</Text>
+                  <Text style={styles.countryDropdownBtnTxt}>{selectedItem ? selectedItem : 'Country'}</Text>
                   <FontAwesomeIcons name="chevron-down" color={theme.colors.text} size={14} />
                 </View>
               )
             }}
+            defaultValue={pageUserProfile.country}
             dropdownOverlayColor="transparent"
             dropdownStyle={styles.countryDropdownDropdownStyle}
             rowStyle={styles.countryDropdownRowStyle}
             renderCustomizedRowChild={(item, index) => {
               return (
                 <View style={styles.countryDropdownRowChildStyle}>
-                  <CountryFlag isoCode={item.value} size={25} />
-                  <Text style={styles.countryDropdownRowTxt}>{item.label}</Text>
+                  <CountryFlag isoCode={countryList().getValue(item)} size={25} />
+                  <Text style={styles.countryDropdownRowTxt}>{item}</Text>
                 </View>
               );
             }}
@@ -428,7 +429,7 @@ const ChangePersonalInfo = ({ theme, navigation }) => {
         </View>
 
         <View style={{ width: '100%' }}>
-          <Text>Date of birth</Text>
+          {/* <Text>Date of birth</Text>
           <TouchableOpacity 
             onPress={() => setShowDatePicker(true)} 
             style={{alignItems: 'center', justifyContent: 'center', marginTop: 10}}
@@ -450,8 +451,15 @@ const ChangePersonalInfo = ({ theme, navigation }) => {
             mode="date"
             // date={new Date(pageUserProfile.birthdate)}
             date={new Date("09/21/1992")}
+          /> */}
+          <TextInput
+            style={[styles.input]}
+            label="DOB"
+            value={pageUserProfile.birthdate}
+            disabled={true}
           />
         </View>
+        
         <Error error={error} />
         <View style={{width: '100%', marginTop: 30}}>
           <CustomButton theme={theme} name="Save" onClick={handleSubmit} state={validateForm()} />

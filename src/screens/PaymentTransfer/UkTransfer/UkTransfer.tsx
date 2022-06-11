@@ -38,7 +38,7 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
   const [accountHolderName, setAccountHolderName] = useState('');
   const [sortCode, setSortCode] = useState('');
   const [accountNumber, setAccountNumber] = useState('');
-  const [transType,] = useState('Personal');
+  const [transType, setTransType] = useState('Personal');
   const [paymentMethod, setPaymentMethod] = useState('');
   const [paymentReference, setPaymentReference] = useState('');
   const [notes, setNotes] = useState('');
@@ -72,6 +72,7 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
       const methodList = getPaymentMethodList(accountList, selectedItem.accountId);
       setPaymentMethodList(methodList);
       methodList.length > 0 && setPaymentMethod(methodList[0]);
+      setTransType(transferTypeList[0])
     }
 
     setFundsAvailable(false);
@@ -295,6 +296,7 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
                   </View>
                 )
               }}
+              defaultValue={paymentMethod}
               dropdownOverlayColor="transparent"
               dropdownStyle={styles.dropdownDropdownStyle}
               rowStyle={styles.dropdownRowStyle}

@@ -75,6 +75,7 @@ const ChangePhoneScreen = ({ theme, navigation }) => {
         const asYouType = new AsYouType()
         asYouType.input(phoneNumber)
         const result = asYouType.getNumber()
+        console.log(result)
         if (result)
             return result.country
         else
@@ -90,7 +91,6 @@ const ChangePhoneScreen = ({ theme, navigation }) => {
         else
             return ''
     }
-
 
     return (
         <SafeAreaView style={styles.container}>

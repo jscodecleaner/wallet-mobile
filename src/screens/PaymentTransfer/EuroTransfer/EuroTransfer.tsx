@@ -67,6 +67,7 @@ const EuroTransferScreen = ({theme, navigation, route}) => {
       const methodList = getPaymentMethodList(accountList, selectedItem.accountId);
       setPaymentMethodList(methodList);
       methodList.length > 0 && setPaymentMethod(methodList[0]);
+      setType(transferTypeList[0])
     }
 
     setFundsAvailable(false);
@@ -319,6 +320,7 @@ const EuroTransferScreen = ({theme, navigation, route}) => {
                   </View>
                 )
               }}
+              defaultValue={type}
               dropdownOverlayColor="transparent"
               dropdownStyle={styles.dropdownDropdownStyle}
               rowStyle={styles.dropdownRowStyle}
@@ -346,6 +348,7 @@ const EuroTransferScreen = ({theme, navigation, route}) => {
                   </View>
                 )
               }}
+              defaultValue={paymentMethod}
               dropdownOverlayColor="transparent"
               dropdownStyle={styles.dropdownDropdownStyle}
               rowStyle={styles.dropdownRowStyle}

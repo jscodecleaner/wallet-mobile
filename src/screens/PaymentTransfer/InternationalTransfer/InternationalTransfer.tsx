@@ -84,6 +84,7 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
       const methodList = getPaymentMethodList(accountList, selectedItem.accountId);
       setPaymentMethodList(methodList);
       methodList.length > 0 && setPaymentMethod(methodList[0]);
+      setType(transferTypeList[0])
     }
 
     setFundsAvailable(false);
@@ -229,7 +230,7 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
             <TextInput
                 autoCapitalize="none"
                 style={styles.input}
-                label="Account number"
+                label="Account number/IBAN"
                 value={accountNumber}
                 onChangeText={text => setAccountNumber(text)}
               />
@@ -249,6 +250,7 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
                   </View>
                 )
               }}
+              defaultValue={type}
               dropdownOverlayColor="transparent"
               dropdownStyle={styles.dropdownDropdownStyle}
               rowStyle={styles.dropdownRowStyle}
@@ -285,6 +287,7 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
                   </View>
                 )
               }}
+              defaultValue={paymentMethod}
               dropdownOverlayColor="transparent"
               dropdownStyle={styles.dropdownDropdownStyle}
               rowStyle={styles.dropdownRowStyle}
