@@ -46,7 +46,7 @@ const ConfirmPayment = ({theme, navigation, route}) => {
   }
 
   const onEdit = () => {
-    navigation.navigate("ToMyOtherAccount")
+    navigation.navigate("ToMyOtherAccount", {fromAccount: transactionDetails.accountId})
   }
 
   return (

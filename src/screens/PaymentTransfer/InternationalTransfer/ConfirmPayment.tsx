@@ -23,12 +23,9 @@ const ConfirmPayment = ({theme, navigation, route}) => {
   const onConfirm = async () => {
     setProgress(true)
     const url = `${BASE_URL}/${ApiEndpoint.CREATE_TRANSACTION_TO_UK_DOMESTIC}`
-    const headers = {
-        Authorization: `Bearer ${loginData.access_token}`,
-    }
     const data = { ...transactionDetails, 'white-label': getProxyUrl() }
 
-    const response = await universalPostRequestWithData(url, data, headers)
+    const response = await universalPostRequestWithData(url, data)
     if (response && response.status === StatusCode.OKAY) {
       Popup.show({
         type: 'success',
@@ -40,13 +37,14 @@ const ConfirmPayment = ({theme, navigation, route}) => {
           navigation.navigate('Home');
         },
       })
-    }
+    } else
+      console.log(response)
 
     setProgress(false)
   }
 
   const onEdit = () => {
-    navigation.navigate("InternationalTransfer")
+    navigation.navigate("InternationalTransfer", {fromAccount: transactionDetails.accountId})
   }
 
   return (

@@ -194,7 +194,7 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
       type,
       pAndTType,
     }
-    navigation.navigate('InternationalConfirm', {transactionDetails: transactionDetails});
+    navigation.navigate('InternationalTransferConfirm', {transactionDetails: transactionDetails});
   }
 
   return (

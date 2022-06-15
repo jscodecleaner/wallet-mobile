@@ -25,6 +25,7 @@ import ToMyOtherAccountScreen from './src/screens/PaymentTransfer/ToMyOtherAccou
 import { default as ToMyOtherAccountConfirmScreen } from './src/screens/PaymentTransfer/ToMyOtherAccount/ConfirmPayment';
 import { default as EuroTransferConfirmScreen } from './src/screens/PaymentTransfer/EuroTransfer/ConfirmPayment';
 import { default as UkTransferConfirmScreen } from './src/screens/PaymentTransfer/UkTransfer/ConfirmPayment';
+import { default as InternationalTransferConfirmScreen } from './src/screens/PaymentTransfer/InternationalTransfer/ConfirmPayment';
 import SettingsScreen from './src/screens/Home/Settings/Settings';
 import ChangeEmailScreen from './src/screens/Settings/ChangeEmail';
 import ChangePasswordScreen from './src/screens/Settings/ChangePassword';
@@ -159,6 +160,14 @@ const App: () => ReactNode = () => {
               options={{
                 headerShown: true,
                 title: "International Transfer"
+              }}
+            />
+            <Stack.Screen
+              name="InternationalTransferConfirm"
+              component={InternationalTransferConfirmScreen}
+              options={{
+                headerShown: true,
+                title: "Confirm International Transfer"
               }}
             />
             <Stack.Screen
