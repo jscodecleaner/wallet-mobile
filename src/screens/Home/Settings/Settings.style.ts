@@ -8,5 +8,18 @@ export default StyleSheet.create({
     },
     fontBold: {
       fontWeight: 'bold'
+    },
+    subTitleArea: {
+      marginVertical: 30,
+      alignItems: 'center'
+    },
+    subTitle: {
+      fontSize: 20,
+      marginBottom: 10
+    },
+    buttonArea: {
+      width: '100%',
+      paddingHorizontal: 15,
+      paddingVertical: 20
     }
 });

@@ -24,11 +24,11 @@ const SettingsScreen = ({theme, navigation}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={{marginBottom: 30}}>
-        <Text style={styles.fontBold}>Welcome!</Text>
+      <View style={styles.subTitleArea}>
+        <Text style={[styles.fontBold, styles.subTitle]}>Settings</Text>
         <Text>You can choose menu from below list to get started.</Text>
       </View>
-      <View>
+      <View style={styles.buttonArea}>
         <CustomButton 
           theme={theme} 
           name="Change email" 
