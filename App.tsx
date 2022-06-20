@@ -90,7 +90,6 @@ const App: () => ReactNode = () => {
     <Root>
       <NavigationContainer>
         <PaperProvider theme={theme}>
-            {/* <Stack.Navigator initialRouteName='ChangePhone'> */}
             <Stack.Navigator initialRouteName={getNavigationScreen()}>
             <Stack.Screen
               name="Login"

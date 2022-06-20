@@ -6,12 +6,9 @@ import SelectDropdown from 'react-native-select-dropdown';
 import countryList from 'react-select-country-list'
 import CountryFlag from "react-native-country-flag";
 import FontAwesomeIcons from 'react-native-vector-icons/FontAwesome';
-import PhoneInput from "react-native-phone-number-input";
-import DatePicker from 'react-native-date-picker'
 import { Toast } from 'react-native-popup-confirm-toast';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useSelector, useDispatch } from "react-redux";
-import { AsYouType } from 'libphonenumber-js';
+import { AsYouType, isValidPhoneNumber } from 'libphonenumber-js';
 
 import CustomButton from '../../components/CustomButton/CustomButton';
 import { BASE_URL, getProxyUrl } from '../../services/common';
@@ -20,7 +17,7 @@ import { ApiEndpoint, StatusCode } from '../../types/enum';
 import { useStyles } from './Settings.style'
 import { ScrollView } from 'react-native-gesture-handler';
 import { universalPostRequestWithData, universalGetRequestWithParams } from '../../services/RequestHandler';
-import { validateAge, validatePhone } from '../../services/validators';
+import { validateAge } from '../../services/validators';
 import Error from '../../components/error';
 
 const ChangePersonalInfo = ({ theme, navigation }) => {
@@ -29,23 +26,11 @@ const ChangePersonalInfo = ({ theme, navigation }) => {
 
   // variables of components
   const [pageUserProfile, setPageUserProfile] = useState({} as UserProfileInterface)
-
   const [progress, setProgress] = useState(true);
-  const [showDatePicker, setShowDatePicker] = useState(false);
   const [error, setError] = useState('');
+  // const [showDatePicker, setShowDatePicker] = useState(false);
 
   const listOfCountry = useMemo(() => countryList().getLabels(), []);
-
-  // validation phone number
-  const [isValidMobilePhone, setIsValidMobilePhone] = useState(true)
-  const [isValidHomePhone, setIsValidHomePhone] = useState(true)
-  const [isValidWorkPhone, setIsValidWorkPhone] = useState(true)
-
-  const [mobilePhoneNumber, setMobilePhoneNumber] = useState('')
-
-  const mobilePhoneInput = useRef<PhoneInput>(null);
-  const homePhoneInput = useRef<PhoneInput>(null);
-  const workPhoneInput = useRef<PhoneInput>(null);
 
   useEffect(() => {
     const getUserProfile = async () => {
@@ -56,9 +41,19 @@ const ChangePersonalInfo = ({ theme, navigation }) => {
       if (response.status === StatusCode.OKAY) {
           const userProfile = response.data.data
           setPageUserProfile(userProfile)
-
-          setMobilePhoneNumber(getNationalNumberFromPhoneNumber(userProfile.phone_number))
+      } else {
+        // Toast.show({
+        //   title: 'Change personal info',
+        //   text: response.data.message,
+        //   color: theme.colors.notification,
+        //   timeColor: theme.colors.primary,
+        //   timing: 3000,
+        //   icon: <MaterialCommunityIcons name='check' color={theme.colors.background} size={30}/>,
+        //   position: 'top',
+        // })
       }
+
+      // 'll add toast code here
 
       setProgress(false)
     }
@@ -66,45 +61,32 @@ const ChangePersonalInfo = ({ theme, navigation }) => {
     getUserProfile()
   }, [])
 
-  const validateForm = () => {
-    return (
-        pageUserProfile.first_name &&
-        pageUserProfile.last_name &&
-        pageUserProfile.address_1 &&
-        pageUserProfile.country &&
-        pageUserProfile.state &&
-        pageUserProfile.city &&
-        pageUserProfile.zip_code &&
-        validatePhone(pageUserProfile.phone_number) &&
-        (validateAge(pageUserProfile.birthdate) > 18)
-    )
+  const isValidPhone = () => {
+    const isValid = pageUserProfile.phone_number && !isValidPhoneNumber(pageUserProfile.phone_number)
+    if (typeof(isValid) === 'boolean')
+      return isValid
+  }
+  const isValidHomePhone = () => {
+    const isValid = pageUserProfile.home_phone && !isValidPhoneNumber(pageUserProfile.home_phone)
+    if (typeof(isValid) === 'boolean')
+      return isValid
+  }
+  const isValidWorkPhone = () => {
+    const isValid = pageUserProfile.work_phone && !isValidPhoneNumber(pageUserProfile.work_phone)
+    if (typeof(isValid) === 'boolean')
+      return isValid
   }
 
-  const getCountryFromPhoneNumber = (phoneNumber) => {
-    if (!phoneNumber)
-      return 'US'
-    
-    const asYouType = new AsYouType()
-    asYouType.input(phoneNumber)
-    const result = asYouType.getNumber()
-    if (result)
-      return result.country
-    else
-      return 'US'
-  }
-  
-  const getNationalNumberFromPhoneNumber = (phoneNumber) => {
-    if (!phoneNumber)
-      return ''
-    
-    const asYouType = new AsYouType()
-    asYouType.input(phoneNumber)
-    const result = asYouType.getNumber()
-    if (result)
-      return result.nationalNumber
-    else
-      return ''
-  }
+  const validateForm = () => (
+    pageUserProfile.first_name &&
+    pageUserProfile.last_name &&
+    pageUserProfile.address_1 &&
+    pageUserProfile.country &&
+    pageUserProfile.state &&
+    pageUserProfile.city &&
+    pageUserProfile.zip_code &&
+    (!isValidPhone()) ? '' : 'disabled'
+  )
 
   const handleSubmit = async () => {
     if (progress === true) {
@@ -114,18 +96,17 @@ const ChangePersonalInfo = ({ theme, navigation }) => {
 
     const url = `${BASE_URL}/${ApiEndpoint.UPDATE_USER_PROFILE}`
     const payload = pageUserProfile
-
     const response: any = await universalPostRequestWithData(url, payload);
 
     if (response && response.status === StatusCode.OKAY) {
       Toast.show({
         title: 'Change personal info',
         text: response.data.message,
-        color: theme.colors.notification,
+        color: theme.colors.error,
         timeColor: theme.colors.primary,
         timing: 3000,
         icon: <MaterialCommunityIcons name='check' color={theme.colors.background} size={30}/>,
-        position: 'top',
+        position: 'bottom',
       })
     } else {
       setError(response.data.message);
@@ -143,328 +124,289 @@ const ChangePersonalInfo = ({ theme, navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Spinner
-        visible={progress}
-        textContent={'Loading...'}
-        textStyle={{
-          color: '#FFF',
-        }}
-      />
-      <ScrollView style={{ width: '100%', paddingHorizontal: 15 }}>
-        <View style={{ width: '100%' }}>
-          <TextInput
-            style={styles.input}
-            label="First name"
-            value={pageUserProfile.first_name}
-            onChangeText={(value) =>
-              setPageUserProfile({
-                ...pageUserProfile,
-                first_name: value,
-              })
-            }
-          // autoFocus
-          />
-        </View>
-        <View style={{ width: '100%' }}>
-          <TextInput
-            style={styles.input}
-            label="Middle name"
-            value={pageUserProfile.middle_name}
-            onChangeText={(value) =>
-              setPageUserProfile({
-                ...pageUserProfile,
-                middle_name: value,
-              })
-            }
-          />
-        </View>
-        <View style={{ width: '100%' }}>
-          <TextInput
-            style={styles.input}
-            label="Last name"
-            value={pageUserProfile.last_name}
-            onChangeText={(value) =>
-              setPageUserProfile({
-                ...pageUserProfile,
-                last_name: value,
-              })
-            }
-          />
-        </View>
-        <View style={{ width: '100%' }}>
-          <TextInput
-            style={[styles.input, styles.bottomLine]}
-            label="Email"
-            value={pageUserProfile.email}
-            disabled={true}
-          />
-        </View>
-        <View style={[styles.genderWrapper]}>
-          <Text style={{ color: 'gray' }}>Select Gender</Text>
-          <View style={styles.radioWrapper}>
-            <TouchableOpacity style={styles.radioOption} onPress={() => setGender('Male')}>
-              <RadioButton
-                value="Male"
-                color='black'
-                status={pageUserProfile.gender === 'Male' ? 'checked' : 'unchecked'}
-                onPress={() => setGender('Male')}
-              />
-              <Text>Male</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.radioOption} onPress={() => setGender('Female')}>
-              <RadioButton
-                value="Female"
-                color='black'
-                status={pageUserProfile.gender === 'Female' ? 'checked' : 'unchecked'}
-                onPress={() => setGender('Female')}
-              />
-              <Text>Female</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.radioOption} onPress={() => setGender('Unknown')}>
-              <RadioButton
-                value="Unknown"
-                color='black'
-                status={pageUserProfile.gender === 'Unknown' ? 'checked' : 'unchecked'}
-                onPress={() => setGender('Unknown')}
-              />
-              <Text>Unknown</Text>
-            </TouchableOpacity>
+      {
+        progress?(
+          <Spinner
+          visible={progress}
+          textContent={'Loading...'}
+          textStyle={{
+            color: '#FFF',
+          }}
+        />
+        ):(
+        <ScrollView style={{ width: '100%', paddingHorizontal: 15 }}>
+          <View style={{ width: '100%' }}>
+            <TextInput
+              style={styles.input}
+              label="First name *"
+              value={pageUserProfile.first_name}
+              onChangeText={(value) =>
+                setPageUserProfile({
+                  ...pageUserProfile,
+                  first_name: value,
+                })
+              }
+            autoFocus
+            />
+            {!pageUserProfile.first_name && <Text style={{ color: 'red' }}>First name is required</Text>}
           </View>
-        </View>
-        <View style={{ width: '100%' }}>
-          <TextInput
-            style={styles.input}
-            label="Occupation"
-            value={pageUserProfile.occupation}
-            onChangeText={(value) =>
-              setPageUserProfile({
-                ...pageUserProfile,
-                occupation: value,
-              })
-            }
-          />
-        </View>
-        <View style={{ width: '100%' }}>
-          <TextInput
-            style={styles.input}
-            label="Address 1"
-            value={pageUserProfile.address_1}
-            onChangeText={(value) =>
-              setPageUserProfile({
-                ...pageUserProfile,
-                address_1: value,
-              })
-            }
-          />
-        </View>
-        <View style={{ width: '100%' }}>
-          <TextInput
-            style={styles.input}
-            label="Address 2"
-            value={pageUserProfile.address_2}
-            onChangeText={(value) =>
-              setPageUserProfile({
-                ...pageUserProfile,
-                address_2: value,
-              })
-            }
-          />
-        </View>
-        <View style={{ width: '100%' }}>
-          <TextInput
-            style={styles.input}
-            label="City"
-            value={pageUserProfile.city}
-            onChangeText={(value) =>
-              setPageUserProfile({
-                ...pageUserProfile,
-                city: value,
-              })
-            }
-          />
-        </View>
-        <View style={{ width: '100%' }}>
-          <TextInput
-            style={styles.input}
-            label="State/County"
-            value={pageUserProfile.state}
-            onChangeText={(value) =>
-              setPageUserProfile({
-                ...pageUserProfile,
-                state: value,
-              })
-            }
-          />
-        </View>
-        <View style={{ width: '100%' }}>
-          <TextInput
-            style={styles.input}
-            label="Postal code/Zipcode"
-            value={pageUserProfile.zip_code}
-            onChangeText={(value) =>
-              setPageUserProfile({
-                ...pageUserProfile,
-                zip_code: value,
-              })
-            }
-          />
-        </View>
-        <View style={{ width: '100%' }}>
-          <SelectDropdown
-            data={listOfCountry}
-            onSelect={(selectedItem, index) => {
-              setPageUserProfile({
-                ...pageUserProfile,
-                country: selectedItem,
-              })
-            }}
-            buttonStyle={styles.countryDropdownBtnStyle}
-            renderCustomizedButtonChild={(selectedItem, index) => {
-              return (
-                <View style={styles.countryDropdownBtnChildStyle}>
-                  <Text style={styles.countryDropdownBtnTxt}>{selectedItem ? selectedItem : 'Country'}</Text>
-                  <FontAwesomeIcons name="chevron-down" color={theme.colors.text} size={14} />
-                </View>
-              )
-            }}
-            defaultValue={pageUserProfile.country}
-            dropdownOverlayColor="transparent"
-            dropdownStyle={styles.countryDropdownDropdownStyle}
-            rowStyle={styles.countryDropdownRowStyle}
-            renderCustomizedRowChild={(item, index) => {
-              return (
-                <View style={styles.countryDropdownRowChildStyle}>
-                  <CountryFlag isoCode={countryList().getValue(item)} size={25} />
-                  <Text style={styles.countryDropdownRowTxt}>{item}</Text>
-                </View>
-              );
-            }}
-          />
-        </View>
-        <View style={{ width: '100%', marginTop: 20 }}>
-          
-          <Text>Mobile phone number</Text>
-          
-          <PhoneInput
-            ref={mobilePhoneInput}
-            defaultCode={getCountryFromPhoneNumber(pageUserProfile.phone_number)}
-            value={mobilePhoneNumber}
-            onChangeFormattedText={(value) => {
-              if (mobilePhoneInput.current?.isValidNumber(value)) {
+          <View style={{ width: '100%' }}>
+            <TextInput
+              style={styles.input}
+              label="Middle name"
+              value={pageUserProfile.middle_name}
+              onChangeText={(value) =>
+                setPageUserProfile({
+                  ...pageUserProfile,
+                  middle_name: value,
+                })
+              }
+            />
+          </View>
+          <View style={{ width: '100%' }}>
+            <TextInput
+              style={styles.input}
+              label="Last name *"
+              value={pageUserProfile.last_name}
+              onChangeText={(value) =>
+                setPageUserProfile({
+                  ...pageUserProfile,
+                  last_name: value,
+                })
+              }
+            />
+            {!pageUserProfile.last_name && <Text style={{ color: 'red' }}>Last name is required</Text>}
+          </View>
+          <View style={{ width: '100%' }}>
+            <TextInput
+              style={[styles.input, styles.bottomLine]}
+              label="Email"
+              value={pageUserProfile.email}
+              disabled={true}
+            />
+          </View>
+          <View style={[styles.genderWrapper]}>
+            <Text style={{ color: 'gray' }}>Select Gender</Text>
+            <View style={styles.radioWrapper}>
+              <TouchableOpacity style={styles.radioOption} onPress={() => setGender('Male')}>
+                <RadioButton
+                  value="Male"
+                  color='black'
+                  status={pageUserProfile.gender === 'Male' ? 'checked' : 'unchecked'}
+                  onPress={() => setGender('Male')}
+                />
+                <Text>Male</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.radioOption} onPress={() => setGender('Female')}>
+                <RadioButton
+                  value="Female"
+                  color='black'
+                  status={pageUserProfile.gender === 'Female' ? 'checked' : 'unchecked'}
+                  onPress={() => setGender('Female')}
+                />
+                <Text>Female</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.radioOption} onPress={() => setGender('Unknown')}>
+                <RadioButton
+                  value="Unknown"
+                  color='black'
+                  status={pageUserProfile.gender === 'Unknown' ? 'checked' : 'unchecked'}
+                  onPress={() => setGender('Unknown')}
+                />
+                <Text>Unknown</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View style={{ width: '100%' }}>
+            <TextInput
+              style={styles.input}
+              label="Occupation"
+              value={pageUserProfile.occupation}
+              onChangeText={(value) =>
+                setPageUserProfile({
+                  ...pageUserProfile,
+                  occupation: value,
+                })
+              }
+            />
+          </View>
+          <View style={{ width: '100%' }}>
+            <TextInput
+              style={styles.input}
+              label="Address 1 *"
+              value={pageUserProfile.address_1}
+              onChangeText={(value) =>
+                setPageUserProfile({
+                  ...pageUserProfile,
+                  address_1: value,
+                })
+              }
+            />
+            {!pageUserProfile.address_1 && <Text style={{ color: 'red' }}>Address 1 is required</Text>}
+          </View>
+          <View style={{ width: '100%' }}>
+            <TextInput
+              style={styles.input}
+              label="Address 2"
+              value={pageUserProfile.address_2}
+              onChangeText={(value) =>
+                setPageUserProfile({
+                  ...pageUserProfile,
+                  address_2: value,
+                })
+              }
+            />
+          </View>
+          <View style={{ width: '100%' }}>
+            <TextInput
+              style={styles.input}
+              label="City *"
+              value={pageUserProfile.city}
+              onChangeText={(value) =>
+                setPageUserProfile({
+                  ...pageUserProfile,
+                  city: value,
+                })
+              }
+            />
+            {!pageUserProfile.city && <Text style={{ color: 'red' }}>City is required</Text>}
+          </View>
+          <View style={{ width: '100%' }}>
+            <TextInput
+              style={styles.input}
+              label="State/County *"
+              value={pageUserProfile.state}
+              onChangeText={(value) =>
+                setPageUserProfile({
+                  ...pageUserProfile,
+                  state: value,
+                })
+              }
+            />
+            {!pageUserProfile.country && <Text style={{ color: 'red' }}>State/Country is required</Text>}
+          </View>
+          <View style={{ width: '100%' }}>
+            <TextInput
+              style={styles.input}
+              label="Postal code/Zipcode *"
+              value={pageUserProfile.zip_code}
+              onChangeText={(value) =>
+                setPageUserProfile({
+                  ...pageUserProfile,
+                  zip_code: value,
+                })
+              }
+            />
+            {!pageUserProfile.zip_code && <Text style={{ color: 'red' }}>Postal code/Zipcode is required</Text>}
+          </View>
+          <View style={{ width: '100%' }}>
+            <SelectDropdown
+              data={listOfCountry}
+              onSelect={(selectedItem, index) => {
+                setPageUserProfile({
+                  ...pageUserProfile,
+                  country: selectedItem,
+                })
+              }}
+              buttonStyle={styles.countryDropdownBtnStyle}
+              renderCustomizedButtonChild={(selectedItem, index) => {
+                return (
+                  <View style={styles.countryDropdownBtnChildStyle}>
+                    <Text style={styles.countryDropdownBtnTxt}>{selectedItem ? selectedItem : 'Country'}</Text>
+                    <FontAwesomeIcons name="chevron-down" color={theme.colors.text} size={14} />
+                  </View>
+                )
+              }}
+              defaultValue={pageUserProfile.country}
+              dropdownOverlayColor="transparent"
+              dropdownStyle={styles.countryDropdownDropdownStyle}
+              rowStyle={styles.countryDropdownRowStyle}
+              renderCustomizedRowChild={(item, index) => {
+                return (
+                  <View style={styles.countryDropdownRowChildStyle}>
+                    <CountryFlag isoCode={countryList().getValue(item)} size={25} />
+                    <Text style={styles.countryDropdownRowTxt}>{item}</Text>
+                  </View>
+                );
+              }}
+            />
+          </View>
+          <View style={{ width: '100%', marginTop: 20 }}>
+            <TextInput
+              style={styles.input}
+              label="Mobile phone number *"
+              value={pageUserProfile.phone_number ? pageUserProfile.phone_number : "+1"}
+              onChangeText={(value) =>
+                value?
                 setPageUserProfile({
                   ...pageUserProfile,
                   phone_number: value,
+                }):
+                setPageUserProfile({
+                  ...pageUserProfile,
+                  phone_number: "+",
                 })
-                setIsValidMobilePhone(true)
-              } else {
-                setIsValidMobilePhone(false)
               }
-            }}
-            containerStyle={{ width: '100%', backgroundColor: 'transaprent' }}
-            textContainerStyle={{ backgroundColor: 'transaprent' }}
-            withDarkTheme
-            withShadow
-          />
-         
-          {!isValidMobilePhone && <Text style={{ color: 'red' }}>Invalid phone number</Text>}
-        
-        </View>
-        
-        <View style={{ width: '100%', marginTop: 20 }}>
-          
-          <Text>Home phone number</Text>
-          
-          <PhoneInput
-            ref={homePhoneInput}
-            defaultCode={getCountryFromPhoneNumber(pageUserProfile.home_phone)}
-            defaultValue={getNationalNumberFromPhoneNumber(pageUserProfile.home_phone)}
-            onChangeFormattedText={(value) => {
-              if (homePhoneInput.current?.isValidNumber(value)) {
+              disabled
+            />
+            {isValidPhone() && <Text style={{ color: 'red' }}>Invalid phone number</Text>}
+          </View>
+          <View style={{ width: '100%', marginTop: 20 }}>
+            <TextInput
+              style={styles.input}
+              label="Home phone number"
+              value={pageUserProfile.home_phone?pageUserProfile.home_phone:"+1"}
+              onChangeText={(value) =>
+                value?
                 setPageUserProfile({
                   ...pageUserProfile,
                   home_phone: value,
+                }):
+                setPageUserProfile({
+                  ...pageUserProfile,
+                  home_phone: "+",
                 })
-                setIsValidHomePhone(true)
-              } else {
-                setIsValidHomePhone(false)
               }
-            }}
-            containerStyle={{ width: '100%', backgroundColor: 'transaprent' }}
-            textContainerStyle={{ backgroundColor: 'transaprent' }}
-            withDarkTheme
-            withShadow
-          />
-
-          {!isValidHomePhone && <Text style={{ color: 'red' }}>Invalid phone number</Text>}
-        
-        </View>
-
-        <View style={{ width: '100%', marginTop: 20 }}>
-          
-          <Text>Work phone number</Text>
-          
-          <PhoneInput
-            ref={workPhoneInput}
-            defaultCode={getCountryFromPhoneNumber(pageUserProfile.home_phone)}
-            defaultValue={getNationalNumberFromPhoneNumber(pageUserProfile.home_phone)}
-            onChangeFormattedText={(value) => {
-              if (workPhoneInput.current?.isValidNumber(value)) {
+            />
+            {isValidHomePhone() && <Text style={{ color: 'red' }}>Invalid Home phone number</Text>}
+          </View>
+          <View style={{ width: '100%', marginTop: 20 }}>
+            <TextInput
+              style={styles.input}
+              label="Work phone number"
+              value={pageUserProfile.work_phone?pageUserProfile.work_phone:"+1"}
+              onChangeText={(value) =>
+                value?
                 setPageUserProfile({
                   ...pageUserProfile,
                   work_phone: value,
+                }):
+                setPageUserProfile({
+                  ...pageUserProfile,
+                  work_phone: "+",
                 })
-                setIsValidWorkPhone(true)
-              } else {
-                setIsValidWorkPhone(false)
               }
-            }}
-            containerStyle={{ width: '100%', backgroundColor: 'transaprent' }}
-            textContainerStyle={{ backgroundColor: 'transaprent' }}
-            withDarkTheme
-            withShadow
-          />
+            />
+            {isValidWorkPhone() && <Text style={{ color: 'red' }}>Invalid Work phone number</Text>}
+          </View>
+
+          <View style={{ width: '100%' }}>
+            <TextInput
+              style={[styles.input]}
+              label="DOB"
+              value={pageUserProfile.birthdate}
+              disabled={true}
+            />
+          </View>
           
-          {!isValidWorkPhone && <Text style={{ color: 'red' }}>Invalid phone number</Text>}
+          <Error error={error} />
+          <View style={{width: '100%', marginTop: 30}}>
+            <CustomButton theme={theme} name="Save" onClick={handleSubmit} state={validateForm()} />
+          </View>
+        </ScrollView>
+      )
+    }
 
-        </View>
-
-        <View style={{ width: '100%' }}>
-          {/* <Text>Date of birth</Text>
-          <TouchableOpacity 
-            onPress={() => setShowDatePicker(true)} 
-            style={{alignItems: 'center', justifyContent: 'center', marginTop: 10}}
-          >
-            <Text style={{fontSize: 20, letterSpacing: 5}}>
-              {pageUserProfile.birthdate}
-            </Text>
-          </TouchableOpacity>
-          <DatePicker
-            modal open={showDatePicker}
-            onConfirm={(date) => {
-              setShowDatePicker(false)
-              setPageUserProfile({
-                ...pageUserProfile,
-                birthdate: date.toLocaleDateString("en-US"),
-              })
-            }}
-            onCancel={() => { setShowDatePicker(false) }}
-            mode="date"
-            // date={new Date(pageUserProfile.birthdate)}
-            date={new Date("09/21/1992")}
-          /> */}
-          <TextInput
-            style={[styles.input]}
-            label="DOB"
-            value={pageUserProfile.birthdate}
-            disabled={true}
-          />
-        </View>
-        
-        <Error error={error} />
-        <View style={{width: '100%', marginTop: 30}}>
-          <CustomButton theme={theme} name="Save" onClick={handleSubmit} state={validateForm()} />
-        </View>
-      </ScrollView>
     </SafeAreaView>
   );
 }
