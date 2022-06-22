@@ -220,7 +220,8 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
             <TextInput
               autoCapitalize="none"
               style={styles.input}
-              label="Bank name"
+              label="Bank name *"
+              placeholder="Recipient bank name"
               value={bankName}
               onChangeText={text => setBankName(text)}
             />
@@ -229,7 +230,8 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
             <TextInput
               autoCapitalize="none"
               style={styles.input}
-              label="Account holder's name"
+              label="Account holder's name *"
+              placeholder="Recipient account name"
               value={accountHolderName}
               onChangeText={text => setAccountHolderName(text)}
             />
@@ -239,7 +241,8 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
               autoCapitalize="none"
               style={styles.input}
               keyboardType='numeric'
-              label="Sort Code"
+              placeholder="Recipient account sort code"
+              label="Sort Code *"
               value={sortCode}
               onChangeText={text => setSortCode(text)}
             />
@@ -248,7 +251,8 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
             <TextInput
               autoCapitalize="none"
               style={styles.input}
-              label="Account number"
+              label="Account number *"
+              placeholder="Recipient account number"
               value={accountNumber}
               onChangeText={text => setAccountNumber(text)}
             />
@@ -314,6 +318,7 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
               autoCapitalize="none"
               style={styles.input}
               label="Add description *"
+              placeholder="Short payment reference"
               value={paymentReference}
               onChangeText={text => setPaymentReference(text)}
             />
@@ -466,6 +471,7 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
               keyboardType='numeric'
               style={styles.input}
               label={"You send " + `${currency && getSymbolFromCurrency(currency)}`}
+              placeholder="Amount to transfer"
               value={amount}
               onChangeText={text => setAmount(text)}
             />

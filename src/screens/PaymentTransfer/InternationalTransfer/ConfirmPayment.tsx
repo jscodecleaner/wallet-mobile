@@ -22,7 +22,7 @@ const ConfirmPayment = ({theme, navigation, route}) => {
 
   const onConfirm = async () => {
     setProgress(true)
-    const url = `${BASE_URL}/${ApiEndpoint.CREATE_TRANSACTION_TO_UK_DOMESTIC}`
+    const url = `${BASE_URL}/${ApiEndpoint.CREATE_TRANSACTION_MCCY}`
     const data = { ...transactionDetails, 'white-label': getProxyUrl() }
 
     const response = await universalPostRequestWithData(url, data)

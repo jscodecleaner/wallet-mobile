@@ -370,6 +370,7 @@ const EuroTransferScreen = ({theme, navigation, route}) => {
                 autoCapitalize="none"
                 style={styles.input}
                 label="Add description *"
+                placeholder="Short payment reference"
                 value={paymentReference}
                 onChangeText={text => setPaymentReference(text)}
               />
@@ -390,6 +391,7 @@ const EuroTransferScreen = ({theme, navigation, route}) => {
                   style={styles.input}
                   keyboardType='numeric'
                   label={"You send " + `${currency && getSymbolFromCurrency(currency)}`}
+                  placeholder="Amount to transfer"
                   value={amount}
                   onChangeText={text => {
                     setAmount(text)

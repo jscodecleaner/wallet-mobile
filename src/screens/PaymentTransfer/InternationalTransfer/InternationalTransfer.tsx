@@ -18,6 +18,7 @@ import { transferTypeList } from '../../../services/common';
 import CustomButton from '../../../components/CustomButton/CustomButton';
 import { getAccountFromAccountID, getPaymentMethodList, getTransactionFee, getAvailableBalance, stringToFloat, floatToString } from '../../../services/utility';
 import { validateName } from '../../../services/validators';
+import useProviderBankCodeTypeList from '../../../services/hooks';
 
 const pAndTType = 'international-transfer';
 
@@ -26,6 +27,7 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
 
   const styles = useStyles(theme);
   const dispatch = useDispatch();
+  const providerBankCodeTypeList = useProviderBankCodeTypeList();
 
   const [fundsavailable, setFundsAvailable] = useState(false);
   const [progress, setProgress] = useState(false);
@@ -37,7 +39,7 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
   const [paymentMethodList, setPaymentMethodList] = useState([] as string[])
   const [currency, setCurrency] = useState('');
   const [accountNumber, setAccountNumber] = useState('');
-  const [sortCode, setSortCode] = useState('');
+  // const [sortCode, setSortCode] = useState('');
   const [type, setType] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('');
   const [paymentReference, setPaymentReference] = useState('');
@@ -102,7 +104,7 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
         paymentMethod, 
         currencyName: currency, 
         pAndTType, 
-        sortCode: parseInt(sortCode)
+        // sortCode: parseInt(sortCode)
       }
     )
 
@@ -148,6 +150,7 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
   const validateInput = () => {
     if (currency.length > 0 && 
       fromAccountName.length > 0 && 
+      accountNumber.length > 0 &&
       paymentReference.length > 0 &&
       notes.length > 0 && validateName(notes) &&
       amount.length > 0 && amountCheck() == true
@@ -162,37 +165,57 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
 
     const transactionDetails = {
       accountId: fromAccount,
-      currentProfile: loginData.current_profile,
-      fromAccountName: fromAcc.accountName,
-      fromAccountNo: fromAcc.accountNumber,
-      fromAccountHolderName: fromAcc.accountHolderName,
-      fromCurrency: currency,
       fromAccountIban: fromAcc.iBan,
       providerName: fromAcc.providerName,
-      toAccountHolderName: recipientName,
-      toAccountNo: accountNumber,
-      toCurrency: currency,
-      toSortCode: sortCode,
-      amount: stringToFloat(amount),
-      feeAmount: stringToFloat(fee),
+      fromAccountName: fromAcc.accountName,
+      fromAccountNo: fromAcc.accountNumber,
+      feeDepositOwnerName: fromAcc.feeDepositOwnerName,
+      feeDepositAccountId: fromAcc.feeDepositeAccountId,
+      feeDepositAccountIBan: fromAcc.feeDepositAccountIBan,
+      fromAccountHolderName: fromAcc.accountHolderName,
+
+      notes,
+      transType: type,
       paymentMethod,
       paymentReference,
-      notes,
-      feeDepositAccountId: fromAcc.feeDepositeAccountId,
-      feeDepositOwnerName: fromAcc.feeDepositOwnerName,
-      feeDepositAccountIBan: fromAcc.feeDepositAccountIBan,
       preApprovalAmount,
       preApprovalTxnCount,
+      toIBAN: accountNumber,
+      toCurrency: currency,
+      fromCurrency: currency,
+      currentProfile: loginData.current_profile,
+      // toSortCode: sortCode,
+      pAndTType,
+      amount: stringToFloat(amount),
+      feeAmount: stringToFloat(fee),
+
+      toAccountHolderName: recipientName,
       beneficiaryAddr1: recipientAddress1,
       beneficiaryAddr2: recipientAddress2,
       beneficiaryPostCode: recipientPostcode,
+      beneficiaryCity: recipientCity,
+      beneficiaryState: recipientState,
       beneficiaryCountry: recipientCountry,
+      
       beneficiaryBankAddr1: bankAddress1,
       beneficiaryBankAddr2: bankAddress2,
       beneficiaryBankCountry: bankCountry,
-      bankName,
-      type,
-      pAndTType,
+      // beneficiaryBankCity: bankDetails.city,
+      // beneficiaryBankState: bankDetails.state,
+      beneficiaryBankPostCode: bankPostcode,
+      beneficiaryBankBankName: bankName,
+      // beneficiaryBankBankCode: bankDetails.bankCode,
+      // beneficiaryBankSwiftBic: bankDetails.swiftBic,
+
+      interBankDetailsAddr1: intermediaryAddress1,
+      interBankDetailsAddr2: intermediaryAddress2,
+      interBankDetailsCountry: intermediaryCountry,
+      // interBankDetailsCity: interBankDetails.city,
+      // interBankDetailsState: interBankDetails.state,
+      interBankDetailsPostCode: intermediaryCountry,
+      interBankDetailsBankName: intermediaryName,
+      // interBankDetailsBankCode: interBankDetails.bankCode,
+      // interBankDetailsSwiftBic: interBankDetails.swiftBic,
     }
     navigation.navigate('InternationalTransferConfirm', {transactionDetails: transactionDetails});
   }
@@ -230,7 +253,8 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
             <TextInput
                 autoCapitalize="none"
                 style={styles.input}
-                label="Account number/IBAN"
+                label="Account number/IBAN *"
+                placeholder="Recipient account number"
                 value={accountNumber}
                 onChangeText={text => setAccountNumber(text)}
               />
@@ -263,7 +287,7 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
               }}
             />
           </View>
-          <View>
+          {/* <View>
             <TextInput
                 autoCapitalize="none"
                 style={styles.input}
@@ -271,7 +295,7 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
                 value={sortCode}
                 onChangeText={text => setSortCode(text)}
               />
-          </View>
+          </View> */}
           <View>
             <SelectDropdown
               data={paymentMethodList}
@@ -305,6 +329,7 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
                 autoCapitalize="none"
                 style={styles.input}
                 label="Add description *"
+                placeholder="Short payment reference"
                 value={paymentReference}
                 onChangeText={text => setPaymentReference(text)}
               />
@@ -619,6 +644,7 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
                 keyboardType="numeric"
                 style={styles.input}
                 label={"You send " + `${currency && getSymbolFromCurrency(currency)}`}
+                placeholder="Amount to transfer"
                 value={amount}
                 onChangeText={text => setAmount(text)}
               />

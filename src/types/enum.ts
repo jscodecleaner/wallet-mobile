@@ -103,6 +103,7 @@ export enum ApiEndpoint {
     BULK_TRANSACTION_REJECT = 'bulk-transaction-reject',
     CREATE_TRANSACTION_TO_ANOTHER_CLIENT = 'create-transaction-to-another-client',
     CREATE_TRANSACTION_TO_UK_DOMESTIC = 'create-transaction-in-uk',
+    CREATE_TRANSACTION_MCCY = 'create-transaction-mccy',
     GET_ENTITY_LEVEL_NOTIFICATIONS = 'get-entity-level-notifications',
     GET_FEE_ACCOUNT_LIST = 'get-fee-account-list',
     GET_STATEMENT_FROMDATE_TODATE = 'get-statement-fromdate-todate',
