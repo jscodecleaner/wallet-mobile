@@ -57,7 +57,7 @@ const ToMyOtherAccountScreen = ({theme, navigation, route}) => {
   
       const toAccountList = accountList
         .filter((account) => account.accountId !== selectedItem.accountId)
-        .filter((account) => account.currencyData.currencyName === selectedItem.currencyData.currencyName);
+        .filter((account) => account.currencyData.currencyName === selectedItem.currencyData.currencyName && account.providerName === selectedItem.providerName );
       setToAccountList(toAccountList);
     }
 
