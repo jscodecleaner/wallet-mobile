@@ -182,7 +182,7 @@ const ToMyOtherAccountScreen = ({theme, navigation, route}) => {
             <TextInput
               autoCapitalize="none"
               style={styles.input}
-              label="From Account"
+              label="From Account *"
               value={fromAccountName}
               disabled={true}
             />
@@ -191,7 +191,7 @@ const ToMyOtherAccountScreen = ({theme, navigation, route}) => {
             <TextInput
               autoCapitalize="none"
               style={styles.input}
-              label="Currency"
+              label="Currency *"
               value={fromCurrency}
               disabled={true}
             />
@@ -228,7 +228,7 @@ const ToMyOtherAccountScreen = ({theme, navigation, route}) => {
             <TextInput
               autoCapitalize="none"
               style={styles.input}
-              label="Currency"
+              label="Currency *"
               value={toCurrency}
               disabled={true}
             />
@@ -243,7 +243,7 @@ const ToMyOtherAccountScreen = ({theme, navigation, route}) => {
               renderCustomizedButtonChild={(selectedItem, index) => {
                 return (
                   <View style={styles.dropdownBtnChildStyle}>
-                    <Text style={styles.dropdownBtnTxt}>{selectedItem ? selectedItem : 'Payment Method'}</Text>
+                    <Text style={styles.dropdownBtnTxt}>{selectedItem ? selectedItem : 'Payment Method *'}</Text>
                     <FontAwesomeIcons name="chevron-down" color={theme.colors.text} size={14} />
                   </View>
                 )
@@ -265,7 +265,7 @@ const ToMyOtherAccountScreen = ({theme, navigation, route}) => {
             <TextInput
                 autoCapitalize="none"
                 style={styles.input}
-                label="Add description"
+                label="Add description *"
                 value={paymentReference}
                 onChangeText={text => setPaymentReference(text)}
               />
@@ -274,7 +274,7 @@ const ToMyOtherAccountScreen = ({theme, navigation, route}) => {
             <TextInput
                 autoCapitalize="none"
                 style={styles.input}
-                label="Payment details"
+                label="Payment details *"
                 value={notes}
                 onChangeText={text => setNotes(text)}
                 maxLength={35}

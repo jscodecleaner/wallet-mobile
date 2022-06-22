@@ -33,3 +33,8 @@ export const validatePhone = (phone) => {
 
   return regex.test(phone)
 }
+
+export const validateBICCode = (code) => {
+  const regex = /^[a-zA-Z0-9](?:.{7}|.{10})$/
+  return regex.test(code)
+}

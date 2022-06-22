@@ -202,7 +202,7 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
             <TextInput
               autoCapitalize="none"
               style={styles.input}
-              label="From Account"
+              label="From Account *"
               value={fromAccountName}
               disabled={true}
             />
@@ -211,7 +211,7 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
             <TextInput
               autoCapitalize="none"
               style={styles.input}
-              label="Currency"
+              label="Currency *"
               value={currency}
               disabled={true}
             />
@@ -263,7 +263,7 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
               renderCustomizedButtonChild={(selectedItem, index) => {
                 return (
                   <View style={styles.dropdownBtnChildStyle}>
-                    <Text style={styles.dropdownBtnTxt}>{selectedItem ? selectedItem : 'Type'}</Text>
+                    <Text style={styles.dropdownBtnTxt}>{selectedItem ? selectedItem : 'Type *'}</Text>
                     <FontAwesomeIcons name="chevron-down" color={theme.colors.text} size={14} />
                   </View>
                 )
@@ -291,7 +291,7 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
               renderCustomizedButtonChild={(selectedItem, index) => {
                 return (
                   <View style={styles.dropdownBtnChildStyle}>
-                    <Text style={styles.dropdownBtnTxt}>{selectedItem ? selectedItem : 'Payment Method'}</Text>
+                    <Text style={styles.dropdownBtnTxt}>{selectedItem ? selectedItem : 'Payment Method *'}</Text>
                     <FontAwesomeIcons name="chevron-down" color={theme.colors.text} size={14} />
                   </View>
                 )
@@ -313,7 +313,7 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
             <TextInput
               autoCapitalize="none"
               style={styles.input}
-              label="Add description"
+              label="Add description *"
               value={paymentReference}
               onChangeText={text => setPaymentReference(text)}
             />
@@ -322,7 +322,7 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
             <TextInput
               autoCapitalize="none"
               style={styles.input}
-              label="Payment details"
+              label="Payment details *"
               value={notes}
               maxLength={35}
               onChangeText={text => setNotes(text)}

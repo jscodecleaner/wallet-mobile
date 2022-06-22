@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import { SafeAreaView, View, ScrollView } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
-import { Button, Text, TextInput, withTheme } from 'react-native-paper';
+import { Button, Text, TextInput, withTheme, HelperText } from 'react-native-paper';
 import FontAwesomeIcons from 'react-native-vector-icons/FontAwesome';
 import { Popup } from 'react-native-popup-confirm-toast';
 import countryList from 'react-select-country-list';
@@ -17,7 +17,7 @@ import { transferTypeList } from '../../../services/common';
 import CustomButton from '../../../components/CustomButton/CustomButton';
 import SelectDropdown from 'react-native-select-dropdown';
 import { getPaymentMethodList, getAccountFromAccountID, getAvailableBalance, getTransactionFee, floatToString, stringToFloat } from '../../../services/utility';
-import { validateName } from '../../../services/validators';
+import { validateName, validateBICCode } from '../../../services/validators';
 
 const pAndTType = 'euro-transfer';
 
@@ -81,7 +81,8 @@ const EuroTransferScreen = ({theme, navigation, route}) => {
       bicCode.length > 0 &&
       paymentReference.length > 0 &&
       notes.length > 0 && validateName(notes) &&
-      amount.length > 0 && amountCheck() == true
+      amount.length > 0 && amountCheck() == true &&
+      validateBICCode(bicCode)
     )
       return "normal";
     else
@@ -188,7 +189,7 @@ const EuroTransferScreen = ({theme, navigation, route}) => {
             <TextInput
               autoCapitalize="none"
               style={styles.input}
-              label="From Account"
+              label="From Account *"
               value={fromAccountName}
               disabled={true}
             />
@@ -197,7 +198,7 @@ const EuroTransferScreen = ({theme, navigation, route}) => {
             <TextInput
               autoCapitalize="none"
               style={styles.input}
-              label="Currency"
+              label="Currency *"
               value={currency}
               disabled={true}
             />
@@ -206,7 +207,7 @@ const EuroTransferScreen = ({theme, navigation, route}) => {
             <TextInput
                 autoCapitalize="none"
                 style={styles.input}
-                label="Account holder's name"
+                label="Account holder's name *"
                 value={accountHolderName}
                 onChangeText={text => setAccountHolderName(text)}
               />
@@ -215,19 +216,22 @@ const EuroTransferScreen = ({theme, navigation, route}) => {
             <TextInput
                 autoCapitalize="none"
                 style={styles.input}
-                label="IBAN Number"
+                label="IBAN Number *"
                 value={iBanNumber}
                 onChangeText={text => setIBanNumber(text)}
               />
           </View>
           <View>
             <TextInput
-                autoCapitalize="none"
-                style={styles.input}
-                label="BIC Code"
-                value={bicCode}
-                onChangeText={text => setBicCode(text)}
-              />
+              autoCapitalize="none"
+              style={styles.input}
+              label="BIC Code *"
+              value={bicCode}
+              onChangeText={text => setBicCode(text)}
+            />
+            {bicCode != '' && !validateBICCode(bicCode) && <HelperText type="error">
+              At least 8 or 11 character
+            </HelperText>}
           </View>
         </View>
         
@@ -315,7 +319,7 @@ const EuroTransferScreen = ({theme, navigation, route}) => {
               renderCustomizedButtonChild={(selectedItem, index) => {
                 return (
                   <View style={styles.dropdownBtnChildStyle}>
-                    <Text style={styles.dropdownBtnTxt}>{selectedItem ? selectedItem : 'Type'}</Text>
+                    <Text style={styles.dropdownBtnTxt}>{selectedItem ? selectedItem : 'Type *'}</Text>
                     <FontAwesomeIcons name="chevron-down" color={theme.colors.text} size={14} />
                   </View>
                 )
@@ -343,7 +347,7 @@ const EuroTransferScreen = ({theme, navigation, route}) => {
               renderCustomizedButtonChild={(selectedItem, index) => {
                 return (
                   <View style={styles.dropdownBtnChildStyle}>
-                    <Text style={styles.dropdownBtnTxt}>{selectedItem ? selectedItem : 'Payment Method'}</Text>
+                    <Text style={styles.dropdownBtnTxt}>{selectedItem ? selectedItem : 'Payment Method *'}</Text>
                     <FontAwesomeIcons name="chevron-down" color={theme.colors.text} size={14} />
                   </View>
                 )
@@ -365,7 +369,7 @@ const EuroTransferScreen = ({theme, navigation, route}) => {
             <TextInput
                 autoCapitalize="none"
                 style={styles.input}
-                label="Add description"
+                label="Add description *"
                 value={paymentReference}
                 onChangeText={text => setPaymentReference(text)}
               />
@@ -374,7 +378,7 @@ const EuroTransferScreen = ({theme, navigation, route}) => {
             <TextInput
                 autoCapitalize="none"
                 style={styles.input}
-                label="Payment details"
+                label="Payment details *"
                 value={notes}
                 onChangeText={text => setNotes(text)}
                 maxLength={35}
