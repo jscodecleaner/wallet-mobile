@@ -84,7 +84,9 @@ const ChangePhoneScreen = ({ theme, navigation }) => {
             />
             <View style={{width: '100%', paddingHorizontal: 15}}>
                 <View style={{ width: '100%', marginTop: 20 }}>
-                    <Text>Current Phone Number</Text>
+                    <Text style={{ marginBottom: 10}}>
+                        Current Phone Number
+                    </Text>
                     <PhoneInput
                         initialCountry={'us'}
                         initialValue={loginData.phone_number}
@@ -96,7 +98,9 @@ const ChangePhoneScreen = ({ theme, navigation }) => {
 
                 </View>
                 <View style={{ width: '100%', marginTop: 20 }}>
-                    <Text>New Phone Number</Text>
+                    <Text style={{ marginBottom: 10}}>
+                        New Phone Number
+                    </Text>
                     <PhoneInput
                         ref={newPhoneRef}
                         initialCountry={'us'}

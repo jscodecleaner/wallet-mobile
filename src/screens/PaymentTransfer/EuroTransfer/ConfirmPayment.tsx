@@ -10,7 +10,7 @@ import { useStyles } from '../PaymentTransfer.style';
 import { BASE_URL, getProxyUrl } from '../../../services/common';
 import { ApiEndpoint, StatusCode } from '../../../types/enum';
 import { universalPostRequestWithData } from '../../../services/RequestHandler';
-import { amountToBeDebited } from '../../../services/utility';
+import { amountToBeDebited, floatToString } from '../../../services/utility';
 
 const ConfirmPayment = ({theme, navigation, route}) => {
   const {loginData} = useSelector((state: any) => state.user);
@@ -82,19 +82,19 @@ const ConfirmPayment = ({theme, navigation, route}) => {
         </View>
         <View style={styles.row}>
           <Text style={styles.leftText}>Amount</Text>
-          <Text style={styles.rightText}>{transactionDetails.amount} {transactionDetails.fromCurrency}</Text>
+          <Text style={styles.rightText}>{floatToString(transactionDetails.amount)} {transactionDetails.fromCurrency}</Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.leftText}>Transfer fee</Text>
-          <Text style={styles.rightText}>{transactionDetails.feeAmount} {transactionDetails.fromCurrency}</Text>
+          <Text style={styles.rightText}>{floatToString(transactionDetails.feeAmount)} {transactionDetails.fromCurrency}</Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.leftText}>To be credited</Text>
-          <Text style={styles.rightText}>{transactionDetails.amount} {transactionDetails.fromCurrency}</Text>
+          <Text style={styles.rightText}>{floatToString(transactionDetails.amount)} {transactionDetails.fromCurrency}</Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.leftText}>To be debited</Text>
-          <Text style={styles.rightText}>{amountToBeDebited(transactionDetails.amount, transactionDetails.feeAmount)} {transactionDetails.fromCurrency}</Text>
+          <Text style={styles.rightText}>{floatToString(amountToBeDebited(transactionDetails.amount, transactionDetails.feeAmount))} {transactionDetails.fromCurrency}</Text>
         </View>
       </View>
       <View style={styles.actionsContainer}>
