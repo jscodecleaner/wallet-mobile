@@ -9,7 +9,7 @@ import { useIsFocused } from '@react-navigation/native';
 
 import styles from './WalletList.style';
 import { getIsoCodeFromCurrencyName } from '../../../services/common';
-import { handleFetchAccountList } from '../../../services/utility';
+import { floatToString, handleFetchAccountList } from '../../../services/utility';
 import { AccountDataInterface } from '../../../types/interface';
 import { setAccountList } from '../../../redux/slices/accounts';
 
@@ -72,9 +72,9 @@ const WalletListScreen = ({theme, navigation}) => {
                   <Text style={styles.fontBold}>Account available </Text>
                 </View>
                 <View>
-                  <Text>{getSymbolFromCurrency(walletAccount.currencyData.currencyName)}{walletAccount.currencyData.fundsAvailable}</Text>
-                  <Text>{getSymbolFromCurrency(walletAccount.currencyData.currencyName)}{walletAccount.currencyData.reservedBalance}</Text>
-                  <Text>{getSymbolFromCurrency(walletAccount.currencyData.currencyName)}{walletAccount.currencyData.accountBalance}</Text>
+                  <Text>{getSymbolFromCurrency(walletAccount.currencyData.currencyName)}{floatToString(walletAccount.currencyData.fundsAvailable)}</Text>
+                  <Text>{getSymbolFromCurrency(walletAccount.currencyData.currencyName)}{floatToString(walletAccount.currencyData.reservedBalance)}</Text>
+                  <Text>{getSymbolFromCurrency(walletAccount.currencyData.currencyName)}{floatToString(walletAccount.currencyData.accountBalance)}</Text>
                 </View>
               </View>
             </View>

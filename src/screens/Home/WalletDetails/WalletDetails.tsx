@@ -7,6 +7,7 @@ import getSymbolFromCurrency from 'currency-symbol-map';
 import styles from './WalletDetails.style';
 import { getIsoCodeFromCurrencyName } from '../../../services/common';
 import CustomButton from '../../../components/CustomButton/CustomButton';
+import { floatToString } from '../../../services/utility';
 
 const WalletDetailsScreen = ({theme, navigation, route}) => {
   const {walletDetails} = route.params;
@@ -69,9 +70,9 @@ const WalletDetailsScreen = ({theme, navigation, route}) => {
               <Text style={styles.fontBold}>Account available </Text>
             </View>
             <View>
-              <Text>{getSymbolFromCurrency(walletDetails.currencyData.currencyName)}{walletDetails.currencyData.fundsAvailable}</Text>
-              <Text>{getSymbolFromCurrency(walletDetails.currencyData.currencyName)}{walletDetails.currencyData.reservedBalance}</Text>
-              <Text>{getSymbolFromCurrency(walletDetails.currencyData.currencyName)}{walletDetails.currencyData.accountBalance}</Text>
+              <Text>{getSymbolFromCurrency(walletDetails.currencyData.currencyName)}{floatToString(walletDetails.currencyData.fundsAvailable)}</Text>
+              <Text>{getSymbolFromCurrency(walletDetails.currencyData.currencyName)}{floatToString(walletDetails.currencyData.reservedBalance)}</Text>
+              <Text>{getSymbolFromCurrency(walletDetails.currencyData.currencyName)}{floatToString(walletDetails.currencyData.accountBalance)}</Text>
             </View>
           </View>
         </View>
