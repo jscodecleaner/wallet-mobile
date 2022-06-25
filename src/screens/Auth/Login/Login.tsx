@@ -32,7 +32,7 @@ const LoginScreen = ({theme, navigation}) => {
       password,
       'white-label': getProxyUrl(),
     };
-
+    
     const response: any = await universalPostRequestWithData(url, data);
 
     if (response && response.status === StatusCode.OKAY) {
