@@ -88,14 +88,13 @@ const ChangePhoneScreen = ({ theme, navigation }) => {
                         Current Phone Number
                     </Text>
                     <PhoneInput
-                        initialCountry={'us'}
+                        initialCountry={'uk'}
                         initialValue={loginData.phone_number}
                         textProps={{
                             placeholder: 'Enter a phone number...'
                         }}
                         disabled
                     />
-
                 </View>
                 <View style={{ width: '100%', marginTop: 20 }}>
                     <Text style={{ marginBottom: 10}}>
@@ -103,7 +102,8 @@ const ChangePhoneScreen = ({ theme, navigation }) => {
                     </Text>
                     <PhoneInput
                         ref={newPhoneRef}
-                        initialCountry={'us'}
+                        initialCountry={'uk'}
+                        initialValue={'+44'}
                         onChangePhoneNumber={value => setNewPhoneNumber(value)}
                         textProps={{
                             placeholder: 'Enter a phone number...'

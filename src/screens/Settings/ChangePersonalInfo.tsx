@@ -61,11 +61,7 @@ const ChangePersonalInfo = ({ theme, navigation }) => {
     getUserProfile()
   }, [])
 
-  const isValidPhone = () => {
-    const isValid = pageUserProfile.phone_number && !isValidPhoneNumber(pageUserProfile.phone_number)
-    if (typeof(isValid) === 'boolean')
-      return isValid
-  }
+  
   const isValidHomePhone = () => {
     const isValid = pageUserProfile.home_phone && !isValidPhoneNumber(pageUserProfile.home_phone)
     if (typeof(isValid) === 'boolean')
@@ -84,8 +80,7 @@ const ChangePersonalInfo = ({ theme, navigation }) => {
     pageUserProfile.country &&
     pageUserProfile.state &&
     pageUserProfile.city &&
-    pageUserProfile.zip_code &&
-    (!isValidPhone()) ? '' : 'disabled'
+    pageUserProfile.zip_code ? '' : 'disabled'
   )
 
   const handleSubmit = async () => {
@@ -349,7 +344,6 @@ const ChangePersonalInfo = ({ theme, navigation }) => {
               }
               disabled
             />
-            {isValidPhone() && <Text style={{ color: 'red' }}>Invalid phone number</Text>}
           </View>
           <View style={{ width: '100%', marginTop: 20 }}>
             <TextInput

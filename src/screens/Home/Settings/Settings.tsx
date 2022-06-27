@@ -36,7 +36,7 @@ const SettingsScreen = ({theme, navigation}) => {
         />
         <CustomButton 
           theme={theme} 
-          name="Chnage password" 
+          name="Change password" 
           onClick={onChangePassword} 
         />
         <CustomButton 
@@ -46,7 +46,7 @@ const SettingsScreen = ({theme, navigation}) => {
         />
         <CustomButton 
           theme={theme} 
-          name="Chnage personal info" 
+          name="Change personal info" 
           onClick={onChangePersonalInfo}
         />
       </View>

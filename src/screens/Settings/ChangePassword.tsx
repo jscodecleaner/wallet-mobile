@@ -84,6 +84,7 @@ const ChangePasswordScreen = ({ theme, navigation }) => {
                 <View style={{ width: '100%' }}>
                     <TextInput
                         autoCapitalize="none"
+                        secureTextEntry
                         style={styles.input}
                         label="Current Password"
                         value={currentPassword}

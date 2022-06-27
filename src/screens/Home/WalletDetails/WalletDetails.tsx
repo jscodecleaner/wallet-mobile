@@ -48,7 +48,7 @@ const WalletDetailsScreen = ({theme, navigation, route}) => {
         <View style={{marginBottom: 30}}>
           <View style={{flexDirection: 'row'}}>
             <Text style={styles.fontBold}>Account name: </Text>
-            <Text>{walletDetails.currencyData.currencyName} card</Text>
+            <Text>{walletDetails.accountName}</Text>
           </View>
           <View style={{flexDirection: 'row'}}>
             <Text style={styles.fontBold}>IBAN: </Text>
