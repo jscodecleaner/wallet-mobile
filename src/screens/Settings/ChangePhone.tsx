@@ -9,7 +9,7 @@ import { Popup } from 'react-native-popup-confirm-toast';
 import AsyncStorage from '@react-native-community/async-storage';
 
 import Error from '../../components/error';
-import { Logout } from '../../redux/slices/userSlice';
+import { Logout, PhoneChanged } from '../../redux/slices/userSlice';
 import { useStyles } from './Settings.style';
 import { universalPutRequestWithData } from '../../services/RequestHandler';
 import { BASE_URL, getProxyUrl } from '../../services/common';
@@ -47,16 +47,15 @@ const ChangePhoneScreen = ({ theme, navigation }) => {
         const response: any = await universalPutRequestWithData(url, data);
 
         if (response && response.status === StatusCode.OKAY) {
-            await AsyncStorage.clear();
             Popup.show({
                 type: 'success',
                 title: 'Change phone',
                 textBody: response.data.message,
-                buttonText: 'Login',
+                buttonText: 'Back to settings',
                 callback: () => {
                     Popup.hide();
-                    dispatch(Logout());
-                    navigation.navigate('Login');
+                    dispatch(PhoneChanged(newPhoneNumber));
+                    navigation.navigate('Settings');
                 },
             })
         } else {

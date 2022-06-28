@@ -57,6 +57,9 @@ export const userSlice = createSlice({
       state.mfaVerified = true;
       state.loginData = action.payload;
     },
+    PhoneChanged: (state, action: PayloadAction<string>) => {
+      state.loginData.phone_number = action.payload;
+    },
     Logout: state => {
       state.authenticated = false;
       state.mfaVerified = false;
@@ -65,6 +68,6 @@ export const userSlice = createSlice({
   },
 });
 
-export const {Login, MfaVerify, Logout} = userSlice.actions;
+export const {Login, MfaVerify, PhoneChanged, Logout} = userSlice.actions;
 
 export default userSlice.reducer;
