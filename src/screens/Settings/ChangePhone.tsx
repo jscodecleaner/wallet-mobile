@@ -55,7 +55,7 @@ const ChangePhoneScreen = ({ theme, navigation }) => {
                 callback: () => {
                     Popup.hide();
                     dispatch(PhoneChanged(newPhoneNumber));
-                    navigation.navigate('Settings');
+                    navigation.goBack();
                 },
             })
         } else {
