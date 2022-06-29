@@ -39,6 +39,8 @@ export const refreshTheToken = async (username: string, refresh_token: string) =
         data['expiry_time'] = Date.now() + data.expires_in * 1000
         data['login_time'] = Date.now()
         return data
+    } else {
+      console.log(response)
     }
     return null
   } catch {

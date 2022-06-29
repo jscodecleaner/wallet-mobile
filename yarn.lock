@@ -6271,6 +6271,11 @@ react-native-popup-confirm-toast@^2.1.1:
   resolved "https://registry.yarnpkg.com/react-native-popup-confirm-toast/-/react-native-popup-confirm-toast-2.1.1.tgz#660f20c11f4860b433a8fca9a586274a96b93a0b"
   integrity sha512-5/bvMGUYKoCYhYvitRDnsPXJHpDFJ0IRtNZd0oTDCLnpJVw+4IJM0OBRxf4lekcqkei8xWQszVca6esm0JgzXg==
 
+react-native-restart@^0.0.24:
+  version "0.0.24"
+  resolved "https://registry.yarnpkg.com/react-native-restart/-/react-native-restart-0.0.24.tgz#c7036f25d900d9221b84d3e5129b02d4289d4e94"
+  integrity sha512-pvJNU3NwQk6bCG2gOWcQpZ4IxhtELB0K9gzmtixfsaTFbW1UXXHkJNjk1kHazcbH5hrD7QbUkR63fsAVh8X4VQ==
+
 react-native-safe-area-context@^3.3.2:
   version "3.4.1"
   resolved "https://registry.yarnpkg.com/react-native-safe-area-context/-/react-native-safe-area-context-3.4.1.tgz#c967a52903d55fe010b2428e5368b42f1debc0a7"

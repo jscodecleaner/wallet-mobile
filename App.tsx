@@ -8,10 +8,13 @@ import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import SplashScreen from 'react-native-splash-screen';
 import { useSelector, useDispatch } from 'react-redux';
 import { Root } from 'react-native-popup-confirm-toast'
+import { Popup } from 'react-native-popup-confirm-toast';
+import AsyncStorage from '@react-native-community/async-storage';
+import RNRestart from 'react-native-restart';
 
 import themeType from './src/types/theme';
 import { refreshTheToken } from './src/services/utility';
-import { Login } from './src/redux/slices/userSlice';
+import { Login, Logout } from './src/redux/slices/userSlice';
 import LoginScreen from './src/screens/Auth/Login/Login';
 import ForgotPasswordScreen from './src/screens/Auth/ForgotPassword/ForgotPassword';
 import VerifyMFAScreen from './src/screens/Auth/VerifyMFA/VerifyMFA';
@@ -59,7 +62,7 @@ const App: () => ReactNode = () => {
   const { loginData, authenticated, mfaVerified } = useSelector((state: any) => state.user);
   const dispatch = useDispatch();
 
-  const TIME_TICK = 20 * 1000;
+  const TIME_TICK = 15 * 60 * 1000;
 
   const getNavigationScreen = () => {
     if (authenticated) {
@@ -77,13 +80,37 @@ const App: () => ReactNode = () => {
     SplashScreen.hide();
 
     // const interval = setInterval(async () => {
-    //   const response: any = await refreshTheToken(loginData.username, loginData.refresh_token)
-    //   if (response) {
-    //     dispatch(Login({ ...loginData, ...response }));
+    //   if (authenticated && mfaVerified) {
+    //     const response: any = await refreshTheToken(loginData.username, loginData.refresh_token)
+    //     if (response) {
+    //       dispatch(Login({ ...loginData, ...response }));
+    //     }
     //   }
     // }, TIME_TICK);
   
     // return () => clearInterval(interval);
+
+    const sessionTimeout = setTimeout(async () => {
+      console.log("app timeout")
+      if (authenticated && mfaVerified) {
+        await AsyncStorage.clear();
+
+        Popup.show({
+          type: 'confirm',
+          title: 'Session Timeout',
+          textBody: "Your current session has been expired. Please login again to continue.",
+          buttonText: 'Login',
+          confirmButtonStyle: {display: "none"},
+          callback: () => {
+            Popup.hide();
+            dispatch(Logout());
+            RNRestart.Restart();
+          },
+        })
+      }
+    }, TIME_TICK)
+
+    return () => clearTimeout(sessionTimeout)
   }, []);
 
   return (
