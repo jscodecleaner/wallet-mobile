@@ -90,9 +90,9 @@ const App: () => ReactNode = () => {
   
     // return () => clearInterval(interval);
 
-    const sessionTimeout = setTimeout(async () => {
-      console.log("app timeout")
-      if (authenticated && mfaVerified) {
+    if (mfaVerified) {
+      const sessionTimeout = setTimeout(async () => {
+        console.log("app timeout")
         await AsyncStorage.clear();
 
         Popup.show({
@@ -107,11 +107,11 @@ const App: () => ReactNode = () => {
             RNRestart.Restart();
           },
         })
-      }
-    }, TIME_TICK)
-
-    return () => clearTimeout(sessionTimeout)
-  }, []);
+      }, TIME_TICK)
+  
+      return () => clearTimeout(sessionTimeout)
+    }
+  }, [mfaVerified]);
 
   return (
     <Root>
