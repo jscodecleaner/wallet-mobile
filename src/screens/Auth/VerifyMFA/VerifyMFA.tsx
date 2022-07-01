@@ -78,7 +78,7 @@ const VerifyMFAScreen = ({theme, navigation}) => {
         Popup.show({
           type: 'warning',
           title: 'Invalid Login',
-          textBody: 'Your account is not enabled for native mobile access. Please login via pc or tablet.',
+          textBody: 'Please use the web application to login. Only corporate and wallet customers may use native mobile app at this time.',
           buttonText: 'OK',
           callback: () => {
             Popup.hide();
