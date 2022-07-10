@@ -12,11 +12,13 @@ import { BASE_URL, getProxyUrl } from '../../../services/common';
 import { ApiEndpoint, StatusCode } from '../../../types/enum';
 import { LoginData } from '../../../types/interface';
 import CustomButton from '../../../components/CustomButton/CustomButton';
+import PasswordInput from '../../../components/PasswordInput/PasswordInput';
 
 const LoginScreen = ({theme, navigation}) => {
   const dispatch = useDispatch();
   const [username, setUserName] = useState('');
   const [password, setPassword] = useState('');
+  const [passwordVisible, setPasswordVisible] = useState(false);
   const [progress, setProgress] = useState(false);
   const [error, setError] = useState('');
 
@@ -104,13 +106,25 @@ const LoginScreen = ({theme, navigation}) => {
           />
         </View>
         <View style={{width: '100%'}}>
+          {/* <PasswordInput
+            label='Password'
+            value=''
+            onChange={text => setPassword(text)}
+          /> */}
           <TextInput
             outlineColor={theme.colors.background}
             style={styles.input}
-            secureTextEntry
+            secureTextEntry={passwordVisible}
             label="Password"
             value={password}
             onChangeText={text => setPassword(text)}
+            right={
+              <TextInput.Icon 
+                name={passwordVisible ? "eye" : "eye-off"} 
+                onPress={() => setPasswordVisible(!passwordVisible)} 
+                color={passwordVisible ? theme.colors.placeholder : theme.colors.disabled}
+              />
+            }
           />
         </View>
         <Error error={error} />

@@ -105,7 +105,8 @@ const ChangePhoneScreen = ({ theme, navigation }) => {
                         initialValue={'+44'}
                         onChangePhoneNumber={value => setNewPhoneNumber(value)}
                         textProps={{
-                            placeholder: 'Enter a phone number...'
+                            placeholder: 'Enter a phone number...',
+                            maxLength: 14
                         }}
                     />
                     {!isValidMobilePhone && <Text style={{ color: 'red' }}>Invalid phone number</Text>}

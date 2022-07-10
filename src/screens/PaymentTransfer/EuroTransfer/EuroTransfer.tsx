@@ -390,7 +390,7 @@ const EuroTransferScreen = ({theme, navigation, route}) => {
             <TextInput
                   style={styles.input}
                   keyboardType='numeric'
-                  label={"You send " + `${currency && getSymbolFromCurrency(currency)}`}
+                  label={"You send " + `${currency && getSymbolFromCurrency(currency)}` + " *"}
                   placeholder="Amount to transfer"
                   value={amount}
                   onChangeText={text => {

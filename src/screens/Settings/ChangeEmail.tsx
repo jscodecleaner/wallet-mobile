@@ -22,6 +22,7 @@ const ChangeEmailScreen = ({theme, navigation}) => {
   const dispatch = useDispatch();
   const [newEmail, setNewEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [passwordVisible, setPasswordVisible] = useState(false);
   const [progress, setProgress] = useState(false);
   const [error, setError] = useState('');
 
@@ -104,10 +105,17 @@ const ChangeEmailScreen = ({theme, navigation}) => {
         <View style={{width: '100%'}}>
           <TextInput
             style={styles.input}
-            secureTextEntry
+            secureTextEntry={passwordVisible}
             label="Password"
             value={password}
             onChangeText={text => setPassword(text)}
+            right={
+              <TextInput.Icon 
+                name={passwordVisible ? "eye" : "eye-off"} 
+                onPress={() => setPasswordVisible(!passwordVisible)} 
+                color={passwordVisible ? theme.colors.placeholder : theme.colors.disabled}
+              />
+            }
           />
           {password != '' && <PasswordValidationWarning password={password} />}
         </View>

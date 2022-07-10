@@ -285,7 +285,7 @@ const ToMyOtherAccountScreen = ({theme, navigation, route}) => {
             <TextInput
                 style={styles.input}
                 keyboardType='numeric'
-                label={"You send " + `${fromCurrency && getSymbolFromCurrency(fromCurrency)}`}
+                label={"You send " + `${fromCurrency && getSymbolFromCurrency(fromCurrency)}` + " *"}
                 placeholder="Amount to transfer"
                 value={amount}
                 onChangeText={text => {

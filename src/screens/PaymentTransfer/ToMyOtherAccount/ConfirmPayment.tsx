@@ -85,7 +85,7 @@ const ConfirmPayment = ({theme, navigation, route}) => {
         </View>
         <View style={styles.row}>
           <Text style={styles.leftText}>To be debited</Text>
-          <Text style={styles.rightText}>{amountToBeDebited(transactionDetails.amount, transactionDetails.feeAmount)} {transactionDetails.fromCurrency}</Text>
+          <Text style={styles.rightText}>{floatToString(amountToBeDebited(transactionDetails.amount, transactionDetails.feeAmount))} {transactionDetails.fromCurrency}</Text>
         </View>
       </View>
       <View style={styles.actionsContainer}>
