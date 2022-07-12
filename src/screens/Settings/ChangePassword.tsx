@@ -22,11 +22,11 @@ const ChangePasswordScreen = ({ theme, navigation }) => {
 
     const dispatch = useDispatch();
     const [currentPassword, setCurrentPassword] = useState('');
-    const [currentPasswordVisible, setCurrentPasswordVisible] = useState(false);
+    const [currentPasswordVisible, setCurrentPasswordVisible] = useState(true);
     const [newPassword1, setNewPassword1] = useState('');
-    const [newPassword1Visible, setNewPassword1Visible] = useState(false);
+    const [newPassword1Visible, setNewPassword1Visible] = useState(true);
     const [newPassword2, setNewPassword2] = useState('');
-    const [newPassword2Visible, setNewPassword2Visible] = useState(false);
+    const [newPassword2Visible, setNewPassword2Visible] = useState(true);
     const [progress, setProgress] = useState(false);
     const [error, setError] = useState('');
 

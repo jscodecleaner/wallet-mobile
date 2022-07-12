@@ -22,7 +22,7 @@ const ChangeEmailScreen = ({theme, navigation}) => {
   const dispatch = useDispatch();
   const [newEmail, setNewEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [passwordVisible, setPasswordVisible] = useState(true);
   const [progress, setProgress] = useState(false);
   const [error, setError] = useState('');
 
