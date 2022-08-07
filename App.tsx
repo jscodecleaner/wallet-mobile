@@ -53,7 +53,7 @@ const theme: themeType = {
     ...DefaultTheme.colors,
     primary: '#3f51b5',
     accent: 'yellow',
-    background: '#DFEAED',
+    background: '#DCDCDC',
     error: 'red'
   },
 };
@@ -87,7 +87,7 @@ const App: () => ReactNode = () => {
     //     }
     //   }
     // }, TIME_TICK);
-  
+
     // return () => clearInterval(interval);
 
     if (mfaVerified) {
@@ -100,7 +100,7 @@ const App: () => ReactNode = () => {
           title: 'Session Timeout',
           textBody: "Your current session has been expired. Please login again to continue.",
           buttonText: 'Login',
-          confirmButtonStyle: {display: "none"},
+          confirmButtonStyle: { display: "none" },
           callback: () => {
             Popup.hide();
             dispatch(Logout());
@@ -108,7 +108,7 @@ const App: () => ReactNode = () => {
           },
         })
       }, TIME_TICK)
-  
+
       return () => clearTimeout(sessionTimeout)
     }
   }, [mfaVerified]);
@@ -117,7 +117,7 @@ const App: () => ReactNode = () => {
     <Root>
       <NavigationContainer>
         <PaperProvider theme={theme}>
-            <Stack.Navigator initialRouteName={getNavigationScreen()}>
+          <Stack.Navigator initialRouteName={getNavigationScreen()}>
             <Stack.Screen
               name="Login"
               options={{ headerShown: false }}
