@@ -79,17 +79,6 @@ const App: () => ReactNode = () => {
   useEffect(() => {
     SplashScreen.hide();
 
-    // const interval = setInterval(async () => {
-    //   if (authenticated && mfaVerified) {
-    //     const response: any = await refreshTheToken(loginData.username, loginData.refresh_token)
-    //     if (response) {
-    //       dispatch(Login({ ...loginData, ...response }));
-    //     }
-    //   }
-    // }, TIME_TICK);
-
-    // return () => clearInterval(interval);
-
     if (mfaVerified) {
       const sessionTimeout = setTimeout(async () => {
         console.log("app timeout")
