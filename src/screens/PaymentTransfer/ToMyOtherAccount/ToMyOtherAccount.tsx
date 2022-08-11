@@ -185,6 +185,7 @@ const ToMyOtherAccountScreen = ({theme, navigation, route}) => {
               label="From Account *"
               value={fromAccountName}
               disabled={true}
+              underlineColor="transparent"
             />
           </View>
           <View>
@@ -194,6 +195,7 @@ const ToMyOtherAccountScreen = ({theme, navigation, route}) => {
               label="Currency *"
               value={fromCurrency}
               disabled={true}
+              underlineColor="transparent"
             />
           </View>
           <View>
@@ -231,6 +233,7 @@ const ToMyOtherAccountScreen = ({theme, navigation, route}) => {
               label="Currency *"
               value={toCurrency}
               disabled={true}
+              underlineColor="transparent"
             />
           </View>
           <View>
@@ -268,6 +271,7 @@ const ToMyOtherAccountScreen = ({theme, navigation, route}) => {
                 label="Add description *"
                 value={paymentReference}
                 onChangeText={text => setPaymentReference(text)}
+                underlineColor="transparent"
               />
           </View>
           <View>
@@ -279,6 +283,7 @@ const ToMyOtherAccountScreen = ({theme, navigation, route}) => {
                 onChangeText={text => setNotes(text)}
                 maxLength={35}
                 error={notes && !validateName(notes)}
+                underlineColor="transparent"
               />
           </View>
           <View>
@@ -293,6 +298,7 @@ const ToMyOtherAccountScreen = ({theme, navigation, route}) => {
                   setFundsAvailable(false)
                 }}
                 error={!amountCheck()}
+                underlineColor="transparent"
               />
             <Text>{fromCurrency && `Available balance: ${getSymbolFromCurrency(fromCurrency)} ${getAvailableBalance(accountList, fromAccount)}`}</Text>
           </View>
@@ -302,6 +308,7 @@ const ToMyOtherAccountScreen = ({theme, navigation, route}) => {
                 label="Yet to calculate"
                 value={fee}
                 disabled={true}
+                underlineColor="transparent"
               />
           </View>
         </View>

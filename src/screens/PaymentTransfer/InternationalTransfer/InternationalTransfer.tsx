@@ -238,6 +238,7 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
               label="From Account *"
               value={fromAccountName}
               disabled={true}
+              underlineColor="transparent"
             />
           </View>
           <View>
@@ -247,6 +248,7 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
               label="Currency *"
               value={currency}
               disabled={true}
+              underlineColor="transparent"
             />
           </View>
           <View>
@@ -257,6 +259,7 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
                 placeholder="Recipient account number"
                 value={accountNumber}
                 onChangeText={text => setAccountNumber(text)}
+                underlineColor="transparent"
               />
           </View>
           <View>
@@ -287,15 +290,6 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
               }}
             />
           </View>
-          {/* <View>
-            <TextInput
-                autoCapitalize="none"
-                style={styles.input}
-                label="Sort Code"
-                value={sortCode}
-                onChangeText={text => setSortCode(text)}
-              />
-          </View> */}
           <View>
             <SelectDropdown
               data={paymentMethodList}
@@ -332,6 +326,7 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
                 placeholder="Short payment reference"
                 value={paymentReference}
                 onChangeText={text => setPaymentReference(text)}
+                underlineColor="transparent"
               />
           </View>
           <View>
@@ -342,6 +337,7 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
                 value={notes}
                 maxLength={35}
                 onChangeText={text => setNotes(text)}
+                underlineColor="transparent"
               />
           </View>
         </View>
@@ -361,6 +357,7 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
                   label="Name"
                   value={recipientName}
                   onChangeText={text => setRecipientName(text)}
+                  underlineColor="transparent"
                 />
             </View>
             <View>
@@ -370,6 +367,7 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
                   label="Address 1"
                   value={recipientAddress1}
                   onChangeText={text => setRecipientAddress1(text)}
+                  underlineColor="transparent"
                 />
             </View>
             <View>
@@ -379,6 +377,7 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
                   label="Address 2"
                   value={recipientAddress2}
                   onChangeText={text => setRecipientAddress2(text)}
+                  underlineColor="transparent"
                 />
             </View>
             <View>
@@ -388,6 +387,7 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
                   label="City"
                   value={recipientCity}
                   onChangeText={text => setRecipientCity(text)}
+                  underlineColor="transparent"
                 />
             </View>
             <View>
@@ -397,6 +397,7 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
                   label="State"
                   value={recipientState}
                   onChangeText={text => setRecipientState(text)}
+                  underlineColor="transparent"
                 />
             </View>
             <SelectDropdown
@@ -432,6 +433,7 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
                   label="Postcode"
                   value={recipientPostcode}
                   onChangeText={text => setRecipientPostcode(text)}
+                  underlineColor="transparent"
                 />
             </View>
           </CollapseBody>
@@ -452,6 +454,7 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
                   label="Name"
                   value={bankName}
                   onChangeText={text => setBankName(text)}
+                  underlineColor="transparent"
                 />
             </View>
             <View>
@@ -461,6 +464,7 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
                   label="Address 1"
                   value={bankAddress1}
                   onChangeText={text => setBankAddress1(text)}
+                  underlineColor="transparent"
                 />
             </View>
             <View>
@@ -470,6 +474,7 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
                   label="Address 2"
                   value={bankAddress2}
                   onChangeText={text => setBankAddress2(text)}
+                  underlineColor="transparent"
                 />
             </View>
             <View>
@@ -506,6 +511,7 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
                   label="Bank Postcode"
                   value={bankPostcode}
                   onChangeText={text => setBankPostcode(text)}
+                  underlineColor="transparent"
                 />
             </View>
             <SelectDropdown
@@ -552,6 +558,7 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
                   label="Name"
                   value={intermediaryName}
                   onChangeText={text => setIntermediaryName(text)}
+                  underlineColor="transparent"
                 />
             </View>
             <View>
@@ -561,6 +568,7 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
                   label="Address 1"
                   value={intermediaryAddress1}
                   onChangeText={text => setIntermediaryAddress1(text)}
+                  underlineColor="transparent"
                 />
             </View>
             <View>
@@ -570,6 +578,7 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
                   label="Address 2"
                   value={intermediaryAddress2}
                   onChangeText={text => setIntermediaryAddress2(text)}
+                  underlineColor="transparent"
                 />
             </View>
             <View>
@@ -606,6 +615,7 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
                   label="Bank Postcode"
                   value={intermediaryPostcode}
                   onChangeText={text => setIntermediaryPostcode(text)}
+                  underlineColor="transparent"
                 />
             </View>
             <SelectDropdown
@@ -647,6 +657,7 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
                 placeholder="Amount to transfer"
                 value={amount}
                 onChangeText={text => setAmount(text)}
+                underlineColor="transparent"
               />
           </View>
           <View>
@@ -656,6 +667,7 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
                 label="Yet to calculate"
                 value={fee}
                 disabled={true}
+                underlineColor="transparent"
               />
           </View>
         </View>

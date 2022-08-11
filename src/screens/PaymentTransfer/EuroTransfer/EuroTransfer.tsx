@@ -192,6 +192,7 @@ const EuroTransferScreen = ({theme, navigation, route}) => {
               label="From Account *"
               value={fromAccountName}
               disabled={true}
+              underlineColor="transparent"
             />
           </View>
           <View>
@@ -201,6 +202,7 @@ const EuroTransferScreen = ({theme, navigation, route}) => {
               label="Currency *"
               value={currency}
               disabled={true}
+              underlineColor="transparent"
             />
           </View>
           <View>
@@ -210,6 +212,7 @@ const EuroTransferScreen = ({theme, navigation, route}) => {
                 label="Account holder's name *"
                 value={accountHolderName}
                 onChangeText={text => setAccountHolderName(text)}
+                underlineColor="transparent"
               />
           </View>
           <View>
@@ -219,6 +222,7 @@ const EuroTransferScreen = ({theme, navigation, route}) => {
                 label="IBAN Number *"
                 value={iBanNumber}
                 onChangeText={text => setIBanNumber(text)}
+                underlineColor="transparent"
               />
           </View>
           <View>
@@ -228,6 +232,7 @@ const EuroTransferScreen = ({theme, navigation, route}) => {
               label="BIC Code *"
               value={bicCode}
               onChangeText={text => setBicCode(text)}
+              underlineColor="transparent"
             />
             {bicCode != '' && !validateBICCode(bicCode) && <HelperText type="error">
               At least 8 or 11 character
@@ -250,6 +255,7 @@ const EuroTransferScreen = ({theme, navigation, route}) => {
                   label="Address"
                   value={address}
                   onChangeText={text => setAddress(text)}
+                  underlineColor="transparent"
                 />
             </View>
             <View>
@@ -259,6 +265,7 @@ const EuroTransferScreen = ({theme, navigation, route}) => {
                   label="City"
                   value={city}
                   onChangeText={text => setCity(text)}
+                  underlineColor="transparent"
                 />
             </View>
             <View>
@@ -268,6 +275,7 @@ const EuroTransferScreen = ({theme, navigation, route}) => {
                   label="State"
                   value={state}
                   onChangeText={text => setState(text)}
+                  underlineColor="transparent"
                 />
             </View>
             <SelectDropdown
@@ -303,6 +311,7 @@ const EuroTransferScreen = ({theme, navigation, route}) => {
                   label="Postal Code"
                   value={postalCode}
                   onChangeText={text => setPostalCode(text)}
+                  underlineColor="transparent"
                 />
             </View>
           </CollapseBody>
@@ -373,6 +382,7 @@ const EuroTransferScreen = ({theme, navigation, route}) => {
                 placeholder="Short payment reference"
                 value={paymentReference}
                 onChangeText={text => setPaymentReference(text)}
+                underlineColor="transparent"
               />
           </View>
           <View>
@@ -384,6 +394,7 @@ const EuroTransferScreen = ({theme, navigation, route}) => {
                 onChangeText={text => setNotes(text)}
                 maxLength={35}
                 error={notes && !validateName(notes)}
+                underlineColor="transparent"
               />
           </View>
           <View>
@@ -398,6 +409,7 @@ const EuroTransferScreen = ({theme, navigation, route}) => {
                     setFundsAvailable(false)
                   }}
                   error={!amountCheck()}
+                  underlineColor="transparent"
                 />
               <Text>{currency && `Available balance: ${getSymbolFromCurrency(currency)} ${getAvailableBalance(accountList, fromAccount)}`}</Text>
           </View>
@@ -407,6 +419,7 @@ const EuroTransferScreen = ({theme, navigation, route}) => {
                 label="Yet to calculate"
                 value={fee}
                 disabled={true}
+                underlineColor="transparent"
               />
           </View>
         </View>

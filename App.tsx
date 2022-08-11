@@ -54,9 +54,11 @@ const theme: themeType = {
     primary: '#3f51b5',
     accent: 'yellow',
     background: '#DCDCDC',
-    error: 'red'
+    error: 'red',
+    lightGrey: '#2b2c2e',
   },
 };
+console.log(theme)
 
 const App: () => ReactNode = () => {
   const { loginData, authenticated, mfaVerified } = useSelector((state: any) => state.user);

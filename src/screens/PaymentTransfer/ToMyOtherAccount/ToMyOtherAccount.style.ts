@@ -13,14 +13,14 @@ export const useStyles = theme => (StyleSheet.create({
     height: 50,
     backgroundColor: "transparent",
     borderBottomWidth: 1,
-    borderColor: theme.colors.text,
+    borderColor: theme.colors.lightGrey,
   },
   dropdownBtnStyle: {
     width: '100%',
     height: 50,
     paddingHorizontal: 0,
     borderBottomWidth: 1,
-    borderColor: theme.colors.text,
+    borderColor: theme.colors.lightGrey,
   },
   dropdownBtnChildStyle: {
     flex: 1,
