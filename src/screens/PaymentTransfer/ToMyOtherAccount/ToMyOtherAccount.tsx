@@ -181,21 +181,21 @@ const ToMyOtherAccountScreen = ({theme, navigation, route}) => {
           <View>
             <TextInput
               autoCapitalize="none"
-              style={styles.input}
+              style={[styles.input, styles.inputBorder]}
               label="From Account *"
               value={fromAccountName}
               disabled={true}
-              underlineColor="transparent"
+              underlineColor={theme.colors.lightGrey}
             />
           </View>
           <View>
             <TextInput
               autoCapitalize="none"
-              style={styles.input}
+              style={[styles.input, styles.inputBorder]}
               label="Currency *"
               value={fromCurrency}
               disabled={true}
-              underlineColor="transparent"
+              underlineColor={theme.colors.lightGrey}
             />
           </View>
           <View>
@@ -229,11 +229,11 @@ const ToMyOtherAccountScreen = ({theme, navigation, route}) => {
           <View>
             <TextInput
               autoCapitalize="none"
-              style={styles.input}
+              style={[styles.input, styles.inputBorder]}
               label="Currency *"
               value={toCurrency}
               disabled={true}
-              underlineColor="transparent"
+              underlineColor={theme.colors.lightGrey}
             />
           </View>
           <View>
@@ -271,7 +271,7 @@ const ToMyOtherAccountScreen = ({theme, navigation, route}) => {
                 label="Add description *"
                 value={paymentReference}
                 onChangeText={text => setPaymentReference(text)}
-                underlineColor="transparent"
+                underlineColor={theme.colors.lightGrey}
               />
           </View>
           <View>
@@ -283,7 +283,7 @@ const ToMyOtherAccountScreen = ({theme, navigation, route}) => {
                 onChangeText={text => setNotes(text)}
                 maxLength={35}
                 error={notes && !validateName(notes)}
-                underlineColor="transparent"
+                underlineColor={theme.colors.lightGrey}
               />
           </View>
           <View>
@@ -298,17 +298,17 @@ const ToMyOtherAccountScreen = ({theme, navigation, route}) => {
                   setFundsAvailable(false)
                 }}
                 error={!amountCheck()}
-                underlineColor="transparent"
+                underlineColor={theme.colors.lightGrey}
               />
             <Text>{fromCurrency && `Available balance: ${getSymbolFromCurrency(fromCurrency)} ${getAvailableBalance(accountList, fromAccount)}`}</Text>
           </View>
           <View>
             <TextInput
-                style={styles.input}
+                style={[styles.input, styles.inputBorder]}
                 label="Yet to calculate"
                 value={fee}
                 disabled={true}
-                underlineColor="transparent"
+                underlineColor={theme.colors.lightGrey}
               />
           </View>
         </View>

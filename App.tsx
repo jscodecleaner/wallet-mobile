@@ -58,7 +58,6 @@ const theme: themeType = {
     lightGrey: '#2b2c2e',
   },
 };
-console.log(theme)
 
 const App: () => ReactNode = () => {
   const { loginData, authenticated, mfaVerified } = useSelector((state: any) => state.user);

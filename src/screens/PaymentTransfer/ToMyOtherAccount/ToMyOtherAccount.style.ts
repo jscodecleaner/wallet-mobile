@@ -12,6 +12,8 @@ export const useStyles = theme => (StyleSheet.create({
     marginVertical: 10,
     height: 50,
     backgroundColor: "transparent",
+  },
+  inputBorder: {
     borderBottomWidth: 1,
     borderColor: theme.colors.lightGrey,
   },

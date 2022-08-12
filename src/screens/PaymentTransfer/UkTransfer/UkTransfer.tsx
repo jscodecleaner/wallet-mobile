@@ -201,21 +201,21 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
           <View>
             <TextInput
               autoCapitalize="none"
-              style={styles.input}
+              style={[styles.input, styles.inputBorder]}
               label="From Account *"
               value={fromAccountName}
               disabled={true}
-              underlineColor="transparent"
+              underlineColor={theme.colors.lightGrey}
             />
           </View>
           <View>
             <TextInput
               autoCapitalize="none"
-              style={styles.input}
+              style={[styles.input, styles.inputBorder]}
               label="Currency *"
               value={currency}
               disabled={true}
-              underlineColor="transparent"
+              underlineColor={theme.colors.lightGrey}
             />
           </View>
           <View>
@@ -226,7 +226,7 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
               placeholder="Recipient bank name"
               value={bankName}
               onChangeText={text => setBankName(text)}
-              underlineColor="transparent"
+              underlineColor={theme.colors.lightGrey}
             />
           </View>
           <View>
@@ -237,7 +237,7 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
               placeholder="Recipient account name"
               value={accountHolderName}
               onChangeText={text => setAccountHolderName(text)}
-              underlineColor="transparent"
+              underlineColor={theme.colors.lightGrey}
             />
           </View>
           <View>
@@ -249,7 +249,7 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
               label="Sort Code *"
               value={sortCode}
               onChangeText={text => setSortCode(text)}
-              underlineColor="transparent"
+              underlineColor={theme.colors.lightGrey}
             />
           </View>
           <View>
@@ -260,7 +260,7 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
               placeholder="Recipient account number"
               value={accountNumber}
               onChangeText={text => setAccountNumber(text)}
-              underlineColor="transparent"
+              underlineColor={theme.colors.lightGrey}
             />
           </View>
           <View>
@@ -327,7 +327,7 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
               placeholder="Short payment reference"
               value={paymentReference}
               onChangeText={text => setPaymentReference(text)}
-              underlineColor="transparent"
+              underlineColor={theme.colors.lightGrey}
             />
           </View>
           <View>
@@ -339,7 +339,7 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
               maxLength={35}
               onChangeText={text => setNotes(text)}
               error={notes && !validateName(notes)}
-              underlineColor="transparent"
+              underlineColor={theme.colors.lightGrey}
             />
           </View>
         </View>
@@ -359,7 +359,7 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
                 label="Address 1"
                 value={recipientAddress1}
                 onChangeText={text => setRecipientAddress1(text)}
-                underlineColor="transparent"
+                underlineColor={theme.colors.lightGrey}
               />
             </View>
             <View>
@@ -369,7 +369,7 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
                 label="Address 2"
                 value={recipientAddress2}
                 onChangeText={text => setRecipientAddress2(text)}
-                underlineColor="transparent"
+                underlineColor={theme.colors.lightGrey}
               />
             </View>
             <View>
@@ -379,7 +379,7 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
                 label="Postal Code"
                 value={recipientPostalCode}
                 onChangeText={text => setRecipientPostalCode(text)}
-                underlineColor="transparent"
+                underlineColor={theme.colors.lightGrey}
               />
             </View>
             <SelectDropdown
@@ -426,7 +426,7 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
                 label="Address 1"
                 value={bankAddress1}
                 onChangeText={text => setBankAddress1(text)}
-                underlineColor="transparent"
+                underlineColor={theme.colors.lightGrey}
               />
             </View>
             <View>
@@ -436,7 +436,7 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
                 label="Address 2"
                 value={bankAddress2}
                 onChangeText={text => setBankAddress2(text)}
-                underlineColor="transparent"
+                underlineColor={theme.colors.lightGrey}
               />
             </View>
             <View>
@@ -446,7 +446,7 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
                 label="Postal Code"
                 value={bankPostalCode}
                 onChangeText={text => setBankPostalCode(text)}
-                underlineColor="transparent"
+                underlineColor={theme.colors.lightGrey}
               />
             </View>
             <SelectDropdown
@@ -488,17 +488,17 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
               placeholder="Amount to transfer"
               value={amount}
               onChangeText={text => setAmount(text)}
-              underlineColor="transparent"
+              underlineColor={theme.colors.lightGrey}
             />
           </View>
           <View>
             <TextInput
               autoCapitalize="none"
-              style={styles.input}
+              style={[styles.input, styles.inputBorder]}
               label="Yet to calculate"
               value={fee}
               disabled={true}
-              underlineColor="transparent"
+              underlineColor={theme.colors.lightGrey}
             />
           </View>
         </View>
