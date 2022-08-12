@@ -136,13 +136,17 @@ const App: () => ReactNode = () => {
             <Stack.Screen
               name="WalletDetails"
               component={WalletDetailsScreen}
-              options={{ headerShown: true }}
+              options={{ 
+                headerShown: true,
+                headerTitleAlign: 'center',
+              }}
             />
             <Stack.Screen
               name="EuroTransfer"
               component={EuroTransferScreen}
               options={{
                 headerShown: true,
+                headerTitleAlign: 'center',
                 title: "Euro Transfer"
               }}
             />
@@ -151,6 +155,7 @@ const App: () => ReactNode = () => {
               component={EuroTransferConfirmScreen}
               options={{
                 headerShown: true,
+                headerTitleAlign: 'center',
                 title: "Confirm Euro Transfer"
               }}
             />
@@ -159,6 +164,7 @@ const App: () => ReactNode = () => {
               component={UkTransferScreen}
               options={{
                 headerShown: true,
+                headerTitleAlign: 'center',
                 title: 'UK Transfer'
               }}
             />
@@ -167,6 +173,7 @@ const App: () => ReactNode = () => {
               component={UkTransferConfirmScreen}
               options={{
                 headerShown: true,
+                headerTitleAlign: 'center',
                 title: "Confirm UK Transfer"
               }}
             />
@@ -175,6 +182,7 @@ const App: () => ReactNode = () => {
               component={InternationalTransferScreen}
               options={{
                 headerShown: true,
+                headerTitleAlign: 'center',
                 title: "International Transfer"
               }}
             />
@@ -183,6 +191,7 @@ const App: () => ReactNode = () => {
               component={InternationalTransferConfirmScreen}
               options={{
                 headerShown: true,
+                headerTitleAlign: 'center',
                 title: "Confirm International Transfer"
               }}
             />
@@ -191,6 +200,7 @@ const App: () => ReactNode = () => {
               component={ToMyOtherAccountScreen}
               options={{
                 headerShown: true,
+                headerTitleAlign: 'center',
                 title: "Transfer between my accounts"
               }}
             />
@@ -199,6 +209,7 @@ const App: () => ReactNode = () => {
               component={ToMyOtherAccountConfirmScreen}
               options={{
                 headerShown: true,
+                headerTitleAlign: 'center',
                 title: "Confirm to my other accounts"
               }}
             />
@@ -211,6 +222,7 @@ const App: () => ReactNode = () => {
               component={ChangeEmailScreen}
               options={{
                 headerShown: true,
+                headerTitleAlign: 'center',
                 title: "Change Email"
               }}
             />
@@ -219,6 +231,7 @@ const App: () => ReactNode = () => {
               component={ChangePasswordScreen}
               options={{
                 headerShown: true,
+                headerTitleAlign: 'center',
                 title: "Change Password"
               }}
             />
@@ -227,6 +240,7 @@ const App: () => ReactNode = () => {
               component={ChangePhoneScreen}
               options={{
                 headerShown: true,
+                headerTitleAlign: 'center',
                 title: "Change Phone"
               }}
             />
@@ -235,6 +249,7 @@ const App: () => ReactNode = () => {
               component={ChangePersonalInfoScreen}
               options={{
                 headerShown: true,
+                headerTitleAlign: 'center',
                 title: "Change personal Info"
               }}
             />
