@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { useSelector, useDispatch } from "react-redux";
-import { SafeAreaView, View, ScrollView } from 'react-native';
+import { useSelector } from "react-redux";
+import { SafeAreaView, View} from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview'
 import { Text, TextInput, withTheme } from 'react-native-paper';
 import FontAwesomeIcons from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -169,14 +170,14 @@ const ToMyOtherAccountScreen = ({theme, navigation, route}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Spinner
+    <Spinner
           visible={progress}
           textContent={'Loading...'}
           textStyle={{
             color: '#FFF',
-        }}
+          }}
       />
-      <ScrollView style={styles.scrollViewStyle}>
+      <KeyboardAwareScrollView style={styles.scrollViewStyle}>
         <View style={{marginTop: 10}}>
           <View>
             <TextInput
@@ -313,11 +314,11 @@ const ToMyOtherAccountScreen = ({theme, navigation, route}) => {
           </View>
         </View>
         
-        <View style={{width: '100%', marginTop: 20, marginBottom: 15}}>
+        <View style={{width: '100%', marginTop: 20, marginBottom: 35}}>
           {fundsavailable && <CustomButton theme={theme} name="Continue" onClick={toConfirm} state={validateInput()} />}
           {!fundsavailable && <CustomButton theme={theme} name="Calculate Fee" onClick={handleFetchTransactionFee} state={validateInput()} />}
         </View>
-      </ScrollView>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   )
 };

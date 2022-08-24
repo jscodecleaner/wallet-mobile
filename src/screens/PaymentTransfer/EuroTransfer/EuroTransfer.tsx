@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useSelector, useDispatch } from "react-redux";
-import { SafeAreaView, View, ScrollView } from 'react-native';
+import { SafeAreaView, View } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview'
 import Spinner from 'react-native-loading-spinner-overlay';
 import { Button, Text, TextInput, withTheme, HelperText } from 'react-native-paper';
 import FontAwesomeIcons from 'react-native-vector-icons/FontAwesome';
@@ -183,7 +184,7 @@ const EuroTransferScreen = ({theme, navigation, route}) => {
             color: '#FFF',
         }}
       />
-      <ScrollView style={styles.scrollViewStyle}>
+      <KeyboardAwareScrollView style={styles.scrollViewStyle}>
         <View style={{marginTop: 10}}>
           <View>
             <TextInput
@@ -428,7 +429,7 @@ const EuroTransferScreen = ({theme, navigation, route}) => {
           {fundsavailable && <CustomButton theme={theme} name="Continue" onClick={toConfirm} state={validateInput()} />}
           {!fundsavailable && <CustomButton theme={theme} name="Calculate Fee" onClick={handleFetchTransactionFee} state={validateInput()} />}
         </View>
-      </ScrollView>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   )
 };

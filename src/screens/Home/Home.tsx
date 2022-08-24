@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import { BackHandler, Alert, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { BackHandler, Alert } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { withTheme } from 'react-native-paper';
 import { useDispatch, useSelector } from "react-redux";

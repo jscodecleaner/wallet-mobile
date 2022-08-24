@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Image, SafeAreaView, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { View, Image, SafeAreaView, ScrollView } from 'react-native';
 import { TextInput, Button, Text, withTheme } from 'react-native-paper';
 import Spinner from 'react-native-loading-spinner-overlay';
 import Error from '../../../components/error';

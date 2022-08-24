@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {View, SafeAreaView, ScrollView} from 'react-native';
-import {TextInput, Button, Text, HelperText, withTheme} from 'react-native-paper';
+import {TextInput, HelperText, withTheme} from 'react-native-paper';
 import Spinner from 'react-native-loading-spinner-overlay';
 import {useSelector, useDispatch} from 'react-redux';
 import { Popup } from 'react-native-popup-confirm-toast';

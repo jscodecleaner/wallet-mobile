@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { View, SafeAreaView, TouchableOpacity } from 'react-native';
-import { TextInput, Button, Text, HelperText, withTheme, RadioButton } from 'react-native-paper';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview'
+import { TextInput, Text, withTheme, RadioButton } from 'react-native-paper';
 import Spinner from 'react-native-loading-spinner-overlay';
 import SelectDropdown from 'react-native-select-dropdown';
 import countryList from 'react-select-country-list'
@@ -11,13 +12,11 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { AsYouType, isValidPhoneNumber } from 'libphonenumber-js';
 
 import CustomButton from '../../components/CustomButton/CustomButton';
-import { BASE_URL, getProxyUrl } from '../../services/common';
+import { BASE_URL } from '../../services/common';
 import { UserProfileInterface } from '../../types/interface'
 import { ApiEndpoint, StatusCode } from '../../types/enum';
 import { useStyles } from './Settings.style'
-import { ScrollView } from 'react-native-gesture-handler';
 import { universalPostRequestWithData, universalGetRequestWithParams } from '../../services/RequestHandler';
-import { validateAge } from '../../services/validators';
 import Error from '../../components/error';
 
 const ChangePersonalInfo = ({ theme, navigation }) => {
@@ -126,7 +125,7 @@ const ChangePersonalInfo = ({ theme, navigation }) => {
               color: '#FFF',
           }}
       />
-      <ScrollView style={{ width: '100%', paddingHorizontal: 15 }}>
+      <KeyboardAwareScrollView style={{ width: '100%', paddingHorizontal: 15 }}>
         <View style={{ width: '100%' }}>
           <TextInput
             style={styles.input}
@@ -396,7 +395,7 @@ const ChangePersonalInfo = ({ theme, navigation }) => {
         <View style={{width: '100%', marginTop: 30}}>
           <CustomButton theme={theme} name="Save" onClick={handleSubmit} state={validateForm()} />
         </View>
-      </ScrollView>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 }

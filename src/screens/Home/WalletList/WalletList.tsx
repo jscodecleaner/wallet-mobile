@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Text, withTheme } from 'react-native-paper';
 import Spinner from 'react-native-loading-spinner-overlay';
-import { View, SafeAreaView, TouchableOpacity, ScrollView } from 'react-native';
+import { View, SafeAreaView, TouchableOpacity } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview'
 import { useSelector, useDispatch } from 'react-redux';
 import getSymbolFromCurrency from 'currency-symbol-map';
 import CountryFlag from "react-native-country-flag";
@@ -44,7 +45,7 @@ const WalletListScreen = ({theme, navigation}) => {
             color: '#FFF',
         }}
       />
-      <ScrollView style={styles.scrollViewStyle}>
+      <KeyboardAwareScrollView style={styles.scrollViewStyle}>
         {accountList.map((walletAccount: AccountDataInterface, index: number) => (
           <TouchableOpacity style={[styles.card, {borderLeftColor: theme.colors.primary,}]} onPress={()=>showDetails(index)} key={index}>
             <View style={{marginBottom: 30}}>
@@ -80,7 +81,7 @@ const WalletListScreen = ({theme, navigation}) => {
             </View>
           </TouchableOpacity>
         ))}
-      </ScrollView>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { SafeAreaView, View } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { Text, withTheme } from 'react-native-paper';
