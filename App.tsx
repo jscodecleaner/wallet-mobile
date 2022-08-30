@@ -16,6 +16,7 @@ import themeType from './src/types/theme';
 import { refreshTheToken } from './src/services/utility';
 import { Login, Logout } from './src/redux/slices/userSlice';
 import LoginScreen from './src/screens/Auth/Login/Login';
+import LogoutScreen from './src/screens/Auth/Logout/Logout';
 import ForgotPasswordScreen from './src/screens/Auth/ForgotPassword/ForgotPassword';
 import VerifyMFAScreen from './src/screens/Auth/VerifyMFA/VerifyMFA';
 import ForgotUsernameScreen from './src/screens/Auth/ForgotUsername/ForgotUsername';
@@ -112,6 +113,11 @@ const App: () => ReactNode = () => {
               name="Login"
               options={{ headerShown: false }}
               component={LoginScreen}
+            />
+            <Stack.Screen
+              name="Logout"
+              options={{ headerShown: false }}
+              component={LogoutScreen}
             />
             <Stack.Screen
               name="ForgotPassword"

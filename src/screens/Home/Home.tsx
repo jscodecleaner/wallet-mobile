@@ -11,6 +11,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { Logout } from '../../redux/slices/userSlice';
 import WalletListScreen from './WalletList/WalletList';
 import SettingsScreen from './Settings/Settings';
+import LogoutScreen from '../Auth/Logout/Logout';
 import styles from './Home.style';
 
 const Tab = createBottomTabNavigator();
@@ -73,6 +74,16 @@ const Home = ({theme, navigation}) => {
         options={{
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="account" color={color} size={size} />
+          ),
+          headerShown: false,
+        }} 
+      />
+      <Tab.Screen 
+        name="Logout" 
+        component={LogoutScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="logout" color={color} size={size} />
           ),
           headerShown: false,
         }} 

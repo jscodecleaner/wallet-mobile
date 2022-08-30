@@ -64,7 +64,7 @@
 	<array>
 		<string>armv7</string>
 	</array>
-	<key>UIRequiresFullScreen</key>
+	<!-- <key>UIRequiresFullScreen</key> -->
 	<true/>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
