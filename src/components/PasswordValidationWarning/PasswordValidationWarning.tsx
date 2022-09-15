@@ -1,8 +1,8 @@
-import React, {useState, useEffect} from 'react';
-import {View} from 'react-native';
-import {HelperText} from 'react-native-paper';
+import React, { useState, useEffect } from 'react'
+import { View } from 'react-native'
+import { HelperText } from 'react-native-paper'
 
-import { validatePassword } from '../../services/validators';
+import { validatePassword } from '../../services/validators'
 
 interface PasswordWarningProps {
   password: string
@@ -17,12 +17,12 @@ export const PasswordValidationWarning: React.FC<PasswordWarningProps> = ({ pass
 
   return (
     <View>
-        {condition.indexOf('min') >= 0 && <HelperText type="error">Minimum length 8 characters.</HelperText>}
-        {condition.indexOf('uppercase') >= 0 && <HelperText type="error">At least 1 uppercase letter</HelperText>}
-        {condition.indexOf('lowercase') >= 0 && <HelperText type="error">At least 1 lower letter</HelperText>}
-        {condition.indexOf('digits') >= 0 && <HelperText type="error">At least 1 digit</HelperText>}
-        {condition.indexOf('symbols') >= 0 && <HelperText type="error">At least 1 special character</HelperText>}
-        {condition.indexOf('spaces') >= 0 && <HelperText type="error">No space allowed.</HelperText>}
+      { condition.includes('min') && <HelperText type="error">Minimum length 8 characters.</HelperText> }
+      { condition.includes('uppercase') && <HelperText type="error">At least 1 uppercase letter</HelperText> }
+      { condition.includes('lowercase') && <HelperText type="error">At least 1 lower letter</HelperText> }
+      { condition.includes('digits') && <HelperText type="error">At least 1 digit</HelperText> }
+      { condition.includes('symbols') && <HelperText type="error">At least 1 special character</HelperText> }
+      { condition.includes('spaces') && <HelperText type="error">No space allowed.</HelperText> }
     </View>
   )
 }

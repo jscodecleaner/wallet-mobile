@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { Text, withTheme } from 'react-native-paper';
-import { View, SafeAreaView } from 'react-native';
+import React, { useEffect, useState } from 'react'
+import { Text, withTheme } from 'react-native-paper'
+import { View, SafeAreaView } from 'react-native'
 
-import styles from './Settings.style';
-import CustomButton from '../../../components/CustomButton/CustomButton';
+import styles from './Settings.style'
+import CustomButton from '../../../components/CustomButton/CustomButton'
 
-const SettingsScreen = ({theme, navigation}) => {
+const SettingsScreen = ({ theme, navigation }) => {
   const onChangeEmail = () => {
     navigation.navigate('ChangeEmail')
   }
@@ -51,7 +51,7 @@ const SettingsScreen = ({theme, navigation}) => {
         />
       </View>
     </SafeAreaView>
-  );
-};
+  )
+}
 
-export default withTheme(SettingsScreen);
+export default withTheme(SettingsScreen)

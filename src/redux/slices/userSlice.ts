@@ -1,5 +1,5 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import { LoginData } from '../../types/interface';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { LoginData } from '../../types/interface'
 
 interface UserState {
   authenticated: boolean;
@@ -41,33 +41,33 @@ const initialState: UserState = {
     onboardingStatus: '',
     entity_name: '',
   },
-};
+}
 
 export const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
     Login: (state, action: PayloadAction<LoginData>) => {
-      state.authenticated = true;
-      state.mfaVerified = false;
-      state.loginData = action.payload;
+      state.authenticated = true
+      state.mfaVerified = false
+      state.loginData = action.payload
     },
     MfaVerify: (state, action: PayloadAction<LoginData>) => {
-      state.authenticated = true;
-      state.mfaVerified = true;
-      state.loginData = action.payload;
+      state.authenticated = true
+      state.mfaVerified = true
+      state.loginData = action.payload
     },
     PhoneChanged: (state, action: PayloadAction<string>) => {
-      state.loginData.phone_number = action.payload;
+      state.loginData.phone_number = action.payload
     },
     Logout: state => {
-      state.authenticated = false;
-      state.mfaVerified = false;
-      state.loginData = initialState.loginData;
+      state.authenticated = false
+      state.mfaVerified = false
+      state.loginData = initialState.loginData
     },
   },
-});
+})
 
-export const {Login, MfaVerify, PhoneChanged, Logout} = userSlice.actions;
+export const { Login, MfaVerify, PhoneChanged, Logout } = userSlice.actions
 
-export default userSlice.reducer;
+export default userSlice.reducer

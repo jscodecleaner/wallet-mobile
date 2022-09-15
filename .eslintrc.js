@@ -38,9 +38,11 @@ module.exports = {
       ignoreStringArrays: true
     }],
     'react/jsx-curly-spacing': ['error', {
-      when: 'always',
+      when: 'never',
       allowMultiline: true,
-      children: true
+      children: {
+        when: 'always'
+      }
     }],
     'eol-last': ['error', 'always'],
     'no-multiple-empty-lines': 'error',

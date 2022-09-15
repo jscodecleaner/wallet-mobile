@@ -1,68 +1,68 @@
-import React, { useEffect, useState, useMemo } from 'react';
-import { useSelector } from "react-redux";
-import { SafeAreaView, View} from 'react-native';
-import Spinner from 'react-native-loading-spinner-overlay';
+import React, { useEffect, useState, useMemo } from 'react'
+import { useSelector } from "react-redux"
+import { SafeAreaView, View } from 'react-native'
+import Spinner from 'react-native-loading-spinner-overlay'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview'
-import { Text, TextInput, withTheme } from 'react-native-paper';
-import FontAwesomeIcons from 'react-native-vector-icons/FontAwesome';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import getSymbolFromCurrency from 'currency-symbol-map';
-import SelectDropdown from 'react-native-select-dropdown';
-import { Toast } from 'react-native-popup-confirm-toast';
+import { Text, TextInput, withTheme } from 'react-native-paper'
+import FontAwesomeIcons from 'react-native-vector-icons/FontAwesome'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import getSymbolFromCurrency from 'currency-symbol-map'
+import SelectDropdown from 'react-native-select-dropdown'
+import { Toast } from 'react-native-popup-confirm-toast'
 
-import { useStyles } from './ToMyOtherAccount.style';
-import CustomButton from '../../../components/CustomButton/CustomButton';
-import { AccountDataInterface } from '../../../types/interface';
-import { getPaymentMethodList, getAvailableBalance, getTransactionFee, stringToFloat, floatToString, getAccountFromAccountID } from '../../../services/utility';
-import { validateName } from '../../../services/validators';
+import { useStyles } from './ToMyOtherAccount.style'
+import CustomButton from '../../../components/CustomButton/CustomButton'
+import { AccountDataInterface } from '../../../types/interface'
+import { getPaymentMethodList, getAvailableBalance, getTransactionFee, stringToFloat, floatToString, getAccountFromAccountID } from '../../../services/utility'
+import { validateName } from '../../../services/validators'
 
-const pAndTType = 'to-my-other-account';
+const pAndTType = 'to-my-other-account'
 
-const ToMyOtherAccountScreen = ({theme, navigation, route}) => {
-  const {fromAccount} = route.params;
+const ToMyOtherAccountScreen = ({ theme, navigation, route }) => {
+  const { fromAccount } = route.params
 
-  const styles = useStyles(theme);
+  const styles = useStyles(theme)
 
-  const [toAccountList, setToAccountList] = useState([] as AccountDataInterface[]);
+  const [toAccountList, setToAccountList] = useState([] as AccountDataInterface[])
   const [paymentMethodList, setPaymentMethodList] = useState([] as string[])
-  const [fromAccountName, setFromAccountName] = useState('');
-  const [toAccount, setToAccount] = useState('');
-  const [fromCurrency, setFromCurrency] = useState('');
-  const [toCurrency, setToCurrency] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState('');
-  const [paymentReference, setPaymentReference] = useState('');
-  const [notes, setNotes] = useState('');
-  const [amount, setAmount] = useState('');
-  const [fee, setFee] = useState('');
+  const [fromAccountName, setFromAccountName] = useState('')
+  const [toAccount, setToAccount] = useState('')
+  const [fromCurrency, setFromCurrency] = useState('')
+  const [toCurrency, setToCurrency] = useState('')
+  const [paymentMethod, setPaymentMethod] = useState('')
+  const [paymentReference, setPaymentReference] = useState('')
+  const [notes, setNotes] = useState('')
+  const [amount, setAmount] = useState('')
+  const [fee, setFee] = useState('')
   const [preApprovalAmount, setPreApprovalAmount] = useState(0)
   const [preApprovalTxnCount, setPreApprovalTxnCount] = useState(0)
 
-  const [progress, setProgress] = useState(true);
-  const [fundsavailable, setFundsAvailable] = useState(false);
+  const [progress, setProgress] = useState(true)
+  const [fundsavailable, setFundsAvailable] = useState(false)
 
-  const {loginData} = useSelector((state: any) => state.user);
-  const {accountList} = useSelector((state: any) => state.accounts);
+  const { loginData } = useSelector((state: any) => state.user)
+  const { accountList } = useSelector((state: any) => state.accounts)
 
   useEffect(() => {
-  }, []);
+  }, [])
 
   useEffect(() => {
     if (accountList.length > 0) {
-      const selectedItem = getAccountFromAccountID(accountList, fromAccount);
+      const selectedItem = getAccountFromAccountID(accountList, fromAccount)
   
-      setFromAccountName(selectedItem.accountName);
-      setFromCurrency(selectedItem.currencyData.currencyName);
-      const methodList = getPaymentMethodList(accountList, selectedItem.accountId);
-      setPaymentMethodList(methodList);
-      methodList.length > 0 && setPaymentMethod(methodList[0]);
+      setFromAccountName(selectedItem.accountName)
+      setFromCurrency(selectedItem.currencyData.currencyName)
+      const methodList = getPaymentMethodList(accountList, selectedItem.accountId)
+      setPaymentMethodList(methodList)
+      methodList.length > 0 && setPaymentMethod(methodList[0])
   
       const toAccountList = accountList
         .filter((account) => account.accountId !== selectedItem.accountId)
-        .filter((account) => account.currencyData.currencyName === selectedItem.currencyData.currencyName && account.providerName === selectedItem.providerName );
-      setToAccountList(toAccountList);
+        .filter((account) => account.currencyData.currencyName === selectedItem.currencyData.currencyName && account.providerName === selectedItem.providerName )
+      setToAccountList(toAccountList)
     }
 
-    setFundsAvailable(false);
+    setFundsAvailable(false)
     setProgress(false)
   }, [accountList])
 
@@ -73,12 +73,12 @@ const ToMyOtherAccountScreen = ({theme, navigation, route}) => {
       paymentMethod.length > 0 &&
       paymentReference.length > 0 &&
       notes.length > 0 && validateName(notes) &&
-      amount.length > 0 && amountCheck() == true
+      amount.length > 0 && amountCheck()
     )
-      return "normal";
+      return "normal"
     else
-      return "disabled";
-  };
+      return "disabled"
+  }
 
   const amountCheck = () => {
     return Number(parseFloat(amount==''?'0':amount).toFixed(2)) <= getAvailableBalance(accountList, fromAccount)
@@ -134,8 +134,8 @@ const ToMyOtherAccountScreen = ({theme, navigation, route}) => {
   }
 
   const toConfirm = () => {
-    const fromAcc = getAccountFromAccountID(accountList, fromAccount);
-    const toAcc = getAccountFromAccountID(accountList, toAccount);
+    const fromAcc = getAccountFromAccountID(accountList, fromAccount)
+    const toAcc = getAccountFromAccountID(accountList, toAccount)
 
     const transactionDetails = {
       accountId: fromAccount,
@@ -143,14 +143,14 @@ const ToMyOtherAccountScreen = ({theme, navigation, route}) => {
       fromAccountName: fromAcc.accountName,
       fromAccountNo: fromAcc.accountNumber,
       fromAccountHolderName: fromAcc.accountHolderName,
-      fromCurrency: fromCurrency,
+      fromCurrency,
       fromAccountIban: fromAcc.iBan,
       providerName: fromAcc.providerName,
       amount: stringToFloat(amount),
       toAccountName: toAcc.accountName,
       toAccountNo: toAcc.accountNumber,
       toAccountHolderName: toAcc.accountHolderName,
-      toCurrency: toCurrency,
+      toCurrency,
       toAccountIban: toAcc.iBan,
       toSortCode: toAcc.sortCode,
       paymentReference,
@@ -165,20 +165,20 @@ const ToMyOtherAccountScreen = ({theme, navigation, route}) => {
       details: "Transfer between own accounts",
       pAndTType,
     }
-    navigation.navigate('ToMyOtherAccountConfirm', {transactionDetails: transactionDetails});
+    navigation.navigate('ToMyOtherAccountConfirm', { transactionDetails })
   }
 
   return (
     <SafeAreaView style={styles.container}>
-    <Spinner
-          visible={progress}
-          textContent={'Loading...'}
-          textStyle={{
-            color: '#FFF',
-          }}
+      <Spinner
+        visible={progress}
+        textContent={'Loading...'}
+        textStyle={{
+          color: '#FFF',
+        }}
       />
       <KeyboardAwareScrollView style={styles.scrollViewStyle}>
-        <View style={{marginTop: 10}}>
+        <View style={{ marginTop: 10 }}>
           <View>
             <TextInput
               autoCapitalize="none"
@@ -210,7 +210,7 @@ const ToMyOtherAccountScreen = ({theme, navigation, route}) => {
               renderCustomizedButtonChild={(selectedItem, index) => {
                 return (
                   <View style={styles.dropdownBtnChildStyle}>
-                    <Text style={styles.dropdownBtnTxt}>{selectedItem && selectedItem.accountId === toAccount ? selectedItem.accountName : 'To Account'}</Text>
+                    <Text style={styles.dropdownBtnTxt}>{ selectedItem && selectedItem.accountId === toAccount ? selectedItem.accountName : 'To Account' }</Text>
                     <FontAwesomeIcons name="chevron-down" color={theme.colors.text} size={14} />
                   </View>
                 )
@@ -221,9 +221,9 @@ const ToMyOtherAccountScreen = ({theme, navigation, route}) => {
               renderCustomizedRowChild={(item, index) => {
                 return (
                   <View style={styles.dropdownRowChildStyle}>
-                    <Text style={styles.dropdownRowTxt}>{item.accountName}</Text>
+                    <Text style={styles.dropdownRowTxt}>{ item.accountName }</Text>
                   </View>
-                );
+                )
               }}
             />
           </View>
@@ -247,7 +247,7 @@ const ToMyOtherAccountScreen = ({theme, navigation, route}) => {
               renderCustomizedButtonChild={(selectedItem, index) => {
                 return (
                   <View style={styles.dropdownBtnChildStyle}>
-                    <Text style={styles.dropdownBtnTxt}>{selectedItem ? selectedItem : 'Payment Method *'}</Text>
+                    <Text style={styles.dropdownBtnTxt}>{ selectedItem || 'Payment Method *' }</Text>
                     <FontAwesomeIcons name="chevron-down" color={theme.colors.text} size={14} />
                   </View>
                 )
@@ -259,68 +259,68 @@ const ToMyOtherAccountScreen = ({theme, navigation, route}) => {
               renderCustomizedRowChild={(item, index) => {
                 return (
                   <View style={styles.dropdownRowChildStyle}>
-                    <Text style={styles.dropdownRowTxt}>{item}</Text>
+                    <Text style={styles.dropdownRowTxt}>{ item }</Text>
                   </View>
-                );
+                )
               }}
             />
           </View>
           <View>
             <TextInput
-                autoCapitalize="none"
-                style={styles.input}
-                label="Add description *"
-                value={paymentReference}
-                onChangeText={text => setPaymentReference(text)}
-                underlineColor={theme.colors.lightGrey}
-              />
+              autoCapitalize="none"
+              style={styles.input}
+              label="Add description *"
+              value={paymentReference}
+              onChangeText={text => setPaymentReference(text)}
+              underlineColor={theme.colors.lightGrey}
+            />
           </View>
           <View>
             <TextInput
-                autoCapitalize="none"
-                style={styles.input}
-                label="Payment details *"
-                value={notes}
-                onChangeText={text => setNotes(text)}
-                maxLength={35}
-                error={notes && !validateName(notes)}
-                underlineColor={theme.colors.lightGrey}
-              />
+              autoCapitalize="none"
+              style={styles.input}
+              label="Payment details *"
+              value={notes}
+              onChangeText={text => setNotes(text)}
+              maxLength={35}
+              error={notes && !validateName(notes)}
+              underlineColor={theme.colors.lightGrey}
+            />
           </View>
           <View>
             <TextInput
-                style={styles.input}
-                keyboardType='numeric'
-                label={"You send " + `${fromCurrency && getSymbolFromCurrency(fromCurrency)}` + " *"}
-                placeholder="Amount to transfer"
-                value={amount}
-                onChangeText={text => {
-                  setAmount(text)
-                  setFundsAvailable(false)
-                }}
-                error={!amountCheck()}
-                underlineColor={theme.colors.lightGrey}
-              />
-            <Text>{fromCurrency && `Available balance: ${getSymbolFromCurrency(fromCurrency)} ${getAvailableBalance(accountList, fromAccount)}`}</Text>
+              style={styles.input}
+              keyboardType='numeric'
+              label={"You send " + `${fromCurrency && getSymbolFromCurrency(fromCurrency)}` + " *"}
+              placeholder="Amount to transfer"
+              value={amount}
+              onChangeText={text => {
+                setAmount(text)
+                setFundsAvailable(false)
+              }}
+              error={!amountCheck()}
+              underlineColor={theme.colors.lightGrey}
+            />
+            <Text>{ fromCurrency && `Available balance: ${getSymbolFromCurrency(fromCurrency)} ${getAvailableBalance(accountList, fromAccount)}` }</Text>
           </View>
           <View>
             <TextInput
-                style={[styles.input, styles.inputBorder]}
-                label="Yet to calculate"
-                value={fee}
-                disabled={true}
-                underlineColor={theme.colors.lightGrey}
-              />
+              style={[styles.input, styles.inputBorder]}
+              label="Yet to calculate"
+              value={fee}
+              disabled={true}
+              underlineColor={theme.colors.lightGrey}
+            />
           </View>
         </View>
         
-        <View style={{width: '100%', marginTop: 20, marginBottom: 35}}>
-          {fundsavailable && <CustomButton theme={theme} name="Continue" onClick={toConfirm} state={validateInput()} />}
-          {!fundsavailable && <CustomButton theme={theme} name="Calculate Fee" onClick={handleFetchTransactionFee} state={validateInput()} />}
+        <View style={{ width: '100%', marginTop: 20, marginBottom: 35 }}>
+          { fundsavailable && <CustomButton theme={theme} name="Continue" onClick={toConfirm} state={validateInput()} /> }
+          { !fundsavailable && <CustomButton theme={theme} name="Calculate Fee" onClick={handleFetchTransactionFee} state={validateInput()} /> }
         </View>
       </KeyboardAwareScrollView>
     </SafeAreaView>
   )
-};
+}
 
-export default withTheme(ToMyOtherAccountScreen);
+export default withTheme(ToMyOtherAccountScreen)

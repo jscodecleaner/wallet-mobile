@@ -1,5 +1,5 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import { LoginData, AccountDataInterface } from '../../types/interface';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { LoginData, AccountDataInterface } from '../../types/interface'
 
 interface AccountsState {
   accountList: AccountDataInterface[];
@@ -7,18 +7,18 @@ interface AccountsState {
 
 const initialState: AccountsState = {
   accountList: []
-};
+}
 
 export const accountsReducer = createSlice({
   name: 'accounts',
   initialState,
   reducers: {
     setAccountList: (state, action: PayloadAction<AccountDataInterface[]>) => {
-      state.accountList = action.payload;
+      state.accountList = action.payload
     },
   },
-});
+})
 
-export const {setAccountList} = accountsReducer.actions;
+export const { setAccountList } = accountsReducer.actions
 
-export default accountsReducer.reducer;
+export default accountsReducer.reducer

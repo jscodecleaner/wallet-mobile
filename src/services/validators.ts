@@ -29,7 +29,7 @@ export const validateAge = (dob: string) => {
 }
 
 export const validatePhone = (phone) => {
-  var regex = /^\+(?:[0-9] ?){6,14}[0-9]$/
+  const regex = /^\+(?:[0-9] ?){6,14}[0-9]$/
 
   return regex.test(phone)
 }

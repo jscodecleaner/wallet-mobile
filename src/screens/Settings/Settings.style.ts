@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native'
 
 export const useStyles = theme => (StyleSheet.create({
   container: {
@@ -75,4 +75,4 @@ export const useStyles = theme => (StyleSheet.create({
     fontSize: 16,
     marginHorizontal: 12,
   },
-}));
+}))

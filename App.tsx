@@ -1,42 +1,42 @@
-import 'react-native-gesture-handler';
-import React, { useEffect } from 'react';
-import { LogBox } from 'react-native';
-import type { ReactNode } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
-import SplashScreen from 'react-native-splash-screen';
-import { useSelector, useDispatch } from 'react-redux';
-import { Root } from 'react-native-popup-confirm-toast'
-import { Popup } from 'react-native-popup-confirm-toast';
-import AsyncStorage from '@react-native-community/async-storage';
-import RNRestart from 'react-native-restart';
+import 'react-native-gesture-handler'
+import React, { useEffect } from 'react'
+import { LogBox } from 'react-native'
+import type { ReactNode } from 'react'
+import { NavigationContainer } from '@react-navigation/native'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper'
+import SplashScreen from 'react-native-splash-screen'
+import { useSelector, useDispatch } from 'react-redux'
+import { Root , Popup } from 'react-native-popup-confirm-toast'
 
-import themeType from './src/types/theme';
-import { refreshTheToken } from './src/services/utility';
-import { Login, Logout } from './src/redux/slices/userSlice';
-import LoginScreen from './src/screens/Auth/Login/Login';
-import LogoutScreen from './src/screens/Auth/Logout/Logout';
-import ForgotPasswordScreen from './src/screens/Auth/ForgotPassword/ForgotPassword';
-import VerifyMFAScreen from './src/screens/Auth/VerifyMFA/VerifyMFA';
-import ForgotUsernameScreen from './src/screens/Auth/ForgotUsername/ForgotUsername';
-import HomeScreen from './src/screens/Home/Home';
-import WalletDetailsScreen from './src/screens/Home/WalletDetails/WalletDetails';
-import EuroTransferScreen from './src/screens/PaymentTransfer/EuroTransfer/EuroTransfer';
-import UkTransferScreen from './src/screens/PaymentTransfer/UkTransfer/UkTransfer';
-import InternationalTransferScreen from './src/screens/PaymentTransfer/InternationalTransfer/InternationalTransfer';
-import ToMyOtherAccountScreen from './src/screens/PaymentTransfer/ToMyOtherAccount/ToMyOtherAccount';
-import { default as ToMyOtherAccountConfirmScreen } from './src/screens/PaymentTransfer/ToMyOtherAccount/ConfirmPayment';
-import { default as EuroTransferConfirmScreen } from './src/screens/PaymentTransfer/EuroTransfer/ConfirmPayment';
-import { default as UkTransferConfirmScreen } from './src/screens/PaymentTransfer/UkTransfer/ConfirmPayment';
-import { default as InternationalTransferConfirmScreen } from './src/screens/PaymentTransfer/InternationalTransfer/ConfirmPayment';
-import SettingsScreen from './src/screens/Home/Settings/Settings';
-import ChangeEmailScreen from './src/screens/Settings/ChangeEmail';
-import ChangePasswordScreen from './src/screens/Settings/ChangePassword';
-import ChangePhoneScreen from './src/screens/Settings/ChangePhone';
-import ChangePersonalInfoScreen from './src/screens/Settings/ChangePersonalInfo';
+import AsyncStorage from '@react-native-community/async-storage'
+import RNRestart from 'react-native-restart'
 
-LogBox.ignoreAllLogs(true);
+import themeType from './src/types/theme'
+import { refreshTheToken } from './src/services/utility'
+import { Login, Logout } from './src/redux/slices/userSlice'
+import LoginScreen from './src/screens/Auth/Login/Login'
+import LogoutScreen from './src/screens/Auth/Logout/Logout'
+import ForgotPasswordScreen from './src/screens/Auth/ForgotPassword/ForgotPassword'
+import VerifyMFAScreen from './src/screens/Auth/VerifyMFA/VerifyMFA'
+import ForgotUsernameScreen from './src/screens/Auth/ForgotUsername/ForgotUsername'
+import HomeScreen from './src/screens/Home/Home'
+import WalletDetailsScreen from './src/screens/Home/WalletDetails/WalletDetails'
+import EuroTransferScreen from './src/screens/PaymentTransfer/EuroTransfer/EuroTransfer'
+import UkTransferScreen from './src/screens/PaymentTransfer/UkTransfer/UkTransfer'
+import InternationalTransferScreen from './src/screens/PaymentTransfer/InternationalTransfer/InternationalTransfer'
+import ToMyOtherAccountScreen from './src/screens/PaymentTransfer/ToMyOtherAccount/ToMyOtherAccount'
+import { default as ToMyOtherAccountConfirmScreen } from './src/screens/PaymentTransfer/ToMyOtherAccount/ConfirmPayment'
+import { default as EuroTransferConfirmScreen } from './src/screens/PaymentTransfer/EuroTransfer/ConfirmPayment'
+import { default as UkTransferConfirmScreen } from './src/screens/PaymentTransfer/UkTransfer/ConfirmPayment'
+import { default as InternationalTransferConfirmScreen } from './src/screens/PaymentTransfer/InternationalTransfer/ConfirmPayment'
+import SettingsScreen from './src/screens/Home/Settings/Settings'
+import ChangeEmailScreen from './src/screens/Settings/ChangeEmail'
+import ChangePasswordScreen from './src/screens/Settings/ChangePassword'
+import ChangePhoneScreen from './src/screens/Settings/ChangePhone'
+import ChangePersonalInfoScreen from './src/screens/Settings/ChangePersonalInfo'
+
+LogBox.ignoreAllLogs(true)
 
 declare global {
   namespace ReactNativePaper {
@@ -46,7 +46,7 @@ declare global {
   }
 }
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator()
 
 const theme: themeType = {
   ...DefaultTheme,
@@ -58,33 +58,33 @@ const theme: themeType = {
     error: 'red',
     lightGrey: '#2b2c2e',
   },
-};
+}
 
 const App: () => ReactNode = () => {
-  const { loginData, authenticated, mfaVerified } = useSelector((state: any) => state.user);
-  const dispatch = useDispatch();
+  const { loginData, authenticated, mfaVerified } = useSelector((state: any) => state.user)
+  const dispatch = useDispatch()
 
-  const TIME_TICK = 15 * 60 * 1000;
+  const TIME_TICK = 15 * 60 * 1000
 
   const getNavigationScreen = () => {
     if (authenticated) {
       if (mfaVerified) {
-        return 'Home';
+        return 'Home'
       } else {
         return 'VerifyMFA'
       }
     } else {
-      return 'Login';
+      return 'Login'
     }
-  };
+  }
 
   useEffect(() => {
-    SplashScreen.hide();
+    SplashScreen.hide()
 
     if (mfaVerified) {
       const sessionTimeout = setTimeout(async () => {
         console.log("app timeout")
-        await AsyncStorage.clear();
+        await AsyncStorage.clear()
 
         Popup.show({
           type: 'confirm',
@@ -93,16 +93,16 @@ const App: () => ReactNode = () => {
           buttonText: 'Login',
           confirmButtonStyle: { display: "none" },
           callback: () => {
-            Popup.hide();
-            dispatch(Logout());
-            RNRestart.Restart();
+            Popup.hide()
+            dispatch(Logout())
+            RNRestart.Restart()
           },
         })
       }, TIME_TICK)
 
       return () => clearTimeout(sessionTimeout)
     }
-  }, [mfaVerified]);
+  }, [mfaVerified])
 
   return (
     <Root>
@@ -263,7 +263,7 @@ const App: () => ReactNode = () => {
         </PaperProvider>
       </NavigationContainer>
     </Root>
-  );
-};
+  )
+}
 
-export default App;
+export default App

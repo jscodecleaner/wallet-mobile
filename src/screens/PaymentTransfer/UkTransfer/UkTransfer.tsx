@@ -1,84 +1,84 @@
-import React, { useEffect, useState, useMemo } from 'react';
-import { useSelector, useDispatch } from "react-redux";
-import { SafeAreaView, View } from 'react-native';
+import React, { useEffect, useState, useMemo } from 'react'
+import { useSelector, useDispatch } from "react-redux"
+import { SafeAreaView, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview'
-import Spinner from 'react-native-loading-spinner-overlay';
-import { Button, Text, TextInput, withTheme } from 'react-native-paper';
-import FontAwesomeIcons from 'react-native-vector-icons/FontAwesome';
+import Spinner from 'react-native-loading-spinner-overlay'
+import { Button, Text, TextInput, withTheme } from 'react-native-paper'
+import FontAwesomeIcons from 'react-native-vector-icons/FontAwesome'
 import countryList from 'react-select-country-list'
-import { Collapse, CollapseHeader, CollapseBody } from 'accordion-collapse-react-native';
-import CountryFlag from "react-native-country-flag";
-import getSymbolFromCurrency from 'currency-symbol-map';
-import SelectDropdown from 'react-native-select-dropdown';
-import { Toast } from 'react-native-popup-confirm-toast';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Collapse, CollapseHeader, CollapseBody } from 'accordion-collapse-react-native'
+import CountryFlag from "react-native-country-flag"
+import getSymbolFromCurrency from 'currency-symbol-map'
+import SelectDropdown from 'react-native-select-dropdown'
+import { Toast } from 'react-native-popup-confirm-toast'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
-import { useStyles } from './UkTransfer.style';
-import { transferTypeList } from '../../../services/common';
-import CustomButton from '../../../components/CustomButton/CustomButton';
-import { getAccountFromAccountID, getPaymentMethodList, getTransactionFee, getAvailableBalance, stringToFloat, floatToString } from '../../../services/utility';
-import { validateName } from '../../../services/validators';
+import { useStyles } from './UkTransfer.style'
+import { transferTypeList } from '../../../services/common'
+import CustomButton from '../../../components/CustomButton/CustomButton'
+import { getAccountFromAccountID, getPaymentMethodList, getTransactionFee, getAvailableBalance, stringToFloat, floatToString } from '../../../services/utility'
+import { validateName } from '../../../services/validators'
 
-const pAndTType = 'uk-domestic-transfer';
+const pAndTType = 'uk-domestic-transfer'
 
 const UkTransferScreen = ({ theme, navigation, route }) => {
-  const { fromAccount } = route.params;
+  const { fromAccount } = route.params
 
-  const styles = useStyles(theme);
-  const dispatch = useDispatch();
+  const styles = useStyles(theme)
+  const dispatch = useDispatch()
 
-  const [fundsavailable, setFundsAvailable] = useState(false);
-  const [progress, setProgress] = useState(false);
-  const [addressCollapsed, setAddressCollapsed] = useState(false);
-  const [bankCollapsed, setBankCollapsed] = useState(false);
+  const [fundsavailable, setFundsAvailable] = useState(false)
+  const [progress, setProgress] = useState(false)
+  const [addressCollapsed, setAddressCollapsed] = useState(false)
+  const [bankCollapsed, setBankCollapsed] = useState(false)
 
-  const [fromAccountName, setFromAccountName] = useState('');
+  const [fromAccountName, setFromAccountName] = useState('')
   const [paymentMethodList, setPaymentMethodList] = useState([] as string[])
-  const [currency, setCurrency] = useState('');
-  const [bankName, setBankName] = useState('');
-  const [accountHolderName, setAccountHolderName] = useState('');
-  const [sortCode, setSortCode] = useState('');
-  const [accountNumber, setAccountNumber] = useState('');
-  const [transType, setTransType] = useState('Personal');
-  const [paymentMethod, setPaymentMethod] = useState('');
-  const [paymentReference, setPaymentReference] = useState('');
-  const [notes, setNotes] = useState('');
-  const [recipientAddress1, setRecipientAddress1] = useState('');
-  const [recipientAddress2, setRecipientAddress2] = useState('');
-  const [recipientPostalCode, setRecipientPostalCode] = useState('');
-  const [recipientCountry, setRecipientCountry] = useState('');
-  const [bankAddress1, setBankAddress1] = useState('');
-  const [bankAddress2, setBankAddress2] = useState('');
-  const [bankPostalCode, setBankPostalCode] = useState('');
-  const [bankCountry, setBankCountry] = useState('');
-  const [amount, setAmount] = useState('');
-  const [fee, setFee] = useState('');
-  const [preApprovalAmount, setPreApprovalAmount] = useState(0);
-  const [preApprovalTxnCount, setPreApprovalTxnCount] = useState(0);
+  const [currency, setCurrency] = useState('')
+  const [bankName, setBankName] = useState('')
+  const [accountHolderName, setAccountHolderName] = useState('')
+  const [sortCode, setSortCode] = useState('')
+  const [accountNumber, setAccountNumber] = useState('')
+  const [transType, setTransType] = useState('Personal')
+  const [paymentMethod, setPaymentMethod] = useState('')
+  const [paymentReference, setPaymentReference] = useState('')
+  const [notes, setNotes] = useState('')
+  const [recipientAddress1, setRecipientAddress1] = useState('')
+  const [recipientAddress2, setRecipientAddress2] = useState('')
+  const [recipientPostalCode, setRecipientPostalCode] = useState('')
+  const [recipientCountry, setRecipientCountry] = useState('')
+  const [bankAddress1, setBankAddress1] = useState('')
+  const [bankAddress2, setBankAddress2] = useState('')
+  const [bankPostalCode, setBankPostalCode] = useState('')
+  const [bankCountry, setBankCountry] = useState('')
+  const [amount, setAmount] = useState('')
+  const [fee, setFee] = useState('')
+  const [preApprovalAmount, setPreApprovalAmount] = useState(0)
+  const [preApprovalTxnCount, setPreApprovalTxnCount] = useState(0)
 
-  const listOfCountry = useMemo(() => countryList().getData(), []);
+  const listOfCountry = useMemo(() => countryList().getData(), [])
 
-  const { accountList } = useSelector((state: any) => state.accounts);
-  const { loginData } = useSelector((state: any) => state.user);
+  const { accountList } = useSelector((state: any) => state.accounts)
+  const { loginData } = useSelector((state: any) => state.user)
 
   useEffect(() => {
-  }, []);
+  }, [])
 
   useEffect(() => {
     if (accountList.length > 0) {
-      const selectedItem = getAccountFromAccountID(accountList, fromAccount);
+      const selectedItem = getAccountFromAccountID(accountList, fromAccount)
 
-      setFromAccountName(selectedItem.accountName);
-      setCurrency(selectedItem.currencyData.currencyName);
-      const methodList = getPaymentMethodList(accountList, selectedItem.accountId);
-      setPaymentMethodList(methodList);
-      methodList.length > 0 && setPaymentMethod(methodList[0]);
+      setFromAccountName(selectedItem.accountName)
+      setCurrency(selectedItem.currencyData.currencyName)
+      const methodList = getPaymentMethodList(accountList, selectedItem.accountId)
+      setPaymentMethodList(methodList)
+      methodList.length > 0 && setPaymentMethod(methodList[0])
       setTransType(transferTypeList[0])
     }
 
-    setFundsAvailable(false);
+    setFundsAvailable(false)
     setProgress(false)
-  }, [accountList]);
+  }, [accountList])
 
   const amountCheck = () => {
     return Number(parseFloat(amount == '' ? '0' : amount).toFixed(2)) <= getAvailableBalance(accountList, fromAccount)
@@ -90,11 +90,11 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
       accountHolderName.length > 0 &&
       paymentReference.length > 0 &&
       notes.length > 0 && validateName(notes) &&
-      amount.length > 0 && amountCheck() == true
+      amount.length > 0 && amountCheck()
     )
-      return "normal";
+      return "normal"
     else
-      return "disabled";
+      return "disabled"
   }
 
   const handleFetchTransactionFee = async () => {
@@ -148,7 +148,7 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
   }
 
   const toConfirm = () => {
-    const fromAcc = getAccountFromAccountID(accountList, fromAccount);
+    const fromAcc = getAccountFromAccountID(accountList, fromAccount)
 
     const transactionDetails = {
       accountId: fromAccount,
@@ -185,7 +185,7 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
       transType,
       pAndTType,
     }
-    navigation.navigate('UkTransferConfirm', { transactionDetails: transactionDetails });
+    navigation.navigate('UkTransferConfirm', { transactionDetails })
   }
 
   return (
@@ -274,7 +274,7 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
               renderCustomizedButtonChild={(selectedItem, index) => {
                 return (
                   <View style={styles.dropdownBtnChildStyle}>
-                    <Text style={styles.dropdownBtnTxt}>{selectedItem ? selectedItem : 'Type *'}</Text>
+                    <Text style={styles.dropdownBtnTxt}>{ selectedItem || 'Type *' }</Text>
                     <FontAwesomeIcons name="chevron-down" color={theme.colors.text} size={14} />
                   </View>
                 )
@@ -286,9 +286,9 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
               renderCustomizedRowChild={(item, index) => {
                 return (
                   <View style={styles.dropdownRowChildStyle}>
-                    <Text style={styles.dropdownRowTxt}>{item}</Text>
+                    <Text style={styles.dropdownRowTxt}>{ item }</Text>
                   </View>
-                );
+                )
               }}
             />
           </View>
@@ -302,7 +302,7 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
               renderCustomizedButtonChild={(selectedItem, index) => {
                 return (
                   <View style={styles.dropdownBtnChildStyle}>
-                    <Text style={styles.dropdownBtnTxt}>{selectedItem ? selectedItem : 'Payment Method *'}</Text>
+                    <Text style={styles.dropdownBtnTxt}>{ selectedItem || 'Payment Method *' }</Text>
                     <FontAwesomeIcons name="chevron-down" color={theme.colors.text} size={14} />
                   </View>
                 )
@@ -314,9 +314,9 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
               renderCustomizedRowChild={(item, index) => {
                 return (
                   <View style={styles.dropdownRowChildStyle}>
-                    <Text style={styles.dropdownRowTxt}>{item}</Text>
+                    <Text style={styles.dropdownRowTxt}>{ item }</Text>
                   </View>
-                );
+                )
               }}
             />
           </View>
@@ -392,7 +392,7 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
               renderCustomizedButtonChild={(selectedItem, index) => {
                 return (
                   <View style={styles.countryDropdownBtnChildStyle}>
-                    <Text style={styles.countryDropdownBtnTxt}>{selectedItem ? selectedItem.label : 'Country'}</Text>
+                    <Text style={styles.countryDropdownBtnTxt}>{ selectedItem ? selectedItem.label : 'Country' }</Text>
                     <FontAwesomeIcons name="chevron-down" color={theme.colors.text} size={14} />
                   </View>
                 )
@@ -404,9 +404,9 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
                 return (
                   <View style={styles.countryDropdownRowChildStyle}>
                     <CountryFlag isoCode={item.value} size={25} />
-                    <Text style={styles.countryDropdownRowTxt}>{item.label}</Text>
+                    <Text style={styles.countryDropdownRowTxt}>{ item.label }</Text>
                   </View>
-                );
+                )
               }}
             />
           </CollapseBody>
@@ -459,7 +459,7 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
               renderCustomizedButtonChild={(selectedItem, index) => {
                 return (
                   <View style={styles.countryDropdownBtnChildStyle}>
-                    <Text style={styles.countryDropdownBtnTxt}>{selectedItem ? selectedItem.label : 'Country'}</Text>
+                    <Text style={styles.countryDropdownBtnTxt}>{ selectedItem ? selectedItem.label : 'Country' }</Text>
                     <FontAwesomeIcons name="chevron-down" color={theme.colors.text} size={14} />
                   </View>
                 )
@@ -471,9 +471,9 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
                 return (
                   <View style={styles.countryDropdownRowChildStyle}>
                     <CountryFlag isoCode={item.value} size={25} />
-                    <Text style={styles.countryDropdownRowTxt}>{item.label}</Text>
+                    <Text style={styles.countryDropdownRowTxt}>{ item.label }</Text>
                   </View>
-                );
+                )
               }}
             />
           </CollapseBody>
@@ -505,12 +505,12 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
         </View>
 
         <View style={{ width: '100%', marginTop: 20, marginBottom: 15 }}>
-          {fundsavailable && <CustomButton theme={theme} name="Continue" onClick={toConfirm} state={validateInput()} />}
-          {!fundsavailable && <CustomButton theme={theme} name="Calculate Fee" onClick={handleFetchTransactionFee} state={validateInput()} />}
+          { fundsavailable && <CustomButton theme={theme} name="Continue" onClick={toConfirm} state={validateInput()} /> }
+          { !fundsavailable && <CustomButton theme={theme} name="Calculate Fee" onClick={handleFetchTransactionFee} state={validateInput()} /> }
         </View>
       </KeyboardAwareScrollView>
     </SafeAreaView>
   )
-};
+}
 
-export default withTheme(UkTransferScreen);
+export default withTheme(UkTransferScreen)

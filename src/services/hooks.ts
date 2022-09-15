@@ -6,24 +6,24 @@ import { ApiEndpoint, StatusCode } from '../types/enum'
 import { universalGetRequestWithParams } from './RequestHandler'
 
 const useProviderBankCodeTypeList = () => {
-    const [providerBankCodeTypeList, setProviderBankCodeTypeList] = useState([] as string[])
+  const [providerBankCodeTypeList, setProviderBankCodeTypeList] = useState([] as string[])
 
-    const { loginData } = useSelector((state: any) => state.user);
+  const { loginData } = useSelector((state: any) => state.user)
 
-    useEffect(() => {
-        const getUserProfile = async () => {
-            const url = `${BASE_URL}/${ApiEndpoint.GET_PARAMETER}`
-            const response: any = await universalGetRequestWithParams(url, { param_name: 'bank_code_type' })
+  useEffect(() => {
+    const getUserProfile = async () => {
+      const url = `${BASE_URL}/${ApiEndpoint.GET_PARAMETER}`
+      const response: any = await universalGetRequestWithParams(url, { param_name: 'bank_code_type' })
 
-            if (response.status === StatusCode.OKAY) {
-                setProviderBankCodeTypeList(response.data.data.map((o: { value: string }) => o.value))
-            }
-        }
+      if (response.status === StatusCode.OKAY) {
+        setProviderBankCodeTypeList(response.data.data.map((o: { value: string }) => o.value))
+      }
+    }
 
-        getUserProfile()
-    }, [loginData])
+    getUserProfile()
+  }, [loginData])
 
-    return providerBankCodeTypeList
+  return providerBankCodeTypeList
 }
 
 export default useProviderBankCodeTypeList

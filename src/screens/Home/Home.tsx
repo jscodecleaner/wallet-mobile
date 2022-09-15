@@ -1,30 +1,30 @@
-import React, { useEffect, useState } from 'react';
-import { useFocusEffect } from '@react-navigation/native';
-import { BackHandler, Alert } from 'react-native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { withTheme } from 'react-native-paper';
-import { useDispatch, useSelector } from "react-redux";
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import FontAwesomeIcons from 'react-native-vector-icons/FontAwesome';
-import AsyncStorage from '@react-native-community/async-storage';
+import React, { useEffect, useState } from 'react'
+import { useFocusEffect } from '@react-navigation/native'
+import { BackHandler, Alert } from 'react-native'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { withTheme } from 'react-native-paper'
+import { useDispatch, useSelector } from "react-redux"
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import FontAwesomeIcons from 'react-native-vector-icons/FontAwesome'
+import AsyncStorage from '@react-native-community/async-storage'
 
-import { Logout } from '../../redux/slices/userSlice';
-import WalletListScreen from './WalletList/WalletList';
-import SettingsScreen from './Settings/Settings';
-import LogoutScreen from '../Auth/Logout/Logout';
-import styles from './Home.style';
+import { Logout } from '../../redux/slices/userSlice'
+import WalletListScreen from './WalletList/WalletList'
+import SettingsScreen from './Settings/Settings'
+import LogoutScreen from '../Auth/Logout/Logout'
+import styles from './Home.style'
 
-const Tab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator()
 
-const Home = ({theme, navigation}) => {
-  const dispatch = useDispatch();
-  const {mfaVerified} = useSelector((state: any) => state.user);
+const Home = ({ theme, navigation }) => {
+  const dispatch = useDispatch()
+  const { mfaVerified } = useSelector((state: any) => state.user)
 
   const exitApp = async () => {
-    await AsyncStorage.clear();
-    dispatch(Logout());
-    BackHandler.exitApp();
-  };
+    await AsyncStorage.clear()
+    dispatch(Logout())
+    BackHandler.exitApp()
+  }
 
   useFocusEffect(
     React.useCallback(() => {
@@ -36,19 +36,19 @@ const Home = ({theme, navigation}) => {
           },
           { 
             text: "Yes", 
-            onPress: () => exitApp()
+            onPress: async () => await exitApp()
           }
-        ]);
+        ])
 
-        return true;
-      };
+        return true
+      }
 
-      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+      BackHandler.addEventListener('hardwareBackPress', onBackPress)
 
       return () =>
-        BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+        BackHandler.removeEventListener('hardwareBackPress', onBackPress)
     }, [])
-  );
+  )
 
   return (
     <Tab.Navigator
@@ -89,7 +89,7 @@ const Home = ({theme, navigation}) => {
         }} 
       />
     </Tab.Navigator>
-  );
+  )
 }
 
-export default withTheme(Home);
+export default withTheme(Home)

@@ -1,79 +1,79 @@
-import React, { useEffect, useState, useMemo } from 'react';
-import { useSelector, useDispatch } from "react-redux";
-import { SafeAreaView, View } from 'react-native';
+import React, { useEffect, useState, useMemo } from 'react'
+import { useSelector, useDispatch } from "react-redux"
+import { SafeAreaView, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview'
-import Spinner from 'react-native-loading-spinner-overlay';
-import { Button, Text, TextInput, withTheme, HelperText } from 'react-native-paper';
-import FontAwesomeIcons from 'react-native-vector-icons/FontAwesome';
-import { Popup } from 'react-native-popup-confirm-toast';
-import countryList from 'react-select-country-list';
-import { Collapse, CollapseHeader, CollapseBody } from 'accordion-collapse-react-native';
-import CountryFlag from "react-native-country-flag";
-import getSymbolFromCurrency from 'currency-symbol-map';
-import { Toast } from 'react-native-popup-confirm-toast';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Spinner from 'react-native-loading-spinner-overlay'
+import { Button, Text, TextInput, withTheme, HelperText } from 'react-native-paper'
+import FontAwesomeIcons from 'react-native-vector-icons/FontAwesome'
+import { Popup , Toast } from 'react-native-popup-confirm-toast'
+import countryList from 'react-select-country-list'
+import { Collapse, CollapseHeader, CollapseBody } from 'accordion-collapse-react-native'
+import CountryFlag from "react-native-country-flag"
+import getSymbolFromCurrency from 'currency-symbol-map'
 
-import { useStyles } from './EuroTransfer.style';
-import { transferTypeList } from '../../../services/common';
-import CustomButton from '../../../components/CustomButton/CustomButton';
-import SelectDropdown from 'react-native-select-dropdown';
-import { getPaymentMethodList, getAccountFromAccountID, getAvailableBalance, getTransactionFee, floatToString, stringToFloat } from '../../../services/utility';
-import { validateName, validateBICCode } from '../../../services/validators';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
-const pAndTType = 'euro-transfer';
+import { useStyles } from './EuroTransfer.style'
+import { transferTypeList } from '../../../services/common'
+import CustomButton from '../../../components/CustomButton/CustomButton'
+import SelectDropdown from 'react-native-select-dropdown'
+import { getPaymentMethodList, getAccountFromAccountID, getAvailableBalance, getTransactionFee, floatToString, stringToFloat } from '../../../services/utility'
+import { validateName, validateBICCode } from '../../../services/validators'
 
-const EuroTransferScreen = ({theme, navigation, route}) => {
-  const {fromAccount} = route.params;
+const pAndTType = 'euro-transfer'
 
-  const styles = useStyles(theme);
+const EuroTransferScreen = ({ theme, navigation, route }) => {
+  const { fromAccount } = route.params
 
-  const [fundsavailable, setFundsAvailable] = useState(false);
-  const [progress, setProgress] = useState(false);
-  const [collapsed, setCollapsed] = useState(false);
+  const styles = useStyles(theme)
 
-  const [fromAccountName, setFromAccountName] = useState('');
+  const [fundsavailable, setFundsAvailable] = useState(false)
+  const [progress, setProgress] = useState(false)
+  const [collapsed, setCollapsed] = useState(false)
+
+  const [fromAccountName, setFromAccountName] = useState('')
   const [paymentMethodList, setPaymentMethodList] = useState([] as string[])
-  const [currency, setCurrency] = useState('');
-  const [accountHolderName, setAccountHolderName] = useState('');
-  const [iBanNumber, setIBanNumber] = useState('');
-  const [bicCode, setBicCode] = useState('');
-  const [address, setAddress] = useState('');
-  const [city, setCity] = useState('');
-  const [state, setState] = useState('');
-  const [country, setCountry] = useState('');
-  const [postalCode, setPostalCode] = useState('');
-  const [type, setType] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState('');
-  const [paymentReference, setPaymentReference] = useState('');
-  const [notes, setNotes] = useState('');
-  const [amount, setAmount] = useState('');
-  const [fee, setFee] = useState('');
+  const [currency, setCurrency] = useState('')
+  const [accountHolderName, setAccountHolderName] = useState('')
+  const [iBanNumber, setIBanNumber] = useState('')
+  const [bicCode, setBicCode] = useState('')
+  const [address, setAddress] = useState('')
+  const [city, setCity] = useState('')
+  const [state, setState] = useState('')
+  const [country, setCountry] = useState('')
+  const [postalCode, setPostalCode] = useState('')
+  const [type, setType] = useState('')
+  const [paymentMethod, setPaymentMethod] = useState('')
+  const [paymentReference, setPaymentReference] = useState('')
+  const [notes, setNotes] = useState('')
+  const [amount, setAmount] = useState('')
+  const [fee, setFee] = useState('')
   const [preApprovalAmount, setPreApprovalAmount] = useState(0)
   const [preApprovalTxnCount, setPreApprovalTxnCount] = useState(0)
 
   const listOfCountry = useMemo(() => countryList().getData(), [])
 
-  const {accountList} = useSelector((state: any) => state.accounts);
-  const {loginData} = useSelector((state: any) => state.user);
+  const { accountList } = useSelector((state: any) => state.accounts)
+  const { loginData } = useSelector((state: any) => state.user)
 
   useEffect(() => {
-  }, []);
+  }, [])
 
   useEffect(() => {
     if (accountList.length > 0) {
-      const selectedItem = getAccountFromAccountID(accountList, fromAccount);
+      const selectedItem = getAccountFromAccountID(accountList, fromAccount)
   
-      setFromAccountName(selectedItem.accountName);
-      setCurrency(selectedItem.currencyData.currencyName);
-      const methodList = getPaymentMethodList(accountList, selectedItem.accountId);
-      setPaymentMethodList(methodList);
-      methodList.length > 0 && setPaymentMethod(methodList[0]);
+      setFromAccountName(selectedItem.accountName)
+      setCurrency(selectedItem.currencyData.currencyName)
+      const methodList = getPaymentMethodList(accountList, selectedItem.accountId)
+      setPaymentMethodList(methodList)
+      methodList.length > 0 && setPaymentMethod(methodList[0])
       setType(transferTypeList[0])
     }
 
-    setFundsAvailable(false);
+    setFundsAvailable(false)
     setProgress(false)
-  }, [accountList]);
+  }, [accountList])
 
   const validateInput = () => {
     if (currency.length > 0 && 
@@ -82,12 +82,12 @@ const EuroTransferScreen = ({theme, navigation, route}) => {
       bicCode.length > 0 &&
       paymentReference.length > 0 &&
       notes.length > 0 && validateName(notes) &&
-      amount.length > 0 && amountCheck() == true &&
+      amount.length > 0 && amountCheck() &&
       validateBICCode(bicCode)
     )
-      return "normal";
+      return "normal"
     else
-      return "disabled";
+      return "disabled"
   }
 
   const amountCheck = () => {
@@ -145,7 +145,7 @@ const EuroTransferScreen = ({theme, navigation, route}) => {
   }
 
   const toConfirm = () => {
-    const fromAcc = getAccountFromAccountID(accountList, fromAccount);
+    const fromAcc = getAccountFromAccountID(accountList, fromAccount)
 
     const transactionDetails = {
       accountId: fromAccount,
@@ -172,20 +172,20 @@ const EuroTransferScreen = ({theme, navigation, route}) => {
       preApprovalTxnCount,
       pAndTType,
     }
-    navigation.navigate('EuroTransferConfirm', {transactionDetails: transactionDetails});
+    navigation.navigate('EuroTransferConfirm', { transactionDetails })
   }
 
   return (
     <SafeAreaView style={styles.container}>
       <Spinner
-          visible={progress}
-          textContent={'Loading...'}
-          textStyle={{
-            color: '#FFF',
+        visible={progress}
+        textContent={'Loading...'}
+        textStyle={{
+          color: '#FFF',
         }}
       />
       <KeyboardAwareScrollView style={styles.scrollViewStyle}>
-        <View style={{marginTop: 10}}>
+        <View style={{ marginTop: 10 }}>
           <View>
             <TextInput
               autoCapitalize="none"
@@ -208,23 +208,23 @@ const EuroTransferScreen = ({theme, navigation, route}) => {
           </View>
           <View>
             <TextInput
-                autoCapitalize="none"
-                style={styles.input}
-                label="Account holder's name *"
-                value={accountHolderName}
-                onChangeText={text => setAccountHolderName(text)}
-                underlineColor={theme.colors.lightGrey}
-              />
+              autoCapitalize="none"
+              style={styles.input}
+              label="Account holder's name *"
+              value={accountHolderName}
+              onChangeText={text => setAccountHolderName(text)}
+              underlineColor={theme.colors.lightGrey}
+            />
           </View>
           <View>
             <TextInput
-                autoCapitalize="none"
-                style={styles.input}
-                label="IBAN Number *"
-                value={iBanNumber}
-                onChangeText={text => setIBanNumber(text)}
-                underlineColor={theme.colors.lightGrey}
-              />
+              autoCapitalize="none"
+              style={styles.input}
+              label="IBAN Number *"
+              value={iBanNumber}
+              onChangeText={text => setIBanNumber(text)}
+              underlineColor={theme.colors.lightGrey}
+            />
           </View>
           <View>
             <TextInput
@@ -235,49 +235,49 @@ const EuroTransferScreen = ({theme, navigation, route}) => {
               onChangeText={text => setBicCode(text)}
               underlineColor={theme.colors.lightGrey}
             />
-            {bicCode != '' && !validateBICCode(bicCode) && <HelperText type="error">
+            { bicCode != '' && !validateBICCode(bicCode) && <HelperText type="error">
               At least 8 or 11 character
-            </HelperText>}
+            </HelperText> }
           </View>
         </View>
         
-        <Collapse style={{marginTop: 20}} onToggle={setCollapsed}>
+        <Collapse style={{ marginTop: 20 }} onToggle={setCollapsed}>
           <CollapseHeader>
-            <View style={{flexDirection: "row", justifyContent: "space-between"}}>
-              <Text style={{fontSize: 20, fontWeight: 'bold'}}>Recipient address</Text>
+            <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+              <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Recipient address</Text>
               <FontAwesomeIcons name={collapsed ? "chevron-up" : "chevron-down"} color={theme.colors.text} size={18} />
             </View>
           </CollapseHeader>
           <CollapseBody>
             <View>
               <TextInput
-                  autoCapitalize="none"
-                  style={styles.input}
-                  label="Address"
-                  value={address}
-                  onChangeText={text => setAddress(text)}
-                  underlineColor={theme.colors.lightGrey}
-                />
+                autoCapitalize="none"
+                style={styles.input}
+                label="Address"
+                value={address}
+                onChangeText={text => setAddress(text)}
+                underlineColor={theme.colors.lightGrey}
+              />
             </View>
             <View>
               <TextInput
-                  autoCapitalize="none"
-                  style={styles.input}
-                  label="City"
-                  value={city}
-                  onChangeText={text => setCity(text)}
-                  underlineColor={theme.colors.lightGrey}
-                />
+                autoCapitalize="none"
+                style={styles.input}
+                label="City"
+                value={city}
+                onChangeText={text => setCity(text)}
+                underlineColor={theme.colors.lightGrey}
+              />
             </View>
             <View>
               <TextInput
-                  autoCapitalize="none"
-                  style={styles.input}
-                  label="State"
-                  value={state}
-                  onChangeText={text => setState(text)}
-                  underlineColor={theme.colors.lightGrey}
-                />
+                autoCapitalize="none"
+                style={styles.input}
+                label="State"
+                value={state}
+                onChangeText={text => setState(text)}
+                underlineColor={theme.colors.lightGrey}
+              />
             </View>
             <SelectDropdown
               data={listOfCountry}
@@ -288,7 +288,7 @@ const EuroTransferScreen = ({theme, navigation, route}) => {
               renderCustomizedButtonChild={(selectedItem, index) => {
                 return (
                   <View style={styles.countryDropdownBtnChildStyle}>
-                    <Text style={styles.countryDropdownBtnTxt}>{selectedItem ? selectedItem.label : 'Country'}</Text>
+                    <Text style={styles.countryDropdownBtnTxt}>{ selectedItem ? selectedItem.label : 'Country' }</Text>
                     <FontAwesomeIcons name="chevron-down" color={theme.colors.text} size={14} />
                   </View>
                 )
@@ -300,25 +300,25 @@ const EuroTransferScreen = ({theme, navigation, route}) => {
                 return (
                   <View style={styles.countryDropdownRowChildStyle}>
                     <CountryFlag isoCode={item.value} size={25} />
-                    <Text style={styles.countryDropdownRowTxt}>{item.label}</Text>
+                    <Text style={styles.countryDropdownRowTxt}>{ item.label }</Text>
                   </View>
-                );
+                )
               }}
             />
             <View>
               <TextInput
-                  autoCapitalize="none"
-                  style={styles.input}
-                  label="Postal Code"
-                  value={postalCode}
-                  onChangeText={text => setPostalCode(text)}
-                  underlineColor={theme.colors.lightGrey}
-                />
+                autoCapitalize="none"
+                style={styles.input}
+                label="Postal Code"
+                value={postalCode}
+                onChangeText={text => setPostalCode(text)}
+                underlineColor={theme.colors.lightGrey}
+              />
             </View>
           </CollapseBody>
         </Collapse>
         
-        <View style={{marginTop: 20}}>
+        <View style={{ marginTop: 20 }}>
           <View>
             <SelectDropdown
               data={transferTypeList}
@@ -329,7 +329,7 @@ const EuroTransferScreen = ({theme, navigation, route}) => {
               renderCustomizedButtonChild={(selectedItem, index) => {
                 return (
                   <View style={styles.dropdownBtnChildStyle}>
-                    <Text style={styles.dropdownBtnTxt}>{selectedItem ? selectedItem : 'Type *'}</Text>
+                    <Text style={styles.dropdownBtnTxt}>{ selectedItem || 'Type *' }</Text>
                     <FontAwesomeIcons name="chevron-down" color={theme.colors.text} size={14} />
                   </View>
                 )
@@ -341,9 +341,9 @@ const EuroTransferScreen = ({theme, navigation, route}) => {
               renderCustomizedRowChild={(item, index) => {
                 return (
                   <View style={styles.dropdownRowChildStyle}>
-                    <Text style={styles.dropdownRowTxt}>{item}</Text>
+                    <Text style={styles.dropdownRowTxt}>{ item }</Text>
                   </View>
-                );
+                )
               }}
             />
           </View>
@@ -357,7 +357,7 @@ const EuroTransferScreen = ({theme, navigation, route}) => {
               renderCustomizedButtonChild={(selectedItem, index) => {
                 return (
                   <View style={styles.dropdownBtnChildStyle}>
-                    <Text style={styles.dropdownBtnTxt}>{selectedItem ? selectedItem : 'Payment Method *'}</Text>
+                    <Text style={styles.dropdownBtnTxt}>{ selectedItem || 'Payment Method *' }</Text>
                     <FontAwesomeIcons name="chevron-down" color={theme.colors.text} size={14} />
                   </View>
                 )
@@ -369,69 +369,69 @@ const EuroTransferScreen = ({theme, navigation, route}) => {
               renderCustomizedRowChild={(item, index) => {
                 return (
                   <View style={styles.dropdownRowChildStyle}>
-                    <Text style={styles.dropdownRowTxt}>{item}</Text>
+                    <Text style={styles.dropdownRowTxt}>{ item }</Text>
                   </View>
-                );
+                )
               }}
             />
           </View>
           <View>
             <TextInput
-                autoCapitalize="none"
-                style={styles.input}
-                label="Add description *"
-                placeholder="Short payment reference"
-                value={paymentReference}
-                onChangeText={text => setPaymentReference(text)}
-                underlineColor={theme.colors.lightGrey}
-              />
+              autoCapitalize="none"
+              style={styles.input}
+              label="Add description *"
+              placeholder="Short payment reference"
+              value={paymentReference}
+              onChangeText={text => setPaymentReference(text)}
+              underlineColor={theme.colors.lightGrey}
+            />
           </View>
           <View>
             <TextInput
-                autoCapitalize="none"
-                style={styles.input}
-                label="Payment details *"
-                value={notes}
-                onChangeText={text => setNotes(text)}
-                maxLength={35}
-                error={notes && !validateName(notes)}
-                underlineColor={theme.colors.lightGrey}
-              />
+              autoCapitalize="none"
+              style={styles.input}
+              label="Payment details *"
+              value={notes}
+              onChangeText={text => setNotes(text)}
+              maxLength={35}
+              error={notes && !validateName(notes)}
+              underlineColor={theme.colors.lightGrey}
+            />
           </View>
           <View>
             <TextInput
-                  style={styles.input}
-                  keyboardType='numeric'
-                  label={"You send " + `${currency && getSymbolFromCurrency(currency)}` + " *"}
-                  placeholder="Amount to transfer"
-                  value={amount}
-                  onChangeText={text => {
-                    setAmount(text)
-                    setFundsAvailable(false)
-                  }}
-                  error={!amountCheck()}
-                  underlineColor={theme.colors.lightGrey}
-                />
-              <Text>{currency && `Available balance: ${getSymbolFromCurrency(currency)} ${getAvailableBalance(accountList, fromAccount)}`}</Text>
+              style={styles.input}
+              keyboardType='numeric'
+              label={"You send " + `${currency && getSymbolFromCurrency(currency)}` + " *"}
+              placeholder="Amount to transfer"
+              value={amount}
+              onChangeText={text => {
+                setAmount(text)
+                setFundsAvailable(false)
+              }}
+              error={!amountCheck()}
+              underlineColor={theme.colors.lightGrey}
+            />
+            <Text>{ currency && `Available balance: ${getSymbolFromCurrency(currency)} ${getAvailableBalance(accountList, fromAccount)}` }</Text>
           </View>
           <View>
             <TextInput
-                style={[styles.input, styles.inputBorder]}
-                label="Yet to calculate"
-                value={fee}
-                disabled={true}
-                underlineColor={theme.colors.lightGrey}
-              />
+              style={[styles.input, styles.inputBorder]}
+              label="Yet to calculate"
+              value={fee}
+              disabled={true}
+              underlineColor={theme.colors.lightGrey}
+            />
           </View>
         </View>
 
-        <View style={{width: '100%', marginTop: 20, marginBottom: 15}}>
-          {fundsavailable && <CustomButton theme={theme} name="Continue" onClick={toConfirm} state={validateInput()} />}
-          {!fundsavailable && <CustomButton theme={theme} name="Calculate Fee" onClick={handleFetchTransactionFee} state={validateInput()} />}
+        <View style={{ width: '100%', marginTop: 20, marginBottom: 15 }}>
+          { fundsavailable && <CustomButton theme={theme} name="Continue" onClick={toConfirm} state={validateInput()} /> }
+          { !fundsavailable && <CustomButton theme={theme} name="Calculate Fee" onClick={handleFetchTransactionFee} state={validateInput()} /> }
         </View>
       </KeyboardAwareScrollView>
     </SafeAreaView>
   )
-};
+}
 
-export default withTheme(EuroTransferScreen);
+export default withTheme(EuroTransferScreen)

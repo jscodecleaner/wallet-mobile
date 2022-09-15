@@ -1,23 +1,23 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { View, SafeAreaView, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect, useMemo } from 'react'
+import { View, SafeAreaView, TouchableOpacity } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview'
-import { TextInput, Text, withTheme, RadioButton } from 'react-native-paper';
-import Spinner from 'react-native-loading-spinner-overlay';
-import SelectDropdown from 'react-native-select-dropdown';
+import { TextInput, Text, withTheme, RadioButton } from 'react-native-paper'
+import Spinner from 'react-native-loading-spinner-overlay'
+import SelectDropdown from 'react-native-select-dropdown'
 import countryList from 'react-select-country-list'
-import CountryFlag from "react-native-country-flag";
-import FontAwesomeIcons from 'react-native-vector-icons/FontAwesome';
-import { Toast } from 'react-native-popup-confirm-toast';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { AsYouType, isValidPhoneNumber } from 'libphonenumber-js';
+import CountryFlag from "react-native-country-flag"
+import FontAwesomeIcons from 'react-native-vector-icons/FontAwesome'
+import { Toast } from 'react-native-popup-confirm-toast'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import { AsYouType, isValidPhoneNumber } from 'libphonenumber-js'
 
-import CustomButton from '../../components/CustomButton/CustomButton';
-import { BASE_URL } from '../../services/common';
+import CustomButton from '../../components/CustomButton/CustomButton'
+import { BASE_URL } from '../../services/common'
 import { UserProfileInterface } from '../../types/interface'
-import { ApiEndpoint, StatusCode } from '../../types/enum';
+import { ApiEndpoint, StatusCode } from '../../types/enum'
 import { useStyles } from './Settings.style'
-import { universalPostRequestWithData, universalGetRequestWithParams } from '../../services/RequestHandler';
-import Error from '../../components/error';
+import { universalPostRequestWithData, universalGetRequestWithParams } from '../../services/RequestHandler'
+import Error from '../../components/error'
 
 const ChangePersonalInfo = ({ theme, navigation }) => {
 
@@ -25,11 +25,11 @@ const ChangePersonalInfo = ({ theme, navigation }) => {
 
   // variables of components
   const [pageUserProfile, setPageUserProfile] = useState({} as UserProfileInterface)
-  const [progress, setProgress] = useState(true);
-  const [error, setError] = useState('');
+  const [progress, setProgress] = useState(true)
+  const [error, setError] = useState('')
   // const [showDatePicker, setShowDatePicker] = useState(false);
 
-  const listOfCountry = useMemo(() => countryList().getLabels(), []);
+  const listOfCountry = useMemo(() => countryList().getLabels(), [])
 
   useEffect(() => {
     const getUserProfile = async () => {
@@ -38,8 +38,8 @@ const ChangePersonalInfo = ({ theme, navigation }) => {
       const response: any = await universalGetRequestWithParams(url)
 
       if (response.status === StatusCode.OKAY) {
-          const userProfile = response.data.data
-          setPageUserProfile(userProfile)
+        const userProfile = response.data.data
+        setPageUserProfile(userProfile)
       } else {
         // Toast.show({
         //   title: 'Change personal info',
@@ -59,7 +59,6 @@ const ChangePersonalInfo = ({ theme, navigation }) => {
 
     getUserProfile()
   }, [])
-
   
   const isValidHomePhone = () => {
     const isValid = pageUserProfile.home_phone && !isValidPhoneNumber(pageUserProfile.home_phone)
@@ -83,14 +82,14 @@ const ChangePersonalInfo = ({ theme, navigation }) => {
   )
 
   const handleSubmit = async () => {
-    if (progress === true) {
-      return;
+    if (progress) {
+      return
     }
-    setProgress(true);
+    setProgress(true)
 
     const url = `${BASE_URL}/${ApiEndpoint.UPDATE_USER_PROFILE}`
     const payload = pageUserProfile
-    const response: any = await universalPostRequestWithData(url, payload);
+    const response: any = await universalPostRequestWithData(url, payload)
 
     if (response && response.status === StatusCode.OKAY) {
       Toast.show({
@@ -103,7 +102,7 @@ const ChangePersonalInfo = ({ theme, navigation }) => {
         position: 'bottom',
       })
     } else {
-      setError(response.data.message);
+      setError(response.data.message)
     }
 
     setProgress(false)
@@ -119,11 +118,11 @@ const ChangePersonalInfo = ({ theme, navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <Spinner
-          visible={progress}
-          textContent={'Loading...'}
-          textStyle={{
-              color: '#FFF',
-          }}
+        visible={progress}
+        textContent={'Loading...'}
+        textStyle={{
+          color: '#FFF',
+        }}
       />
       <KeyboardAwareScrollView style={{ width: '100%', paddingHorizontal: 15 }}>
         <View style={{ width: '100%' }}>
@@ -137,9 +136,9 @@ const ChangePersonalInfo = ({ theme, navigation }) => {
                 first_name: value,
               })
             }
-          autoFocus
+            autoFocus
           />
-          {!pageUserProfile.first_name && <Text style={{ color: 'red' }}>First name is required</Text>}
+          { !pageUserProfile.first_name && <Text style={{ color: 'red' }}>First name is required</Text> }
         </View>
         <View style={{ width: '100%' }}>
           <TextInput
@@ -166,7 +165,7 @@ const ChangePersonalInfo = ({ theme, navigation }) => {
               })
             }
           />
-          {!pageUserProfile.last_name && <Text style={{ color: 'red' }}>Last name is required</Text>}
+          { !pageUserProfile.last_name && <Text style={{ color: 'red' }}>Last name is required</Text> }
         </View>
         <View style={{ width: '100%' }}>
           <TextInput
@@ -176,7 +175,7 @@ const ChangePersonalInfo = ({ theme, navigation }) => {
             disabled={true}
           />
         </View>
-        <View style={[styles.genderWrapper]}>
+        <View style={styles.genderWrapper}>
           <Text style={{ color: 'gray' }}>Select Gender</Text>
           <View style={styles.radioWrapper}>
             <TouchableOpacity style={styles.radioOption} onPress={() => setGender('Male')}>
@@ -233,7 +232,7 @@ const ChangePersonalInfo = ({ theme, navigation }) => {
               })
             }
           />
-          {!pageUserProfile.address_1 && <Text style={{ color: 'red' }}>Address 1 is required</Text>}
+          { !pageUserProfile.address_1 && <Text style={{ color: 'red' }}>Address 1 is required</Text> }
         </View>
         <View style={{ width: '100%' }}>
           <TextInput
@@ -260,7 +259,7 @@ const ChangePersonalInfo = ({ theme, navigation }) => {
               })
             }
           />
-          {!pageUserProfile.city && <Text style={{ color: 'red' }}>City is required</Text>}
+          { !pageUserProfile.city && <Text style={{ color: 'red' }}>City is required</Text> }
         </View>
         <View style={{ width: '100%' }}>
           <TextInput
@@ -274,7 +273,7 @@ const ChangePersonalInfo = ({ theme, navigation }) => {
               })
             }
           />
-          {!pageUserProfile.country && <Text style={{ color: 'red' }}>State/Country is required</Text>}
+          { !pageUserProfile.country && <Text style={{ color: 'red' }}>State/Country is required</Text> }
         </View>
         <View style={{ width: '100%' }}>
           <TextInput
@@ -288,7 +287,7 @@ const ChangePersonalInfo = ({ theme, navigation }) => {
               })
             }
           />
-          {!pageUserProfile.zip_code && <Text style={{ color: 'red' }}>Postal code/Zipcode is required</Text>}
+          { !pageUserProfile.zip_code && <Text style={{ color: 'red' }}>Postal code/Zipcode is required</Text> }
         </View>
         <View style={{ width: '100%' }}>
           <SelectDropdown
@@ -303,7 +302,7 @@ const ChangePersonalInfo = ({ theme, navigation }) => {
             renderCustomizedButtonChild={(selectedItem, index) => {
               return (
                 <View style={styles.countryDropdownBtnChildStyle}>
-                  <Text style={styles.countryDropdownBtnTxt}>{selectedItem ? selectedItem : 'Country'}</Text>
+                  <Text style={styles.countryDropdownBtnTxt}>{ selectedItem || 'Country' }</Text>
                   <FontAwesomeIcons name="chevron-down" color={theme.colors.text} size={14} />
                 </View>
               )
@@ -316,9 +315,9 @@ const ChangePersonalInfo = ({ theme, navigation }) => {
               return (
                 <View style={styles.countryDropdownRowChildStyle}>
                   <CountryFlag isoCode={countryList().getValue(item)} size={25} />
-                  <Text style={styles.countryDropdownRowTxt}>{item}</Text>
+                  <Text style={styles.countryDropdownRowTxt}>{ item }</Text>
                 </View>
-              );
+              )
             }}
           />
         </View>
@@ -329,14 +328,14 @@ const ChangePersonalInfo = ({ theme, navigation }) => {
             value={pageUserProfile.phone_number ? pageUserProfile.phone_number : "+1"}
             onChangeText={(value) =>
               value?
-              setPageUserProfile({
-                ...pageUserProfile,
-                phone_number: value,
-              }):
-              setPageUserProfile({
-                ...pageUserProfile,
-                phone_number: "+",
-              })
+                setPageUserProfile({
+                  ...pageUserProfile,
+                  phone_number: value,
+                }):
+                setPageUserProfile({
+                  ...pageUserProfile,
+                  phone_number: "+",
+                })
             }
             disabled
           />
@@ -348,18 +347,18 @@ const ChangePersonalInfo = ({ theme, navigation }) => {
             value={pageUserProfile.home_phone?pageUserProfile.home_phone:"+1"}
             onChangeText={(value) =>
               value?
-              setPageUserProfile({
-                ...pageUserProfile,
-                home_phone: value,
-              }):
-              setPageUserProfile({
-                ...pageUserProfile,
-                home_phone: "+",
-              })
+                setPageUserProfile({
+                  ...pageUserProfile,
+                  home_phone: value,
+                }):
+                setPageUserProfile({
+                  ...pageUserProfile,
+                  home_phone: "+",
+                })
             }
             maxLength={14}
           />
-          {isValidHomePhone() && <Text style={{ color: 'red' }}>Invalid Home phone number</Text>}
+          { isValidHomePhone() && <Text style={{ color: 'red' }}>Invalid Home phone number</Text> }
         </View>
         <View style={{ width: '100%', marginTop: 20 }}>
           <TextInput
@@ -368,23 +367,23 @@ const ChangePersonalInfo = ({ theme, navigation }) => {
             value={pageUserProfile.work_phone?pageUserProfile.work_phone:"+1"}
             onChangeText={(value) =>
               value?
-              setPageUserProfile({
-                ...pageUserProfile,
-                work_phone: value,
-              }):
-              setPageUserProfile({
-                ...pageUserProfile,
-                work_phone: "+",
-              })
+                setPageUserProfile({
+                  ...pageUserProfile,
+                  work_phone: value,
+                }):
+                setPageUserProfile({
+                  ...pageUserProfile,
+                  work_phone: "+",
+                })
             }
             maxLength={14}
           />
-          {isValidWorkPhone() && <Text style={{ color: 'red' }}>Invalid Work phone number</Text>}
+          { isValidWorkPhone() && <Text style={{ color: 'red' }}>Invalid Work phone number</Text> }
         </View>
 
         <View style={{ width: '100%' }}>
           <TextInput
-            style={[styles.input]}
+            style={styles.input}
             label="DOB"
             value={pageUserProfile.birthdate}
             disabled={true}
@@ -392,11 +391,11 @@ const ChangePersonalInfo = ({ theme, navigation }) => {
         </View>
         
         <Error error={error} />
-        <View style={{width: '100%', marginTop: 30}}>
+        <View style={{ width: '100%', marginTop: 30 }}>
           <CustomButton theme={theme} name="Save" onClick={handleSubmit} state={validateForm()} />
         </View>
       </KeyboardAwareScrollView>
     </SafeAreaView>
-  );
+  )
 }
-export default withTheme(ChangePersonalInfo);
+export default withTheme(ChangePersonalInfo)

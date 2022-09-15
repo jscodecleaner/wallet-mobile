@@ -1,87 +1,87 @@
-import React, {useState} from 'react';
-import {View, SafeAreaView, ScrollView} from 'react-native';
-import {TextInput, HelperText, withTheme} from 'react-native-paper';
-import Spinner from 'react-native-loading-spinner-overlay';
-import {useSelector, useDispatch} from 'react-redux';
-import { Popup } from 'react-native-popup-confirm-toast';
-import AsyncStorage from '@react-native-community/async-storage';
+import React, { useState } from 'react'
+import { View, SafeAreaView, ScrollView } from 'react-native'
+import { TextInput, HelperText, withTheme } from 'react-native-paper'
+import Spinner from 'react-native-loading-spinner-overlay'
+import { useSelector, useDispatch } from 'react-redux'
+import { Popup } from 'react-native-popup-confirm-toast'
+import AsyncStorage from '@react-native-community/async-storage'
 
-import Error from '../../components/error';
-import { useStyles } from './Settings.style';
-import { universalPostRequestWithData } from '../../services/RequestHandler';
-import { BASE_URL, getProxyUrl } from '../../services/common';
-import { ApiEndpoint, StatusCode } from '../../types/enum';
-import CustomButton from '../../components/CustomButton/CustomButton';
-import { Logout } from '../../redux/slices/userSlice';
-import { validateEmail, validatePassword } from '../../services/validators';
-import { PasswordValidationWarning } from '../../components/PasswordValidationWarning/PasswordValidationWarning';
+import Error from '../../components/error'
+import { useStyles } from './Settings.style'
+import { universalPostRequestWithData } from '../../services/RequestHandler'
+import { BASE_URL, getProxyUrl } from '../../services/common'
+import { ApiEndpoint, StatusCode } from '../../types/enum'
+import CustomButton from '../../components/CustomButton/CustomButton'
+import { Logout } from '../../redux/slices/userSlice'
+import { validateEmail, validatePassword } from '../../services/validators'
+import { PasswordValidationWarning } from '../../components/PasswordValidationWarning/PasswordValidationWarning'
 
-const ChangeEmailScreen = ({theme, navigation}) => {
-  const styles = useStyles(theme);
+const ChangeEmailScreen = ({ theme, navigation }) => {
+  const styles = useStyles(theme)
   
-  const dispatch = useDispatch();
-  const [newEmail, setNewEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [passwordVisible, setPasswordVisible] = useState(true);
-  const [progress, setProgress] = useState(false);
-  const [error, setError] = useState('');
+  const dispatch = useDispatch()
+  const [newEmail, setNewEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [passwordVisible, setPasswordVisible] = useState(true)
+  const [progress, setProgress] = useState(false)
+  const [error, setError] = useState('')
 
-  const {loginData} = useSelector((state: any) => state.user);
+  const { loginData } = useSelector((state: any) => state.user)
 
   const handleChangeEmail = async () => {
-    if (progress === true) {
-      return;
+    if (progress) {
+      return
     }
-    setProgress(true);
+    setProgress(true)
 
-    const url = `${BASE_URL}/${ApiEndpoint.CHANGE_EMAIL}`;
+    const url = `${BASE_URL}/${ApiEndpoint.CHANGE_EMAIL}`
     const data = {
       currentEmail: loginData.email,
       newEmail,
       password,
       'white-label': getProxyUrl(),
-    };
+    }
 
-    const response: any = await universalPostRequestWithData(url, data);
+    const response: any = await universalPostRequestWithData(url, data)
 
     if (response && response.status === StatusCode.OKAY) {
-      await AsyncStorage.clear();
+      await AsyncStorage.clear()
       Popup.show({
         type: 'success',
         title: 'Change email',
         textBody: response.data.message,
         buttonText: 'Login',
         callback: () => {
-          Popup.hide();
-          dispatch(Logout());
-          navigation.navigate('Login');
+          Popup.hide()
+          dispatch(Logout())
+          navigation.navigate('Login')
         },
       })
     } else {
-      setError(response.data.message);
+      setError(response.data.message)
     }
 
-    setProgress(false);
+    setProgress(false)
   }
 
   const validateInput = () => {
     if (newEmail && validateEmail(newEmail) && password && validatePassword(password).length === 0)
-      return "normal";
+      return "normal"
     else
-      return "disabled";
+      return "disabled"
   }
 
   return (
     <SafeAreaView style={styles.container}>
       <Spinner
-          visible={progress}
-          textContent={'Loading...'}
-          textStyle={{
-            color: '#FFF',
+        visible={progress}
+        textContent={'Loading...'}
+        textStyle={{
+          color: '#FFF',
         }}
       />
-      <ScrollView style={{width: '100%', paddingHorizontal: 15}}>
-        <View style={{width: '100%'}}>
+      <ScrollView style={{ width: '100%', paddingHorizontal: 15 }}>
+        <View style={{ width: '100%' }}>
           <TextInput
             autoCapitalize="none"
             style={styles.input}
@@ -90,7 +90,7 @@ const ChangeEmailScreen = ({theme, navigation}) => {
             disabled={true}
           />
         </View>
-        <View style={{width: '100%'}}>
+        <View style={{ width: '100%' }}>
           <TextInput
             autoCapitalize="none"
             style={styles.input}
@@ -98,11 +98,11 @@ const ChangeEmailScreen = ({theme, navigation}) => {
             value={newEmail}
             onChangeText={text => setNewEmail(text)}
           />
-          {newEmail != '' && !validateEmail(newEmail) && <HelperText type="error">
+          { newEmail != '' && !validateEmail(newEmail) && <HelperText type="error">
             Invalid email address
-          </HelperText>}
+          </HelperText> }
         </View>
-        <View style={{width: '100%'}}>
+        <View style={{ width: '100%' }}>
           <TextInput
             style={styles.input}
             secureTextEntry={passwordVisible}
@@ -117,15 +117,15 @@ const ChangeEmailScreen = ({theme, navigation}) => {
               />
             }
           />
-          {password != '' && <PasswordValidationWarning password={password} />}
+          { password != '' && <PasswordValidationWarning password={password} /> }
         </View>
         <Error error={error} />
-        <View style={{width: '100%', marginTop: 30}}>
+        <View style={{ width: '100%', marginTop: 30 }}>
           <CustomButton theme={theme} name="Change email" onClick={handleChangeEmail} state={validateInput()} />
         </View>
       </ScrollView>
     </SafeAreaView>
-  );
-};
+  )
+}
 
-export default withTheme(ChangeEmailScreen);
+export default withTheme(ChangeEmailScreen)

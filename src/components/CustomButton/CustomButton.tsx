@@ -1,9 +1,9 @@
 import React from 'react'
 import { Text, TouchableOpacity } from 'react-native'
-import { withTheme } from 'react-native-paper';
+import { withTheme } from 'react-native-paper'
 import { buttonStyle, buttonText } from './CustomButton.style'
 
-export type Props = {
+export interface Props {
   onClick: () => void,
   name: string,
   theme: any,
@@ -13,15 +13,15 @@ export type Props = {
 const CustomButton: React.FC<Props> = (props) => {
   const getColorFromState = () => {
     if (props.state == 'disabled') {
-      return props.theme.colors.disabled;
+      return props.theme.colors.disabled
     } else {
-      return props.theme.colors.primary;
+      return props.theme.colors.primary
     }
-  };
+  }
 
   return (
     <TouchableOpacity style={buttonStyle(getColorFromState()).ButtonStyle} onPress={props.onClick} disabled={props.state == 'disabled'}>
-      <Text style={buttonText().ButtonText}>{props.name}</Text>
+      <Text style={buttonText().ButtonText}>{ props.name }</Text>
     </TouchableOpacity>
   )
 }
@@ -37,5 +37,3 @@ export default CustomButton
 // }
 
 // export default withTheme(CustomButton);
-
-

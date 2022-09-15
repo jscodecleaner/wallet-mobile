@@ -1,98 +1,98 @@
-import React, { useEffect, useState, useMemo } from 'react';
-import { useSelector, useDispatch } from "react-redux";
-import { SafeAreaView, View } from 'react-native';
+import React, { useEffect, useState, useMemo } from 'react'
+import { useSelector, useDispatch } from "react-redux"
+import { SafeAreaView, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview'
-import Spinner from 'react-native-loading-spinner-overlay';
-import { Button, Text, TextInput, withTheme } from 'react-native-paper';
-import FontAwesomeIcons from 'react-native-vector-icons/FontAwesome';
-import { Popup } from 'react-native-popup-confirm-toast';
+import Spinner from 'react-native-loading-spinner-overlay'
+import { Button, Text, TextInput, withTheme } from 'react-native-paper'
+import FontAwesomeIcons from 'react-native-vector-icons/FontAwesome'
+import { Popup , Toast } from 'react-native-popup-confirm-toast'
 import countryList from 'react-select-country-list'
-import { Collapse, CollapseHeader, CollapseBody } from 'accordion-collapse-react-native';
-import CountryFlag from "react-native-country-flag";
-import getSymbolFromCurrency from 'currency-symbol-map';
-import SelectDropdown from 'react-native-select-dropdown';
-import { Toast } from 'react-native-popup-confirm-toast';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Collapse, CollapseHeader, CollapseBody } from 'accordion-collapse-react-native'
+import CountryFlag from "react-native-country-flag"
+import getSymbolFromCurrency from 'currency-symbol-map'
+import SelectDropdown from 'react-native-select-dropdown'
 
-import { useStyles } from './InternationalTransfer.style';
-import { transferTypeList } from '../../../services/common';
-import CustomButton from '../../../components/CustomButton/CustomButton';
-import { getAccountFromAccountID, getPaymentMethodList, getTransactionFee, getAvailableBalance, stringToFloat, floatToString } from '../../../services/utility';
-import { validateName } from '../../../services/validators';
-import useProviderBankCodeTypeList from '../../../services/hooks';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
-const pAndTType = 'international-transfer';
+import { useStyles } from './InternationalTransfer.style'
+import { transferTypeList } from '../../../services/common'
+import CustomButton from '../../../components/CustomButton/CustomButton'
+import { getAccountFromAccountID, getPaymentMethodList, getTransactionFee, getAvailableBalance, stringToFloat, floatToString } from '../../../services/utility'
+import { validateName } from '../../../services/validators'
+import useProviderBankCodeTypeList from '../../../services/hooks'
 
-const InternationalTransferScreen = ({theme, navigation, route}) => {
-  const {fromAccount} = route.params;
+const pAndTType = 'international-transfer'
 
-  const styles = useStyles(theme);
-  const dispatch = useDispatch();
-  const providerBankCodeTypeList = useProviderBankCodeTypeList();
+const InternationalTransferScreen = ({ theme, navigation, route }) => {
+  const { fromAccount } = route.params
 
-  const [fundsavailable, setFundsAvailable] = useState(false);
-  const [progress, setProgress] = useState(false);
-  const [addressCollapsed, setAddressCollapsed] = useState(false);
-  const [bankCollapsed, setBankCollapsed] = useState(false);
-  const [intermediaryCollapsed, setIntermediaryCollapsed] = useState(false);
+  const styles = useStyles(theme)
+  const dispatch = useDispatch()
+  const providerBankCodeTypeList = useProviderBankCodeTypeList()
 
-  const [fromAccountName, setFromAccountName] = useState('');
+  const [fundsavailable, setFundsAvailable] = useState(false)
+  const [progress, setProgress] = useState(false)
+  const [addressCollapsed, setAddressCollapsed] = useState(false)
+  const [bankCollapsed, setBankCollapsed] = useState(false)
+  const [intermediaryCollapsed, setIntermediaryCollapsed] = useState(false)
+
+  const [fromAccountName, setFromAccountName] = useState('')
   const [paymentMethodList, setPaymentMethodList] = useState([] as string[])
-  const [currency, setCurrency] = useState('');
-  const [accountNumber, setAccountNumber] = useState('');
+  const [currency, setCurrency] = useState('')
+  const [accountNumber, setAccountNumber] = useState('')
   // const [sortCode, setSortCode] = useState('');
-  const [type, setType] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState('');
-  const [paymentReference, setPaymentReference] = useState('');
-  const [notes, setNotes] = useState('');
-  const [recipientName, setRecipientName] = useState('');
-  const [recipientAddress1, setRecipientAddress1] = useState('');
-  const [recipientAddress2, setRecipientAddress2] = useState('');
-  const [recipientCity, setRecipientCity] = useState('');
-  const [recipientState, setRecipientState] = useState('');
-  const [recipientCountry, setRecipientCountry] = useState('');
-  const [recipientPostcode, setRecipientPostcode] = useState('');
-  const [bankName, setBankName] = useState('');
-  const [bankAddress1, setBankAddress1] = useState('');
-  const [bankAddress2, setBankAddress2] = useState('');
-  const [bankCodeType, setBankCodeType] = useState('');
-  const [bankPostcode, setBankPostcode] = useState('');
-  const [bankCountry, setBankCountry] = useState('');
-  const [intermediaryName, setIntermediaryName] = useState('');
-  const [intermediaryAddress1, setIntermediaryAddress1] = useState('');
-  const [intermediaryAddress2, setIntermediaryAddress2] = useState('');
-  const [intermediaryCodeType, setIntermediaryCodeType] = useState('');
-  const [intermediaryPostcode, setIntermediaryPostcode] = useState('');
-  const [intermediaryCountry, setIntermediaryCountry] = useState('');
+  const [type, setType] = useState('')
+  const [paymentMethod, setPaymentMethod] = useState('')
+  const [paymentReference, setPaymentReference] = useState('')
+  const [notes, setNotes] = useState('')
+  const [recipientName, setRecipientName] = useState('')
+  const [recipientAddress1, setRecipientAddress1] = useState('')
+  const [recipientAddress2, setRecipientAddress2] = useState('')
+  const [recipientCity, setRecipientCity] = useState('')
+  const [recipientState, setRecipientState] = useState('')
+  const [recipientCountry, setRecipientCountry] = useState('')
+  const [recipientPostcode, setRecipientPostcode] = useState('')
+  const [bankName, setBankName] = useState('')
+  const [bankAddress1, setBankAddress1] = useState('')
+  const [bankAddress2, setBankAddress2] = useState('')
+  const [bankCodeType, setBankCodeType] = useState('')
+  const [bankPostcode, setBankPostcode] = useState('')
+  const [bankCountry, setBankCountry] = useState('')
+  const [intermediaryName, setIntermediaryName] = useState('')
+  const [intermediaryAddress1, setIntermediaryAddress1] = useState('')
+  const [intermediaryAddress2, setIntermediaryAddress2] = useState('')
+  const [intermediaryCodeType, setIntermediaryCodeType] = useState('')
+  const [intermediaryPostcode, setIntermediaryPostcode] = useState('')
+  const [intermediaryCountry, setIntermediaryCountry] = useState('')
   
-  const [amount, setAmount] = useState('');
-  const [fee, setFee] = useState('');
-  const [preApprovalAmount, setPreApprovalAmount] = useState(0);
-  const [preApprovalTxnCount, setPreApprovalTxnCount] = useState(0);
+  const [amount, setAmount] = useState('')
+  const [fee, setFee] = useState('')
+  const [preApprovalAmount, setPreApprovalAmount] = useState(0)
+  const [preApprovalTxnCount, setPreApprovalTxnCount] = useState(0)
 
-  const listOfCountry = useMemo(() => countryList().getData(), []);
+  const listOfCountry = useMemo(() => countryList().getData(), [])
 
-  const {accountList} = useSelector((state: any) => state.accounts);
-  const {loginData} = useSelector((state: any) => state.user);
+  const { accountList } = useSelector((state: any) => state.accounts)
+  const { loginData } = useSelector((state: any) => state.user)
 
   useEffect(() => {
-  }, []);
+  }, [])
 
   useEffect(() => {
     if (accountList.length > 0) {
-      const selectedItem = getAccountFromAccountID(accountList, fromAccount);
+      const selectedItem = getAccountFromAccountID(accountList, fromAccount)
   
-      setFromAccountName(selectedItem.accountName);
-      setCurrency(selectedItem.currencyData.currencyName);
-      const methodList = getPaymentMethodList(accountList, selectedItem.accountId);
-      setPaymentMethodList(methodList);
-      methodList.length > 0 && setPaymentMethod(methodList[0]);
+      setFromAccountName(selectedItem.accountName)
+      setCurrency(selectedItem.currencyData.currencyName)
+      const methodList = getPaymentMethodList(accountList, selectedItem.accountId)
+      setPaymentMethodList(methodList)
+      methodList.length > 0 && setPaymentMethod(methodList[0])
       setType(transferTypeList[0])
     }
 
-    setFundsAvailable(false);
+    setFundsAvailable(false)
     setProgress(false)
-  }, [accountList]);
+  }, [accountList])
 
   const handleFetchTransactionFee = async () => {
     setProgress(true)
@@ -154,15 +154,15 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
       accountNumber.length > 0 &&
       paymentReference.length > 0 &&
       notes.length > 0 && validateName(notes) &&
-      amount.length > 0 && amountCheck() == true
+      amount.length > 0 && amountCheck()
     )
-      return "normal";
+      return "normal"
     else
-      return "disabled";
+      return "disabled"
   }
 
   const toConfirm = () => {
-    const fromAcc = getAccountFromAccountID(accountList, fromAccount);
+    const fromAcc = getAccountFromAccountID(accountList, fromAccount)
 
     const transactionDetails = {
       accountId: fromAccount,
@@ -218,20 +218,20 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
       // interBankDetailsBankCode: interBankDetails.bankCode,
       // interBankDetailsSwiftBic: interBankDetails.swiftBic,
     }
-    navigation.navigate('InternationalTransferConfirm', {transactionDetails: transactionDetails});
+    navigation.navigate('InternationalTransferConfirm', { transactionDetails })
   }
 
   return (
     <SafeAreaView style={styles.container}>
       <Spinner
-          visible={progress}
-          textContent={'Loading...'}
-          textStyle={{
-            color: '#FFF',
+        visible={progress}
+        textContent={'Loading...'}
+        textStyle={{
+          color: '#FFF',
         }}
       />
       <KeyboardAwareScrollView style={styles.scrollViewStyle}>
-        <View style={{marginTop: 10}}>
+        <View style={{ marginTop: 10 }}>
           <View>
             <TextInput
               autoCapitalize="none"
@@ -254,14 +254,14 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
           </View>
           <View>
             <TextInput
-                autoCapitalize="none"
-                style={styles.input}
-                label="Account number/IBAN *"
-                placeholder="Recipient account number"
-                value={accountNumber}
-                onChangeText={text => setAccountNumber(text)}
-                underlineColor={theme.colors.lightGrey}
-              />
+              autoCapitalize="none"
+              style={styles.input}
+              label="Account number/IBAN *"
+              placeholder="Recipient account number"
+              value={accountNumber}
+              onChangeText={text => setAccountNumber(text)}
+              underlineColor={theme.colors.lightGrey}
+            />
           </View>
           <View>
             <SelectDropdown
@@ -273,7 +273,7 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
               renderCustomizedButtonChild={(selectedItem, index) => {
                 return (
                   <View style={styles.dropdownBtnChildStyle}>
-                    <Text style={styles.dropdownBtnTxt}>{selectedItem ? selectedItem : 'Type *'}</Text>
+                    <Text style={styles.dropdownBtnTxt}>{ selectedItem || 'Type *' }</Text>
                     <FontAwesomeIcons name="chevron-down" color={theme.colors.text} size={14} />
                   </View>
                 )
@@ -285,9 +285,9 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
               renderCustomizedRowChild={(item, index) => {
                 return (
                   <View style={styles.dropdownRowChildStyle}>
-                    <Text style={styles.dropdownRowTxt}>{item}</Text>
+                    <Text style={styles.dropdownRowTxt}>{ item }</Text>
                   </View>
-                );
+                )
               }}
             />
           </View>
@@ -301,7 +301,7 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
               renderCustomizedButtonChild={(selectedItem, index) => {
                 return (
                   <View style={styles.dropdownBtnChildStyle}>
-                    <Text style={styles.dropdownBtnTxt}>{selectedItem ? selectedItem : 'Payment Method *'}</Text>
+                    <Text style={styles.dropdownBtnTxt}>{ selectedItem || 'Payment Method *' }</Text>
                     <FontAwesomeIcons name="chevron-down" color={theme.colors.text} size={14} />
                   </View>
                 )
@@ -313,93 +313,93 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
               renderCustomizedRowChild={(item, index) => {
                 return (
                   <View style={styles.dropdownRowChildStyle}>
-                    <Text style={styles.dropdownRowTxt}>{item}</Text>
+                    <Text style={styles.dropdownRowTxt}>{ item }</Text>
                   </View>
-                );
+                )
               }}
             />
           </View>
           <View>
             <TextInput
-                autoCapitalize="none"
-                style={styles.input}
-                label="Add description *"
-                placeholder="Short payment reference"
-                value={paymentReference}
-                onChangeText={text => setPaymentReference(text)}
-                underlineColor={theme.colors.lightGrey}
-              />
+              autoCapitalize="none"
+              style={styles.input}
+              label="Add description *"
+              placeholder="Short payment reference"
+              value={paymentReference}
+              onChangeText={text => setPaymentReference(text)}
+              underlineColor={theme.colors.lightGrey}
+            />
           </View>
           <View>
             <TextInput
-                autoCapitalize="none"
-                style={styles.input}
-                label="Payment details *"
-                value={notes}
-                maxLength={35}
-                onChangeText={text => setNotes(text)}
-                underlineColor={theme.colors.lightGrey}
-              />
+              autoCapitalize="none"
+              style={styles.input}
+              label="Payment details *"
+              value={notes}
+              maxLength={35}
+              onChangeText={text => setNotes(text)}
+              underlineColor={theme.colors.lightGrey}
+            />
           </View>
         </View>
         
-        <Collapse style={{marginTop: 20}} onToggle={setAddressCollapsed}>
+        <Collapse style={{ marginTop: 20 }} onToggle={setAddressCollapsed}>
           <CollapseHeader>
-            <View style={{flexDirection: "row", justifyContent: "space-between"}}>
-              <Text style={{fontSize: 20, fontWeight: 'bold'}}>Recipient's details</Text>
+            <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+              <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Recipient's details</Text>
               <FontAwesomeIcons name={addressCollapsed ? "chevron-up" : "chevron-down"} color={theme.colors.text} size={18} />
             </View>
           </CollapseHeader>
           <CollapseBody>
             <View>
               <TextInput
-                  autoCapitalize="none"
-                  style={styles.input}
-                  label="Name"
-                  value={recipientName}
-                  onChangeText={text => setRecipientName(text)}
-                  underlineColor={theme.colors.lightGrey}
-                />
+                autoCapitalize="none"
+                style={styles.input}
+                label="Name"
+                value={recipientName}
+                onChangeText={text => setRecipientName(text)}
+                underlineColor={theme.colors.lightGrey}
+              />
             </View>
             <View>
               <TextInput
-                  autoCapitalize="none"
-                  style={styles.input}
-                  label="Address 1"
-                  value={recipientAddress1}
-                  onChangeText={text => setRecipientAddress1(text)}
-                  underlineColor={theme.colors.lightGrey}
-                />
+                autoCapitalize="none"
+                style={styles.input}
+                label="Address 1"
+                value={recipientAddress1}
+                onChangeText={text => setRecipientAddress1(text)}
+                underlineColor={theme.colors.lightGrey}
+              />
             </View>
             <View>
               <TextInput
-                  autoCapitalize="none"
-                  style={styles.input}
-                  label="Address 2"
-                  value={recipientAddress2}
-                  onChangeText={text => setRecipientAddress2(text)}
-                  underlineColor={theme.colors.lightGrey}
-                />
+                autoCapitalize="none"
+                style={styles.input}
+                label="Address 2"
+                value={recipientAddress2}
+                onChangeText={text => setRecipientAddress2(text)}
+                underlineColor={theme.colors.lightGrey}
+              />
             </View>
             <View>
               <TextInput
-                  autoCapitalize="none"
-                  style={styles.input}
-                  label="City"
-                  value={recipientCity}
-                  onChangeText={text => setRecipientCity(text)}
-                  underlineColor={theme.colors.lightGrey}
-                />
+                autoCapitalize="none"
+                style={styles.input}
+                label="City"
+                value={recipientCity}
+                onChangeText={text => setRecipientCity(text)}
+                underlineColor={theme.colors.lightGrey}
+              />
             </View>
             <View>
               <TextInput
-                  autoCapitalize="none"
-                  style={styles.input}
-                  label="State"
-                  value={recipientState}
-                  onChangeText={text => setRecipientState(text)}
-                  underlineColor={theme.colors.lightGrey}
-                />
+                autoCapitalize="none"
+                style={styles.input}
+                label="State"
+                value={recipientState}
+                onChangeText={text => setRecipientState(text)}
+                underlineColor={theme.colors.lightGrey}
+              />
             </View>
             <SelectDropdown
               data={listOfCountry}
@@ -410,7 +410,7 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
               renderCustomizedButtonChild={(selectedItem, index) => {
                 return (
                   <View style={styles.countryDropdownBtnChildStyle}>
-                    <Text style={styles.countryDropdownBtnTxt}>{selectedItem ? selectedItem.label : 'Country'}</Text>
+                    <Text style={styles.countryDropdownBtnTxt}>{ selectedItem ? selectedItem.label : 'Country' }</Text>
                     <FontAwesomeIcons name="chevron-down" color={theme.colors.text} size={14} />
                   </View>
                 )
@@ -422,61 +422,61 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
                 return (
                   <View style={styles.countryDropdownRowChildStyle}>
                     <CountryFlag isoCode={item.value} size={25} />
-                    <Text style={styles.countryDropdownRowTxt}>{item.label}</Text>
+                    <Text style={styles.countryDropdownRowTxt}>{ item.label }</Text>
                   </View>
-                );
+                )
               }}
             />
             <View>
               <TextInput
-                  autoCapitalize="none"
-                  style={styles.input}
-                  label="Postcode"
-                  value={recipientPostcode}
-                  onChangeText={text => setRecipientPostcode(text)}
-                  underlineColor={theme.colors.lightGrey}
-                />
+                autoCapitalize="none"
+                style={styles.input}
+                label="Postcode"
+                value={recipientPostcode}
+                onChangeText={text => setRecipientPostcode(text)}
+                underlineColor={theme.colors.lightGrey}
+              />
             </View>
           </CollapseBody>
         </Collapse>
 
-        <Collapse style={{marginTop: 20}} onToggle={setBankCollapsed}>
+        <Collapse style={{ marginTop: 20 }} onToggle={setBankCollapsed}>
           <CollapseHeader>
-            <View style={{flexDirection: "row", justifyContent: "space-between"}}>
-              <Text style={{fontSize: 20, fontWeight: 'bold'}}>Recipient's bank address</Text>
+            <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+              <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Recipient's bank address</Text>
               <FontAwesomeIcons name={bankCollapsed ? "chevron-up" : "chevron-down"} color={theme.colors.text} size={18} />
             </View>
           </CollapseHeader>
           <CollapseBody>
-          <View>
+            <View>
               <TextInput
-                  autoCapitalize="none"
-                  style={styles.input}
-                  label="Name"
-                  value={bankName}
-                  onChangeText={text => setBankName(text)}
-                  underlineColor={theme.colors.lightGrey}
-                />
+                autoCapitalize="none"
+                style={styles.input}
+                label="Name"
+                value={bankName}
+                onChangeText={text => setBankName(text)}
+                underlineColor={theme.colors.lightGrey}
+              />
             </View>
             <View>
               <TextInput
-                  autoCapitalize="none"
-                  style={styles.input}
-                  label="Address 1"
-                  value={bankAddress1}
-                  onChangeText={text => setBankAddress1(text)}
-                  underlineColor={theme.colors.lightGrey}
-                />
+                autoCapitalize="none"
+                style={styles.input}
+                label="Address 1"
+                value={bankAddress1}
+                onChangeText={text => setBankAddress1(text)}
+                underlineColor={theme.colors.lightGrey}
+              />
             </View>
             <View>
               <TextInput
-                  autoCapitalize="none"
-                  style={styles.input}
-                  label="Address 2"
-                  value={bankAddress2}
-                  onChangeText={text => setBankAddress2(text)}
-                  underlineColor={theme.colors.lightGrey}
-                />
+                autoCapitalize="none"
+                style={styles.input}
+                label="Address 2"
+                value={bankAddress2}
+                onChangeText={text => setBankAddress2(text)}
+                underlineColor={theme.colors.lightGrey}
+              />
             </View>
             <View>
               <SelectDropdown
@@ -488,7 +488,7 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
                 renderCustomizedButtonChild={(selectedItem, index) => {
                   return (
                     <View style={styles.dropdownBtnChildStyle}>
-                      <Text style={styles.dropdownBtnTxt}>{selectedItem ? selectedItem : 'Bank Code Type'}</Text>
+                      <Text style={styles.dropdownBtnTxt}>{ selectedItem || 'Bank Code Type' }</Text>
                       <FontAwesomeIcons name="chevron-down" color={theme.colors.text} size={14} />
                     </View>
                   )
@@ -499,21 +499,21 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
                 renderCustomizedRowChild={(item, index) => {
                   return (
                     <View style={styles.dropdownRowChildStyle}>
-                      <Text style={styles.dropdownRowTxt}>{item}</Text>
+                      <Text style={styles.dropdownRowTxt}>{ item }</Text>
                     </View>
-                  );
+                  )
                 }}
               />
             </View>
             <View>
               <TextInput
-                  autoCapitalize="none"
-                  style={styles.input}
-                  label="Bank Postcode"
-                  value={bankPostcode}
-                  onChangeText={text => setBankPostcode(text)}
-                  underlineColor={theme.colors.lightGrey}
-                />
+                autoCapitalize="none"
+                style={styles.input}
+                label="Bank Postcode"
+                value={bankPostcode}
+                onChangeText={text => setBankPostcode(text)}
+                underlineColor={theme.colors.lightGrey}
+              />
             </View>
             <SelectDropdown
               data={listOfCountry}
@@ -524,7 +524,7 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
               renderCustomizedButtonChild={(selectedItem, index) => {
                 return (
                   <View style={styles.countryDropdownBtnChildStyle}>
-                    <Text style={styles.countryDropdownBtnTxt}>{selectedItem ? selectedItem.label : 'Country'}</Text>
+                    <Text style={styles.countryDropdownBtnTxt}>{ selectedItem ? selectedItem.label : 'Country' }</Text>
                     <FontAwesomeIcons name="chevron-down" color={theme.colors.text} size={14} />
                   </View>
                 )
@@ -536,51 +536,51 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
                 return (
                   <View style={styles.countryDropdownRowChildStyle}>
                     <CountryFlag isoCode={item.value} size={25} />
-                    <Text style={styles.countryDropdownRowTxt}>{item.label}</Text>
+                    <Text style={styles.countryDropdownRowTxt}>{ item.label }</Text>
                   </View>
-                );
+                )
               }}
             />
           </CollapseBody>
         </Collapse>
         
-        <Collapse style={{marginTop: 20}} onToggle={setIntermediaryCollapsed}>
+        <Collapse style={{ marginTop: 20 }} onToggle={setIntermediaryCollapsed}>
           <CollapseHeader>
-            <View style={{flexDirection: "row", justifyContent: "space-between"}}>
-              <Text style={{fontSize: 20, fontWeight: 'bold'}}>Intermediary bank address</Text>
+            <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+              <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Intermediary bank address</Text>
               <FontAwesomeIcons name={intermediaryCollapsed ? "chevron-up" : "chevron-down"} color={theme.colors.text} size={18} />
             </View>
           </CollapseHeader>
           <CollapseBody>
-          <View>
+            <View>
               <TextInput
-                  autoCapitalize="none"
-                  style={styles.input}
-                  label="Name"
-                  value={intermediaryName}
-                  onChangeText={text => setIntermediaryName(text)}
-                  underlineColor={theme.colors.lightGrey}
-                />
+                autoCapitalize="none"
+                style={styles.input}
+                label="Name"
+                value={intermediaryName}
+                onChangeText={text => setIntermediaryName(text)}
+                underlineColor={theme.colors.lightGrey}
+              />
             </View>
             <View>
               <TextInput
-                  autoCapitalize="none"
-                  style={styles.input}
-                  label="Address 1"
-                  value={intermediaryAddress1}
-                  onChangeText={text => setIntermediaryAddress1(text)}
-                  underlineColor={theme.colors.lightGrey}
-                />
+                autoCapitalize="none"
+                style={styles.input}
+                label="Address 1"
+                value={intermediaryAddress1}
+                onChangeText={text => setIntermediaryAddress1(text)}
+                underlineColor={theme.colors.lightGrey}
+              />
             </View>
             <View>
               <TextInput
-                  autoCapitalize="none"
-                  style={styles.input}
-                  label="Address 2"
-                  value={intermediaryAddress2}
-                  onChangeText={text => setIntermediaryAddress2(text)}
-                  underlineColor={theme.colors.lightGrey}
-                />
+                autoCapitalize="none"
+                style={styles.input}
+                label="Address 2"
+                value={intermediaryAddress2}
+                onChangeText={text => setIntermediaryAddress2(text)}
+                underlineColor={theme.colors.lightGrey}
+              />
             </View>
             <View>
               <SelectDropdown
@@ -592,7 +592,7 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
                 renderCustomizedButtonChild={(selectedItem, index) => {
                   return (
                     <View style={styles.dropdownBtnChildStyle}>
-                      <Text style={styles.dropdownBtnTxt}>{selectedItem ? selectedItem : 'Bank Code Type'}</Text>
+                      <Text style={styles.dropdownBtnTxt}>{ selectedItem || 'Bank Code Type' }</Text>
                       <FontAwesomeIcons name="chevron-down" color={theme.colors.text} size={14} />
                     </View>
                   )
@@ -603,21 +603,21 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
                 renderCustomizedRowChild={(item, index) => {
                   return (
                     <View style={styles.dropdownRowChildStyle}>
-                      <Text style={styles.dropdownRowTxt}>{item}</Text>
+                      <Text style={styles.dropdownRowTxt}>{ item }</Text>
                     </View>
-                  );
+                  )
                 }}
               />
             </View>
             <View>
               <TextInput
-                  autoCapitalize="none"
-                  style={styles.input}
-                  label="Bank Postcode"
-                  value={intermediaryPostcode}
-                  onChangeText={text => setIntermediaryPostcode(text)}
-                  underlineColor={theme.colors.lightGrey}
-                />
+                autoCapitalize="none"
+                style={styles.input}
+                label="Bank Postcode"
+                value={intermediaryPostcode}
+                onChangeText={text => setIntermediaryPostcode(text)}
+                underlineColor={theme.colors.lightGrey}
+              />
             </View>
             <SelectDropdown
               data={listOfCountry}
@@ -628,7 +628,7 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
               renderCustomizedButtonChild={(selectedItem, index) => {
                 return (
                   <View style={styles.countryDropdownBtnChildStyle}>
-                    <Text style={styles.countryDropdownBtnTxt}>{selectedItem ? selectedItem.label : 'Country'}</Text>
+                    <Text style={styles.countryDropdownBtnTxt}>{ selectedItem ? selectedItem.label : 'Country' }</Text>
                     <FontAwesomeIcons name="chevron-down" color={theme.colors.text} size={14} />
                   </View>
                 )
@@ -640,46 +640,46 @@ const InternationalTransferScreen = ({theme, navigation, route}) => {
                 return (
                   <View style={styles.countryDropdownRowChildStyle}>
                     <CountryFlag isoCode={item.value} size={25} />
-                    <Text style={styles.countryDropdownRowTxt}>{item.label}</Text>
+                    <Text style={styles.countryDropdownRowTxt}>{ item.label }</Text>
                   </View>
-                );
+                )
               }}
             />
           </CollapseBody>
         </Collapse>
         
-        <View style={{marginTop: 20}}>
+        <View style={{ marginTop: 20 }}>
           <View>
             <TextInput
-                autoCapitalize="none"
-                keyboardType="numeric"
-                style={styles.input}
-                label={"You send " + `${currency && getSymbolFromCurrency(currency)}` + " *"}
-                placeholder="Amount to transfer"
-                value={amount}
-                onChangeText={text => setAmount(text)}
-                underlineColor={theme.colors.lightGrey}
-              />
+              autoCapitalize="none"
+              keyboardType="numeric"
+              style={styles.input}
+              label={"You send " + `${currency && getSymbolFromCurrency(currency)}` + " *"}
+              placeholder="Amount to transfer"
+              value={amount}
+              onChangeText={text => setAmount(text)}
+              underlineColor={theme.colors.lightGrey}
+            />
           </View>
           <View>
             <TextInput
-                autoCapitalize="none"
-                style={[styles.input, styles.inputBorder]}
-                label="Yet to calculate"
-                value={fee}
-                disabled={true}
-                underlineColor={theme.colors.lightGrey}
-              />
+              autoCapitalize="none"
+              style={[styles.input, styles.inputBorder]}
+              label="Yet to calculate"
+              value={fee}
+              disabled={true}
+              underlineColor={theme.colors.lightGrey}
+            />
           </View>
         </View>
 
-        <View style={{width: '100%', marginTop: 20, marginBottom: 15}}>
-          {fundsavailable && <CustomButton theme={theme} name="Continue" onClick={toConfirm} state={validateInput()} />}
-          {!fundsavailable && <CustomButton theme={theme} name="Calculate Fee" onClick={handleFetchTransactionFee} state={validateInput()} />}
+        <View style={{ width: '100%', marginTop: 20, marginBottom: 15 }}>
+          { fundsavailable && <CustomButton theme={theme} name="Continue" onClick={toConfirm} state={validateInput()} /> }
+          { !fundsavailable && <CustomButton theme={theme} name="Calculate Fee" onClick={handleFetchTransactionFee} state={validateInput()} /> }
         </View>
       </KeyboardAwareScrollView>
     </SafeAreaView>
   )
-};
+}
 
-export default withTheme(InternationalTransferScreen);
+export default withTheme(InternationalTransferScreen)

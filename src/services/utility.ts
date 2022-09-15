@@ -1,7 +1,7 @@
-import { AccountDataInterface } from "../types/interface";
-import { BASE_URL, getProxyUrl } from "./common";
-import { ApiEndpoint, StatusCode } from "../types/enum";
-import { universalGetRequestWithParams, universalPostRequestWithData } from "./RequestHandler";
+import { AccountDataInterface } from "../types/interface"
+import { BASE_URL, getProxyUrl } from "./common"
+import { ApiEndpoint, StatusCode } from "../types/enum"
+import { universalGetRequestWithParams, universalPostRequestWithData } from "./RequestHandler"
 
 export const handleFetchAccountList = async (
   entityId: number,
@@ -9,10 +9,10 @@ export const handleFetchAccountList = async (
 ) => {
   const url = `${BASE_URL}/${ApiEndpoint.GET_BALANCES_BYACCT_BYCURRENCY}`
   const params = {
-      entityId,
+    entityId,
   }
   const headers = {
-      Authorization: `Bearer ${token}`,
+    Authorization: `Bearer ${token}`,
   }
 
   const response = await universalGetRequestWithParams(url, params, headers)
@@ -35,10 +35,10 @@ export const refreshTheToken = async (username: string, refresh_token: string) =
   try {
     const response: any = await universalPostRequestWithData(url, data)
     if (response.status === StatusCode.OKAY) {
-        const data = response.data.message
-        data['expiry_time'] = Date.now() + data.expires_in * 1000
-        data['login_time'] = Date.now()
-        return data
+      const data = response.data.message
+      data.expiry_time = Date.now() + data.expires_in * 1000
+      data.login_time = Date.now()
+      return data
     } else {
       console.log(response)
     }
@@ -73,12 +73,12 @@ interface TxnParams {
 export const getTransactionFee = async (token: string, providerName: string, params: TxnParams) => {
   const url = `${BASE_URL}/${ApiEndpoint.GET_TRANSACTION_FEE}?providerName=${providerName}`
   const headers = {
-      Authorization: `Bearer ${token}`,
+    Authorization: `Bearer ${token}`,
   }
 
   const response = await universalGetRequestWithParams(url, params, headers)
   if (response && response.status === StatusCode.OKAY) {
-      return response.data.data
+    return response.data.data
   }
   console.log(response)
   // popupNotification(response.data.message, false)
