@@ -85,3 +85,31 @@ export interface UserProfileInterface {
     subprogramme_manager: number
     phone_number_verified: boolean
 }
+
+export interface TransactionInterface {
+    timeStampCreated: string
+    timeStampSettled: string
+    transactionId: string
+    benTxnOwnerName: string
+    description: string
+    moneyIn: number
+    moneyOut: number
+    balance: number
+    CreditOrDebit?: string
+    actualEndToEndTxnId?: string
+    benBban?: string
+    benIban?: string
+    benInstitutionName?: string
+    benOwnerName?: string
+    benScan?: string
+    endToEndTxnId?: string
+    fromScan?: string
+    iBan?: string
+    isReturn?: boolean
+    reason?: string
+    reference?: string
+    status?: string
+    transactionOwnerName?: string
+    fromCurrency?:string
+    toCurrency?: string
+}
