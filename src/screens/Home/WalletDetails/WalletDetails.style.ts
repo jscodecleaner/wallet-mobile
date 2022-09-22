@@ -7,6 +7,10 @@ export default StyleSheet.create({
     paddingVertical: 20,
     flex:1,
   },
+  contentContainer: {
+    flex: 1,
+    marginHorizontal: 15,
+  },
   card: {
     backgroundColor: '#FFF',
     borderWidth: 1,
@@ -41,7 +45,7 @@ export default StyleSheet.create({
     padding: 20,
     marginHorizontal: 20,
     borderRadius: 10,
-    height: 550
+    height: 550,
   },
   modalScroll: {
     width: '100%',

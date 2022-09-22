@@ -57,104 +57,106 @@ const WalletDetailsScreen = ({ theme, navigation, route }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={[styles.card, { borderLeftColor: theme.colors.primary, }]}>
-        <View style={{ marginBottom: 30 }}>
-          <View style={{ flexDirection: 'row' }}>
-            <Text style={styles.fontBold}>Account name: </Text>
-            <Text>{ walletDetails.accountName }</Text>
-          </View>
-          <View style={{ flexDirection: 'row' }}>
-            <Text style={styles.fontBold}>IBAN: </Text>
-            <Text>{ walletDetails.iBan }</Text>
-          </View>
-        </View>
-        <View style ={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <View style={{ alignItems: 'center', marginLeft: 10 }}>
-            <CountryFlag isoCode={getIsoCodeFromCurrencyName(walletDetails.currencyData.currencyName)} size={25} />
+      <View style={styles.contentContainer}>
+        <View style={[styles.card, { borderLeftColor: theme.colors.primary, }]}>
+          <View style={{ marginBottom: 30 }}>
             <View style={{ flexDirection: 'row' }}>
-              <Text style={styles.fontBold}>Currency </Text>
-              <Text>{ walletDetails.currencyData.currencyName }</Text>
+              <Text style={styles.fontBold}>Account name: </Text>
+              <Text>{ walletDetails.accountName }</Text>
+            </View>
+            <View style={{ flexDirection: 'row' }}>
+              <Text style={styles.fontBold}>IBAN: </Text>
+              <Text>{ walletDetails.iBan }</Text>
             </View>
           </View>
-          <View style={{ flexDirection: 'row' }}>
-            <View style={{ alignItems: 'flex-end' }}>
-              <Text style={styles.fontBold}>Funds available </Text>
-              <Text style={styles.fontBold}>Reserved available </Text>
-              <Text style={styles.fontBold}>Account available </Text>
+          <View style ={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <View style={{ alignItems: 'center', marginLeft: 10 }}>
+              <CountryFlag isoCode={getIsoCodeFromCurrencyName(walletDetails.currencyData.currencyName)} size={25} />
+              <View style={{ flexDirection: 'row' }}>
+                <Text style={styles.fontBold}>Currency </Text>
+                <Text>{ walletDetails.currencyData.currencyName }</Text>
+              </View>
             </View>
-            <View>
-              <Text>{ getSymbolFromCurrency(walletDetails.currencyData.currencyName) }{ floatToString(walletDetails.currencyData.fundsAvailable) }</Text>
-              <Text>{ getSymbolFromCurrency(walletDetails.currencyData.currencyName) }{ floatToString(walletDetails.currencyData.reservedBalance) }</Text>
-              <Text>{ getSymbolFromCurrency(walletDetails.currencyData.currencyName) }{ floatToString(walletDetails.currencyData.accountBalance) }</Text>
+            <View style={{ flexDirection: 'row' }}>
+              <View style={{ alignItems: 'flex-end' }}>
+                <Text style={styles.fontBold}>Funds available </Text>
+                <Text style={styles.fontBold}>Reserved available </Text>
+                <Text style={styles.fontBold}>Account available </Text>
+              </View>
+              <View>
+                <Text>{ getSymbolFromCurrency(walletDetails.currencyData.currencyName) }{ floatToString(walletDetails.currencyData.fundsAvailable) }</Text>
+                <Text>{ getSymbolFromCurrency(walletDetails.currencyData.currencyName) }{ floatToString(walletDetails.currencyData.reservedBalance) }</Text>
+                <Text>{ getSymbolFromCurrency(walletDetails.currencyData.currencyName) }{ floatToString(walletDetails.currencyData.accountBalance) }</Text>
+              </View>
             </View>
           </View>
         </View>
-      </View>
-      <View>
-        <CustomButton 
-          theme={theme} 
-          name="Transfer between my accounts" 
-          state={validateButton("ALL")} 
-          onClick={onToMyOtherAccount} 
-        />
-        <CustomButton 
-          theme={theme} 
-          name="Euro Transfer" 
-          state={validateButton("EUR")} 
-          onClick={onEuroTransfer} 
-        />
-        <CustomButton 
-          theme={theme} 
-          name="International" 
-          state={validateButton("INTERNATIONAL")} 
-          onClick={onInternational} 
-        />
-        <CustomButton 
-          theme={theme} 
-          name="UK Transfer" 
-          state={validateButton("GBP")} 
-          onClick={onUkTransfer}
-        />
-      </View>
-      <Text style={styles.TransactionTitle}>Recent Transactions for <Text style={styles.TransactionTitleBold}>{ walletDetails.accountName }</Text></Text>
-      <TransactionHistory iBan={walletDetails.iBan} showModal={showModal}/>
-      <Modal visible={modalVisible} onDismiss={hideModal} contentContainerStyle={styles.modalContainer}>
-        <Text style={styles.modalTitle}>Transaction information</Text>
-        <KeyboardAwareScrollView style={styles.modalScroll}>
-          <View style={styles.modalGroup}>
-            <Text style={styles.modalGroupName}>Sender details</Text>
-            <Text style={styles.modalText}>From account holder name: <Text style={styles.modalValue}>{ modalData.benOwnerName ? modalData.benOwnerName : '' }</Text></Text>
-            <Text style={styles.modalText}>From account IBAN: <Text style={styles.modalValue}>{ modalData.iBan ? modalData.iBan : '' }</Text></Text>
-            <Text style={styles.modalText}>Amount: <Text style={styles.modalValue}>{ modalData.moneyOut ? parseFloat(modalData.moneyOut).toFixed(2) : '' }</Text></Text>
-            <Text style={styles.modalText}>From Currency: <Text style={styles.modalValue}>{ modalData.fromCurrency ? modalData.fromCurrency : '' }</Text></Text>
-            <Text style={styles.modalText}>Created ts: <Text style={styles.modalValue}>{ modalData.timeStampCreated ? modalData.timeStampCreated : '' }</Text></Text>
-          </View>
-          <View style={styles.modalGroup}>
-            <Text style={styles.modalGroupName}>Additional details</Text>
-            <Text style={styles.modalText}>Credit or debit: <Text style={styles.modalValue}>{ modalData.CreditOrDebit ? modalData.CreditOrDebit : '' }</Text></Text>
-            <Text style={styles.modalText}>End to end txn ID: <Text style={styles.modalValue}>{ modalData.endToEndTxnId ? modalData.endToEndTxnId : '' }</Text></Text>
-            <Text style={styles.modalText}>Payment reference: <Text style={styles.modalValue}>{ modalData.reference ? modalData.reference : '' }</Text></Text>
-            <Text style={styles.modalText}>Transaction status: <Text style={styles.modalValue}>{ modalData.status ? modalData.status : '' }</Text></Text>
-            <Text style={styles.modalText}>User txn ID: <Text style={styles.modalValue}>{ modalData.transactionId ? modalData.transactionId : '' }</Text></Text>
-            
-          </View>
-          <View style={styles.modalGroup}>
-            
-            <Text style={styles.modalGroupName}>Receiver details</Text>
-            <Text style={styles.modalText}>To account holder name: <Text style={styles.modalValue}>{ modalData.transactionOwnerName ? modalData.transactionOwnerName : '' }</Text></Text>
-            <Text style={styles.modalText}>To Currency: <Text style={styles.modalValue}>{ modalData.toCurrency ? modalData.toCurrency : '' }</Text></Text>
-            <Text style={styles.modalText}>To account IBAN: <Text style={styles.modalValue}>{ modalData.benIban ? modalData.benIban : '' }</Text></Text>
-          </View>
-        </KeyboardAwareScrollView>
-        <View style={styles.modalButtonContainer}>
+        <View>
           <CustomButton 
             theme={theme} 
-            name="Close" 
-            state={"normal"} 
-            onClick={hideModal} 
+            name="Transfer between my accounts" 
+            state={validateButton("ALL")} 
+            onClick={onToMyOtherAccount} 
+          />
+          <CustomButton 
+            theme={theme} 
+            name="Euro Transfer" 
+            state={validateButton("EUR")} 
+            onClick={onEuroTransfer} 
+          />
+          <CustomButton 
+            theme={theme} 
+            name="International" 
+            state={validateButton("INTERNATIONAL")} 
+            onClick={onInternational} 
+          />
+          <CustomButton 
+            theme={theme} 
+            name="UK Transfer" 
+            state={validateButton("GBP")} 
+            onClick={onUkTransfer}
           />
         </View>
-      </Modal>
+        <Text style={styles.TransactionTitle}>Recent Transactions for <Text style={styles.TransactionTitleBold}>{ walletDetails.accountName }</Text></Text>
+        <TransactionHistory iBan={walletDetails.iBan} showModal={showModal}/>
+      </View>
+        <Modal visible={modalVisible} onDismiss={hideModal} contentContainerStyle={styles.modalContainer}>
+          <Text style={styles.modalTitle}>Transaction information</Text>
+          <KeyboardAwareScrollView style={styles.modalScroll}>
+            <View style={styles.modalGroup}>
+              <Text style={styles.modalGroupName}>Sender details</Text>
+              <Text style={styles.modalText}>From account holder name: <Text style={styles.modalValue}>{ modalData.benOwnerName ? modalData.benOwnerName : '' }</Text></Text>
+              <Text style={styles.modalText}>From account IBAN: <Text style={styles.modalValue}>{ modalData.iBan ? modalData.iBan : '' }</Text></Text>
+              <Text style={styles.modalText}>Amount: <Text style={styles.modalValue}>{ modalData.moneyOut ? parseFloat(modalData.moneyOut).toFixed(2) : '' }</Text></Text>
+              <Text style={styles.modalText}>From Currency: <Text style={styles.modalValue}>{ modalData.fromCurrency ? modalData.fromCurrency : '' }</Text></Text>
+              <Text style={styles.modalText}>Created ts: <Text style={styles.modalValue}>{ modalData.timeStampCreated ? modalData.timeStampCreated : '' }</Text></Text>
+            </View>
+            <View style={styles.modalGroup}>
+              <Text style={styles.modalGroupName}>Additional details</Text>
+              <Text style={styles.modalText}>Credit or debit: <Text style={styles.modalValue}>{ modalData.CreditOrDebit ? modalData.CreditOrDebit : '' }</Text></Text>
+              <Text style={styles.modalText}>End to end txn ID: <Text style={styles.modalValue}>{ modalData.endToEndTxnId ? modalData.endToEndTxnId : '' }</Text></Text>
+              <Text style={styles.modalText}>Payment reference: <Text style={styles.modalValue}>{ modalData.reference ? modalData.reference : '' }</Text></Text>
+              <Text style={styles.modalText}>Transaction status: <Text style={styles.modalValue}>{ modalData.status ? modalData.status : '' }</Text></Text>
+              <Text style={styles.modalText}>User txn ID: <Text style={styles.modalValue}>{ modalData.transactionId ? modalData.transactionId : '' }</Text></Text>
+              
+            </View>
+            <View style={styles.modalGroup}>
+              
+              <Text style={styles.modalGroupName}>Receiver details</Text>
+              <Text style={styles.modalText}>To account holder name: <Text style={styles.modalValue}>{ modalData.transactionOwnerName ? modalData.transactionOwnerName : '' }</Text></Text>
+              <Text style={styles.modalText}>To Currency: <Text style={styles.modalValue}>{ modalData.toCurrency ? modalData.toCurrency : '' }</Text></Text>
+              <Text style={styles.modalText}>To account IBAN: <Text style={styles.modalValue}>{ modalData.benIban ? modalData.benIban : '' }</Text></Text>
+            </View>
+          </KeyboardAwareScrollView>
+          <View style={styles.modalButtonContainer}>
+            <CustomButton 
+              theme={theme} 
+              name="Close" 
+              state={"normal"} 
+              onClick={hideModal} 
+            />
+          </View>
+        </Modal>
     </SafeAreaView>
   )
 }
