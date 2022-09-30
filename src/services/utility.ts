@@ -80,7 +80,6 @@ export const getTransactionFee = async (token: string, providerName: string, par
   if (response && response.status === StatusCode.OKAY) {
     return response.data.data
   }
-  console.log(response)
   // popupNotification(response.data.message, false)
 }
 

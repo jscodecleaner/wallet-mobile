@@ -84,9 +84,9 @@ const WalletDetailsScreen = ({ theme, navigation, route }) => {
                 <Text style={styles.fontBold}>Account available </Text>
               </View>
               <View>
-                <Text>{ getSymbolFromCurrency(walletDetails.currencyData.currencyName) }{ floatToString(walletDetails.currencyData.fundsAvailable) }</Text>
-                <Text>{ getSymbolFromCurrency(walletDetails.currencyData.currencyName) }{ floatToString(walletDetails.currencyData.reservedBalance) }</Text>
-                <Text>{ getSymbolFromCurrency(walletDetails.currencyData.currencyName) }{ floatToString(walletDetails.currencyData.accountBalance) }</Text>
+                <Text>{ getSymbolFromCurrency(walletDetails.currencyData.currencyName) }{ walletDetails.currencyData.fundsAvailable && floatToString(walletDetails.currencyData.fundsAvailable) }</Text>
+                <Text>{ getSymbolFromCurrency(walletDetails.currencyData.currencyName) }{ walletDetails.currencyData.reservedBalance && floatToString(walletDetails.currencyData.reservedBalance) }</Text>
+                <Text>{ getSymbolFromCurrency(walletDetails.currencyData.currencyName) }{ walletDetails.currencyData.accountBalance && floatToString(walletDetails.currencyData.accountBalance) }</Text>
               </View>
             </View>
           </View>

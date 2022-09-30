@@ -91,7 +91,7 @@ const ToMyOtherAccountScreen = ({ theme, navigation, route }) => {
       getAccountFromAccountID(accountList, fromAccount).providerName, 
       {
         currentProfile: loginData.current_profile, 
-        amount: Number(parseFloat(amount==''?'0':amount).toFixed(2)), 
+        amount: Number(parseFloat(amount === '' ? '0' : amount).toFixed(2)), 
         paymentMethod, 
         currencyName: fromCurrency, 
         pAndTType, 

@@ -73,9 +73,9 @@ const WalletListScreen = ({ theme, navigation }) => {
                   <Text style={styles.fontBold}>Account available </Text>
                 </View>
                 <View>
-                  <Text>{ getSymbolFromCurrency(walletAccount.currencyData.currencyName) }{ floatToString(walletAccount.currencyData.fundsAvailable) }</Text>
-                  <Text>{ getSymbolFromCurrency(walletAccount.currencyData.currencyName) }{ floatToString(walletAccount.currencyData.reservedBalance) }</Text>
-                  <Text>{ getSymbolFromCurrency(walletAccount.currencyData.currencyName) }{ floatToString(walletAccount.currencyData.accountBalance) }</Text>
+                  <Text>{ getSymbolFromCurrency(walletAccount.currencyData.currencyName) }{ walletAccount.currencyData.fundsAvailable && floatToString(walletAccount.currencyData.fundsAvailable) }</Text>
+                  <Text>{ getSymbolFromCurrency(walletAccount.currencyData.currencyName) }{ walletAccount.currencyData.reservedBalance && floatToString(walletAccount.currencyData.reservedBalance) }</Text>
+                  <Text>{ getSymbolFromCurrency(walletAccount.currencyData.currencyName) }{ walletAccount.currencyData.accountBalance && floatToString(walletAccount.currencyData.accountBalance) }</Text>
                 </View>
               </View>
             </View>

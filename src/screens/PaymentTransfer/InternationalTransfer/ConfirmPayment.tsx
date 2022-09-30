@@ -83,19 +83,19 @@ const ConfirmPayment = ({ theme, navigation, route }) => {
         </View>
         <View style={styles.row}>
           <Text style={styles.leftText}>Amount</Text>
-          <Text style={styles.rightText}>{ floatToString(transactionDetails.amount) } { transactionDetails.fromCurrency }</Text>
+          <Text style={styles.rightText}>{ transactionDetails.amount && floatToString(transactionDetails.amount) } { transactionDetails.fromCurrency }</Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.leftText}>Transfer fee</Text>
-          <Text style={styles.rightText}>{ floatToString(transactionDetails.feeAmount) } { transactionDetails.fromCurrency }</Text>
+          <Text style={styles.rightText}>{ transactionDetails.feeAmount && floatToString(transactionDetails.feeAmount) } { transactionDetails.fromCurrency }</Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.leftText}>To be credited</Text>
-          <Text style={styles.rightText}>{ floatToString(transactionDetails.amount) } { transactionDetails.fromCurrency }</Text>
+          <Text style={styles.rightText}>{ transactionDetails.amount && floatToString(transactionDetails.amount) } { transactionDetails.fromCurrency }</Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.leftText}>To be debited</Text>
-          <Text style={styles.rightText}>{ floatToString(amountToBeDebited(transactionDetails.amount, transactionDetails.feeAmount)) } { transactionDetails.fromCurrency }</Text>
+          <Text style={styles.rightText}>{ transactionDetails.amount && transactionDetails.feeAmount && floatToString(amountToBeDebited(transactionDetails.amount, transactionDetails.feeAmount)) } { transactionDetails.fromCurrency }</Text>
         </View>
       </View>
       <View style={styles.actionsContainer}>

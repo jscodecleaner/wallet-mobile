@@ -83,7 +83,7 @@ const App: () => ReactNode = () => {
 
     if (mfaVerified) {
       const sessionTimeout = setTimeout(async () => {
-        console.log("app timeout")
+        // console.log("app timeout")
         await AsyncStorage.clear()
 
         Popup.show({
