@@ -97,7 +97,7 @@ const EuroTransferScreen = ({ theme, navigation, route }) => {
   const handleFetchTransactionFee = async () => {
     setProgress(true)
     const response = await getTransactionFee(
-      loginData.accessToken, 
+      loginData.access_token, 
       getAccountFromAccountID(accountList, fromAccount).providerName, 
       {
         currentProfile: loginData.current_profile, 
