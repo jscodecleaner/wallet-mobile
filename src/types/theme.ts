@@ -1,4 +1,4 @@
-type theme = {
+interface theme {
     colors: {
       primary?: string;
       accent?: string;
@@ -12,7 +12,6 @@ type theme = {
       backdrop?: string;
       notification?: string;
     };
-  };
+  }
   
-  export default theme;
-  
+export default theme

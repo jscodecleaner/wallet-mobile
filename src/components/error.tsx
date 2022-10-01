@@ -1,26 +1,26 @@
-import React from 'react';
-import {StyleSheet, Text} from 'react-native';
+import React from 'react'
+import { StyleSheet, Text } from 'react-native'
 
-type ErrorProps = {
+interface ErrorProps {
   error: string;
-};
+}
 
-const Error = ({error}: ErrorProps) => {
+const Error = ({ error }: ErrorProps) => {
   if (!error) {
-    return null;
+    return null
   }
 
   return (
     <Text testID="errorBox" style={styles.error}>
-      Error: {error}
+      Error: { error }
     </Text>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   error: {
     color: 'red',
   },
-});
+})
 
-export default Error;
+export default Error

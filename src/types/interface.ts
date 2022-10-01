@@ -29,3 +29,87 @@ export interface LoginData {
     onboardingStatus: string
     entity_name: string
 }
+
+export interface CurrencyInterface {
+    currencyName: string
+    fundsAvailable: number
+    reservedBalance: number
+    accountBalance: number
+}
+
+export interface AccountDataInterface {
+    accountName: string
+    accountId: string
+    accountHolderName: string
+    iBan: string
+    currencyData: CurrencyInterface
+    accountNumber: number
+    accountType: string
+    paymentMethod: string
+    sortCode: number
+    feeDepositeAccountId: number
+    feeDepositOwnerName?: string
+    feeDepositAccountIBan: string
+    pAndTType: string
+    providerName: string
+}
+
+export interface UserProfileInterface {
+    city: string
+    state: string
+    email: string
+    gender: string
+    user_id: number
+    country: string
+    username: string
+    zip_code: string
+    birthdate: string
+    entity_id: number
+    address_1: string
+    corporate: string
+    address_2: string
+    last_name: string
+    first_name: string
+    occupation: string
+    home_phone: string
+    work_phone: string
+    middle_name: string
+    'get-user': boolean
+    phone_number: string
+    owner_company: number
+    is_first_login: boolean
+    email_verified: boolean
+    white_label_url: string
+    self_registered: boolean
+    programme_manager: number
+    subprogramme_manager: number
+    phone_number_verified: boolean
+}
+
+export interface TransactionInterface {
+    timeStampCreated: string
+    timeStampSettled: string
+    transactionId: string
+    benTxnOwnerName: string
+    description: string
+    moneyIn: number
+    moneyOut: number
+    balance: number
+    CreditOrDebit?: string
+    actualEndToEndTxnId?: string
+    benBban?: string
+    benIban?: string
+    benInstitutionName?: string
+    benOwnerName?: string
+    benScan?: string
+    endToEndTxnId?: string
+    fromScan?: string
+    iBan?: string
+    isReturn?: boolean
+    reason?: string
+    reference?: string
+    status?: string
+    transactionOwnerName?: string
+    fromCurrency?:string
+    toCurrency?: string
+}

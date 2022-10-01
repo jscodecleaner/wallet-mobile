@@ -62,7 +62,7 @@ buck-out
 .gradle
 local.properties
 *.iml
-/android/
+android
 
 # Node
 node_modules
@@ -103,6 +103,7 @@ package-lock.json
 /template/ios/Pods/
 /template/ios/Podfile.lock
 /packages/rn-tester/Gemfile.lock
+/ios/Pods/
 
 # Ignore RNTester specific Pods, but keep the __offline_mirrors__ here.
 /packages/rn-tester/Pods/*
@@ -125,3 +126,6 @@ package-lock.json
 
 # Android memory profiler files
 *.hprof
+
+# Enviroment file
+.env
