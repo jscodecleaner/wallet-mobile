@@ -14,7 +14,8 @@ import { useStyles } from './ToMyOtherAccount.style'
 import CustomButton from '../../../components/CustomButton/CustomButton'
 import { AccountDataInterface } from '../../../types/interface'
 import { getPaymentMethodList, getAvailableBalance, getTransactionFee, stringToFloat, floatToString, getAccountFromAccountID } from '../../../services/utility'
-import { validateName } from '../../../services/validators'
+import { validateName, validateSpecialCharacters, getSpecialCharacterErrorMessage } from '../../../services/validators'
+
 
 const pAndTType = 'to-my-other-account'
 
@@ -72,7 +73,6 @@ const ToMyOtherAccountScreen = ({ theme, navigation, route }) => {
       toAccount.length > 0 &&
       paymentMethod.length > 0 &&
       paymentReference.length > 0 &&
-      notes.length > 0 && validateName(notes) &&
       amount.length > 0 && amountCheck()
     )
       return "normal"
@@ -269,23 +269,24 @@ const ToMyOtherAccountScreen = ({ theme, navigation, route }) => {
             <TextInput
               autoCapitalize="none"
               style={styles.input}
-              label="Add description *"
+              label="Payment reference *"
               value={paymentReference}
               onChangeText={text => setPaymentReference(text)}
               underlineColor={theme.colors.lightGrey}
             />
+            <Text style={styles.referenceWarning}>{ paymentReference && !validateSpecialCharacters(paymentReference) && (getSpecialCharacterErrorMessage()) }</Text>
           </View>
           <View>
             <TextInput
               autoCapitalize="none"
               style={styles.input}
-              label="Payment details *"
+              label="Internal notes"
               value={notes}
               onChangeText={text => setNotes(text)}
               maxLength={35}
-              error={notes && !validateName(notes)}
               underlineColor={theme.colors.lightGrey}
             />
+            <Text style={styles.referenceWarning}>{ notes && !validateSpecialCharacters(notes) && (getSpecialCharacterErrorMessage()) }</Text>
           </View>
           <View>
             <TextInput
@@ -306,8 +307,8 @@ const ToMyOtherAccountScreen = ({ theme, navigation, route }) => {
           <View>
             <TextInput
               style={[styles.input, styles.inputBorder]}
-              label="Yet to calculate"
-              value={fee}
+              label={"Fee " + `${fromCurrency && getSymbolFromCurrency(fromCurrency)}` + " *"}
+              value={fee ? fee : "Yet to calculate"}
               disabled={true}
               underlineColor={theme.colors.lightGrey}
             />

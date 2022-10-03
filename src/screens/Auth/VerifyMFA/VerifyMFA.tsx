@@ -121,7 +121,7 @@ const VerifyMFAScreen = ({ theme, navigation }) => {
           autoCapitalize="none"
           outlineColor={theme.colors.background}
           style={styles.input}
-          label="Enter code from authenticator"
+          label={`Enter code for user- ${loginData.username}`}
           value={otp}
           onChangeText={text => setOtp(text)}
         />
@@ -129,11 +129,6 @@ const VerifyMFAScreen = ({ theme, navigation }) => {
       <Error error={error} />
       <View style={{ width: '100%', marginTop: 10 }}>
         <CustomButton theme={theme} name="Verify MFA" onClick={verifyMFA} state={validateInput()} />
-      </View>
-      <View style={{ width: '100%', alignItems: "flex-end" }}>
-        <Button mode="text" uppercase={false} onPress={backToLogin} color={theme.colors.primary} >
-          Back To Login
-        </Button>
       </View>
     </SafeAreaView> 
   )
