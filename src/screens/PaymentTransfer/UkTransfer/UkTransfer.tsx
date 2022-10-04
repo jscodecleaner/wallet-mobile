@@ -17,7 +17,7 @@ import { useStyles } from './UkTransfer.style'
 import { transferTypeList } from '../../../services/common'
 import CustomButton from '../../../components/CustomButton/CustomButton'
 import { getAccountFromAccountID, getPaymentMethodList, getTransactionFee, getAvailableBalance, stringToFloat, floatToString } from '../../../services/utility'
-import { validateName } from '../../../services/validators'
+import { validateName, validateBICCode, validateSpecialCharacters, getSpecialCharacterErrorMessage } from '../../../services/validators'
 
 const pAndTType = 'uk-domestic-transfer'
 
@@ -89,7 +89,6 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
       fromAccount.length > 0 &&
       accountHolderName.length > 0 &&
       paymentReference.length > 0 &&
-      notes.length > 0 && validateName(notes) &&
       amount.length > 0 && amountCheck()
     )
       return "normal"
@@ -324,24 +323,25 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
             <TextInput
               autoCapitalize="none"
               style={styles.input}
-              label="Add description *"
+              label="Payment reference *"
               placeholder="Short payment reference"
               value={paymentReference}
               onChangeText={text => setPaymentReference(text)}
               underlineColor={theme.colors.lightGrey}
             />
+            <Text style={styles.referenceWarning}>{ paymentReference && !validateSpecialCharacters(paymentReference) && (getSpecialCharacterErrorMessage()) }</Text>
           </View>
           <View>
             <TextInput
               autoCapitalize="none"
               style={styles.input}
-              label="Payment details *"
+              label="Internal notes"
               value={notes}
               maxLength={35}
               onChangeText={text => setNotes(text)}
-              error={notes && !validateName(notes)}
               underlineColor={theme.colors.lightGrey}
             />
+            <Text style={styles.referenceWarning}>{ notes && !validateSpecialCharacters(notes) && (getSpecialCharacterErrorMessage()) }</Text>
           </View>
         </View>
 
@@ -496,8 +496,8 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
             <TextInput
               autoCapitalize="none"
               style={[styles.input, styles.inputBorder]}
-              label="Yet to calculate"
-              value={fee}
+              label={"Fee " + `${currency && getSymbolFromCurrency(currency)}` + " *"}
+              value={fee ? fee : "Yet to calculate"}
               disabled={true}
               underlineColor={theme.colors.lightGrey}
             />
