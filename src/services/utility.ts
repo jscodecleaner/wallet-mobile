@@ -61,6 +61,7 @@ export const getAvailableBalance = (accountList: AccountDataInterface[], targetA
 }
 
 interface TxnParams {
+  providerName: string
   currentProfile: string
   amount: number
   paymentMethod: string
@@ -68,6 +69,7 @@ interface TxnParams {
   pAndTType: string
   sortCode?: number
   bicCode?: string
+  fromAccountIban: string
 }
 
 export const getTransactionFee = async (token: string, providerName: string, params: TxnParams) => {
@@ -84,7 +86,7 @@ export const getTransactionFee = async (token: string, providerName: string, par
 }
 
 export const stringToFloat = (string: string) => {
-  if (string == '') return Number(0.00)
+  if (string === '') return Number(0.00)
   return Number(parseFloat(string).toFixed(2))
 }
 

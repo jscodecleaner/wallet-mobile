@@ -14,7 +14,7 @@ import { useStyles } from './ToMyOtherAccount.style'
 import CustomButton from '../../../components/CustomButton/CustomButton'
 import { AccountDataInterface } from '../../../types/interface'
 import { getPaymentMethodList, getAvailableBalance, getTransactionFee, stringToFloat, floatToString, getAccountFromAccountID } from '../../../services/utility'
-import { validateName, validateSpecialCharacters, getSpecialCharacterErrorMessage } from '../../../services/validators'
+import { validateSpecialCharacters, getSpecialCharacterErrorMessage } from '../../../services/validators'
 
 
 const pAndTType = 'to-my-other-account'
@@ -81,20 +81,24 @@ const ToMyOtherAccountScreen = ({ theme, navigation, route }) => {
   }
 
   const amountCheck = () => {
-    return Number(parseFloat(amount==''?'0':amount).toFixed(2)) <= getAvailableBalance(accountList, fromAccount)
+    return Number(parseFloat(amount === '' ? '0' : amount).toFixed(2)) <= getAvailableBalance(accountList, fromAccount)
   }
 
   const handleFetchTransactionFee = async () => {
-    setProgress(true)
+    const fromAcc = getAccountFromAccountID(accountList, fromAccount)
+    const providerName = getAccountFromAccountID(accountList, fromAccount).providerName
+    setProgress(true) 
     const response = await getTransactionFee(
       loginData.access_token, 
-      getAccountFromAccountID(accountList, fromAccount).providerName, 
+      encodeURIComponent(providerName), 
       {
+        providerName: encodeURIComponent(providerName), 
         currentProfile: loginData.current_profile, 
         amount: Number(parseFloat(amount === '' ? '0' : amount).toFixed(2)), 
         paymentMethod, 
         currencyName: fromCurrency, 
         pAndTType, 
+        fromAccountIban: fromAcc.iBan
       }
     )
 
