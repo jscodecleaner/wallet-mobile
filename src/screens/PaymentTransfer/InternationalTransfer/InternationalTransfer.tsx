@@ -95,16 +95,19 @@ const InternationalTransferScreen = ({ theme, navigation, route }) => {
   }, [accountList])
 
   const handleFetchTransactionFee = async () => {
+    const fromAcc = getAccountFromAccountID(accountList, fromAccount)
+    const providerName = getAccountFromAccountID(accountList, fromAccount).providerName
     setProgress(true)
     const response = await getTransactionFee(
       loginData.access_token, 
-      getAccountFromAccountID(accountList, fromAccount).providerName, 
+      encodeURIComponent(providerName),
       {
         currentProfile: loginData.current_profile, 
         amount: Number(parseFloat(amount==''?'0':amount).toFixed(2)), 
         paymentMethod, 
         currencyName: currency, 
         pAndTType, 
+        fromAccountIban: fromAcc.iBan
         // sortCode: parseInt(sortCode)
       }
     )

@@ -94,17 +94,20 @@ const EuroTransferScreen = ({ theme, navigation, route }) => {
   }
 
   const handleFetchTransactionFee = async () => {
+    const fromAcc = getAccountFromAccountID(accountList, fromAccount)
+    const providerName = getAccountFromAccountID(accountList, fromAccount).providerName
     setProgress(true)
     const response = await getTransactionFee(
       loginData.access_token, 
-      getAccountFromAccountID(accountList, fromAccount).providerName, 
+      encodeURIComponent(providerName),
       {
         currentProfile: loginData.current_profile, 
         amount: Number(parseFloat(amount==''?'0':amount).toFixed(2)), 
         paymentMethod, 
         currencyName: currency, 
         pAndTType, 
-        bicCode
+        bicCode,
+        fromAccountIban: fromAcc.iBan
       }
     )
 
@@ -145,7 +148,7 @@ const EuroTransferScreen = ({ theme, navigation, route }) => {
 
   const toConfirm = () => {
     const fromAcc = getAccountFromAccountID(accountList, fromAccount)
-
+  
     const transactionDetails = {
       accountId: fromAccount,
       currentProfile: loginData.current_profile,
