@@ -90,9 +90,8 @@ const ToMyOtherAccountScreen = ({ theme, navigation, route }) => {
     setProgress(true) 
     const response = await getTransactionFee(
       loginData.access_token, 
-      encodeURIComponent(providerName), 
+      encodeURIComponent(providerName),
       {
-        providerName: encodeURIComponent(providerName), 
         currentProfile: loginData.current_profile, 
         amount: Number(parseFloat(amount === '' ? '0' : amount).toFixed(2)), 
         paymentMethod, 
