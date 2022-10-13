@@ -12,10 +12,10 @@ export const validateUsername = new passwordValidator()
 validateUsername.is().min(8).has().has().not().spaces()
 
 export const validateEmail = (email: string) => {
-  const re =
+  const regex =
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
-  return re.test(String(email).toLowerCase())
+  return regex.test(String(email).toLowerCase())
 }
 
 export const validateName = (name: string) => {
@@ -35,6 +35,34 @@ export const validatePhone = (phone) => {
 }
 
 export const validateBICCode = (code) => {
-  const regex = /^[a-zA-Z0-9](?:.{7}|.{10})$/
+  const regex = /^(?=[A-Z0-9]*$)(?:.{0}|.{8}|.{11})$/
   return regex.test(code)
+}
+
+export const validateSpecialCharacters = (value) => {
+  const regex = /^[a-zA-Z0-9\/\?\:\-\.\,\s]+$/i
+  return regex.test(value)
+}
+
+export const getSpecialCharacterErrorMessage =()=> { 
+  return "Valid characters are A-Z a-z 0-9 / - ? : . ,"
+}
+
+export const validateRecipientName = (name) => {
+  const regex = /^[a-zA-Z0-9-.,\s"]*$/i
+  return regex.test(name)
+}
+
+export const getSpecialCharacterRecipientNameErrorMessage = () => { 
+  return "Valid characters are A-Z a-z 0-9 - . ,"
+}
+
+export const validateSortCodeUKDomestic = (code) => { 
+  const regex = /^[0-9"]{6}$/
+  return regex.test(code)
+}
+
+export const validateRecipientAccountNumberUKDomestic = (accountNumber) => { 
+  const regex = /^[0-9"]{8}$/
+  return regex.test(accountNumber)
 }

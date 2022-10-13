@@ -12,7 +12,8 @@ export default StyleSheet.create({
   },
   input: {
     marginVertical: 10,
-    height: 50
+    height: 50,
+    fontSize: 13,
   },
   button: {
     marginVertical: 20, 

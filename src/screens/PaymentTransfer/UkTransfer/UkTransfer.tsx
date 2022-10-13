@@ -17,7 +17,7 @@ import { useStyles } from './UkTransfer.style'
 import { transferTypeList } from '../../../services/common'
 import CustomButton from '../../../components/CustomButton/CustomButton'
 import { getAccountFromAccountID, getPaymentMethodList, getTransactionFee, getAvailableBalance, stringToFloat, floatToString } from '../../../services/utility'
-import { validateName } from '../../../services/validators'
+import { validateRecipientName, validateSortCodeUKDomestic, validateRecipientAccountNumberUKDomestic, getSpecialCharacterRecipientNameErrorMessage, validateSpecialCharacters, getSpecialCharacterErrorMessage } from '../../../services/validators'
 
 const pAndTType = 'uk-domestic-transfer'
 
@@ -81,16 +81,29 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
   }, [accountList])
 
   const amountCheck = () => {
-    return Number(parseFloat(amount == '' ? '0' : amount).toFixed(2)) <= getAvailableBalance(accountList, fromAccount)
+    return Number(parseFloat(amount === '' ? '0' : amount).toFixed(2)) <= getAvailableBalance(accountList, fromAccount)
   }
 
   const validateInput = () => {
     if (currency.length > 0 &&
       fromAccount.length > 0 &&
       accountHolderName.length > 0 &&
+      bankName.length > 0 &&
       paymentReference.length > 0 &&
-      notes.length > 0 && validateName(notes) &&
-      amount.length > 0 && amountCheck()
+      amount.length > 0 && 
+      amountCheck() &&
+      validateRecipientName(accountHolderName) &&
+      validateRecipientName(bankName) &&
+      validateSortCodeUKDomestic(sortCode) && 
+      validateRecipientAccountNumberUKDomestic(accountNumber) &&
+      validateSpecialCharacters(paymentReference) && 
+      (notes ? validateSpecialCharacters(notes) : true) &&
+      (recipientAddress1 ? validateSpecialCharacters(recipientAddress1) : true) &&
+      (recipientAddress2 ? validateSpecialCharacters(recipientAddress2) : true) &&
+      (recipientPostalCode ? validateSpecialCharacters(recipientPostalCode) : true) &&
+      (bankAddress1 ? validateSpecialCharacters(bankAddress1) : true) &&
+      (bankAddress2 ? validateSpecialCharacters(bankAddress2) : true) &&
+      (bankPostalCode ? validateSpecialCharacters(bankPostalCode) : true)
     )
       return "normal"
     else
@@ -98,17 +111,20 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
   }
 
   const handleFetchTransactionFee = async () => {
+    const fromAcc = getAccountFromAccountID(accountList, fromAccount)
+    const providerName = getAccountFromAccountID(accountList, fromAccount).providerName
     setProgress(true)
     const response = await getTransactionFee(
       loginData.access_token,
-      getAccountFromAccountID(accountList, fromAccount).providerName,
+      encodeURIComponent(providerName),
       {
         currentProfile: loginData.current_profile,
         amount: Number(parseFloat(amount == '' ? '0' : amount).toFixed(2)),
         paymentMethod,
         currencyName: currency,
         pAndTType,
-        sortCode: parseInt(sortCode)
+        sortCode: parseInt(sortCode),
+        fromAccountIban: fromAcc.iBan
       }
     )
 
@@ -223,23 +239,25 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
             <TextInput
               autoCapitalize="none"
               style={styles.input}
-              label="Bank name *"
-              placeholder="Recipient bank name"
+              label="Recipient's bank name *"
+              placeholder="Recipient's bank name"
               value={bankName}
               onChangeText={text => setBankName(text)}
               underlineColor={theme.colors.lightGrey}
             />
+            <Text style={styles.referenceWarning}>{ bankName && !validateRecipientName(bankName) && (getSpecialCharacterRecipientNameErrorMessage()) }</Text>
           </View>
           <View>
             <TextInput
               autoCapitalize="none"
               style={styles.input}
-              label="Account holder's name *"
-              placeholder="Recipient account name"
+              label="Recipient's name *"
+              placeholder="Recipient's name"
               value={accountHolderName}
               onChangeText={text => setAccountHolderName(text)}
               underlineColor={theme.colors.lightGrey}
             />
+            <Text style={styles.referenceWarning}>{ accountHolderName && !validateRecipientName(accountHolderName) && (getSpecialCharacterRecipientNameErrorMessage()) }</Text>
           </View>
           <View>
             <TextInput
@@ -249,20 +267,24 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
               placeholder="Recipient account sort code"
               label="Sort Code *"
               value={sortCode}
+              maxLength={6}
               onChangeText={text => setSortCode(text)}
               underlineColor={theme.colors.lightGrey}
             />
+            <Text style={styles.referenceWarning}>{ sortCode && !validateSortCodeUKDomestic(sortCode) && ("Valid characters 0-9 and length should be 6") }</Text>
           </View>
           <View>
             <TextInput
               autoCapitalize="none"
               style={styles.input}
-              label="Account number *"
+              label="Recipient account number *"
               placeholder="Recipient account number"
               value={accountNumber}
+              maxLength={8}
               onChangeText={text => setAccountNumber(text)}
               underlineColor={theme.colors.lightGrey}
             />
+            <Text style={styles.referenceWarning}>{ accountNumber && !validateRecipientAccountNumberUKDomestic(accountNumber) && ("Valid characters 0-9 and length should be 8") }</Text>
           </View>
           <View>
             <SelectDropdown
@@ -324,24 +346,25 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
             <TextInput
               autoCapitalize="none"
               style={styles.input}
-              label="Add description *"
+              label="Payment reference *"
               placeholder="Short payment reference"
               value={paymentReference}
               onChangeText={text => setPaymentReference(text)}
               underlineColor={theme.colors.lightGrey}
             />
+            <Text style={styles.referenceWarning}>{ paymentReference && !validateSpecialCharacters(paymentReference) && (getSpecialCharacterErrorMessage()) }</Text>
           </View>
           <View>
             <TextInput
               autoCapitalize="none"
               style={styles.input}
-              label="Payment details *"
+              label="Internal notes"
               value={notes}
               maxLength={35}
               onChangeText={text => setNotes(text)}
-              error={notes && !validateName(notes)}
               underlineColor={theme.colors.lightGrey}
             />
+            <Text style={styles.referenceWarning}>{ notes && !validateSpecialCharacters(notes) && (getSpecialCharacterErrorMessage()) }</Text>
           </View>
         </View>
 
@@ -362,6 +385,7 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
                 onChangeText={text => setRecipientAddress1(text)}
                 underlineColor={theme.colors.lightGrey}
               />
+              <Text style={styles.referenceWarning}>{ recipientAddress1 && !validateSpecialCharacters(recipientAddress1) && (getSpecialCharacterErrorMessage()) }</Text>
             </View>
             <View>
               <TextInput
@@ -372,6 +396,7 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
                 onChangeText={text => setRecipientAddress2(text)}
                 underlineColor={theme.colors.lightGrey}
               />
+              <Text style={styles.referenceWarning}>{ recipientAddress2 && !validateSpecialCharacters(recipientAddress2) && (getSpecialCharacterErrorMessage()) }</Text>
             </View>
             <View>
               <TextInput
@@ -382,6 +407,7 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
                 onChangeText={text => setRecipientPostalCode(text)}
                 underlineColor={theme.colors.lightGrey}
               />
+              <Text style={styles.referenceWarning}>{ recipientPostalCode && !validateSpecialCharacters(recipientPostalCode) && (getSpecialCharacterErrorMessage()) }</Text>
             </View>
             <SelectDropdown
               data={listOfCountry}
@@ -429,6 +455,7 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
                 onChangeText={text => setBankAddress1(text)}
                 underlineColor={theme.colors.lightGrey}
               />
+              <Text style={styles.referenceWarning}>{ bankAddress1 && !validateSpecialCharacters(bankAddress1) && (getSpecialCharacterErrorMessage()) }</Text>
             </View>
             <View>
               <TextInput
@@ -439,6 +466,7 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
                 onChangeText={text => setBankAddress2(text)}
                 underlineColor={theme.colors.lightGrey}
               />
+              <Text style={styles.referenceWarning}>{ bankAddress2 && !validateSpecialCharacters(bankAddress2) && (getSpecialCharacterErrorMessage()) }</Text>
             </View>
             <View>
               <TextInput
@@ -449,6 +477,7 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
                 onChangeText={text => setBankPostalCode(text)}
                 underlineColor={theme.colors.lightGrey}
               />
+              <Text style={styles.referenceWarning}>{ bankPostalCode && !validateSpecialCharacters(bankPostalCode) && (getSpecialCharacterErrorMessage()) }</Text>
             </View>
             <SelectDropdown
               data={listOfCountry}
@@ -496,8 +525,8 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
             <TextInput
               autoCapitalize="none"
               style={[styles.input, styles.inputBorder]}
-              label="Yet to calculate"
-              value={fee}
+              label={"Fee " + `${currency && getSymbolFromCurrency(currency)}` + " *"}
+              value={fee ? fee : "Yet to calculate"}
               disabled={true}
               underlineColor={theme.colors.lightGrey}
             />

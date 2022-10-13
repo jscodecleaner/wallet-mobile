@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux"
 import { SafeAreaView, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview'
 import Spinner from 'react-native-loading-spinner-overlay'
-import { Button, Text, TextInput, withTheme, HelperText } from 'react-native-paper'
+import { Button, Text, TextInput, withTheme } from 'react-native-paper'
 import FontAwesomeIcons from 'react-native-vector-icons/FontAwesome'
 import { Popup , Toast } from 'react-native-popup-confirm-toast'
 import countryList from 'react-select-country-list'
@@ -18,7 +18,7 @@ import { transferTypeList } from '../../../services/common'
 import CustomButton from '../../../components/CustomButton/CustomButton'
 import SelectDropdown from 'react-native-select-dropdown'
 import { getPaymentMethodList, getAccountFromAccountID, getAvailableBalance, getTransactionFee, floatToString, stringToFloat } from '../../../services/utility'
-import { validateName, validateBICCode } from '../../../services/validators'
+import { validateBICCode, validateSpecialCharacters, getSpecialCharacterErrorMessage } from '../../../services/validators'
 
 const pAndTType = 'euro-transfer'
 
@@ -81,9 +81,15 @@ const EuroTransferScreen = ({ theme, navigation, route }) => {
       iBanNumber.length > 0 &&
       bicCode.length > 0 &&
       paymentReference.length > 0 &&
-      notes.length > 0 && validateName(notes) &&
-      amount.length > 0 && amountCheck() &&
-      validateBICCode(bicCode)
+      amount.length > 0 && 
+      amountCheck() &&
+      validateBICCode(bicCode) &&
+      validateSpecialCharacters(paymentReference) &&
+      (notes ? validateSpecialCharacters(notes) : true) &&
+      (address ? validateSpecialCharacters(address) : true) &&
+      (city ? validateSpecialCharacters(city) : true) &&
+      (state ? validateSpecialCharacters(state) : true) &&
+      (postalCode ? validateSpecialCharacters(postalCode) : true) 
     )
       return "normal"
     else
@@ -95,17 +101,20 @@ const EuroTransferScreen = ({ theme, navigation, route }) => {
   }
 
   const handleFetchTransactionFee = async () => {
+    const fromAcc = getAccountFromAccountID(accountList, fromAccount)
+    const providerName = getAccountFromAccountID(accountList, fromAccount).providerName
     setProgress(true)
     const response = await getTransactionFee(
       loginData.access_token, 
-      getAccountFromAccountID(accountList, fromAccount).providerName, 
+      encodeURIComponent(providerName),
       {
         currentProfile: loginData.current_profile, 
         amount: Number(parseFloat(amount==''?'0':amount).toFixed(2)), 
         paymentMethod, 
         currencyName: currency, 
         pAndTType, 
-        bicCode
+        bicCode,
+        fromAccountIban: fromAcc.iBan
       }
     )
 
@@ -146,7 +155,7 @@ const EuroTransferScreen = ({ theme, navigation, route }) => {
 
   const toConfirm = () => {
     const fromAcc = getAccountFromAccountID(accountList, fromAccount)
-
+  
     const transactionDetails = {
       accountId: fromAccount,
       currentProfile: loginData.current_profile,
@@ -210,7 +219,8 @@ const EuroTransferScreen = ({ theme, navigation, route }) => {
             <TextInput
               autoCapitalize="none"
               style={styles.input}
-              label="Account holder's name *"
+              label="Recipient's account name *"
+              placeholder="Recipient's account name"
               value={accountHolderName}
               onChangeText={text => setAccountHolderName(text)}
               underlineColor={theme.colors.lightGrey}
@@ -220,7 +230,8 @@ const EuroTransferScreen = ({ theme, navigation, route }) => {
             <TextInput
               autoCapitalize="none"
               style={styles.input}
-              label="IBAN Number *"
+              label="Recipient's IBAN *"
+              placeholder="Recipient's IBAN"
               value={iBanNumber}
               onChangeText={text => setIBanNumber(text)}
               underlineColor={theme.colors.lightGrey}
@@ -230,14 +241,14 @@ const EuroTransferScreen = ({ theme, navigation, route }) => {
             <TextInput
               autoCapitalize="none"
               style={styles.input}
-              label="BIC Code *"
+              label="Recipient's account BIC Code *"
+              placeholder="Recipient's account BIC Code"
               value={bicCode}
+              maxLength={11}
               onChangeText={text => setBicCode(text)}
               underlineColor={theme.colors.lightGrey}
             />
-            { bicCode != '' && !validateBICCode(bicCode) && <HelperText type="error">
-              At least 8 or 11 character
-            </HelperText> }
+            <Text style={styles.referenceWarning}>{ bicCode && !validateBICCode(bicCode) && ("Length should be 8 or 11 characters. Allowed A-Z and 0-9") }</Text>
           </View>
         </View>
         
@@ -258,6 +269,7 @@ const EuroTransferScreen = ({ theme, navigation, route }) => {
                 onChangeText={text => setAddress(text)}
                 underlineColor={theme.colors.lightGrey}
               />
+              <Text style={styles.referenceWarning}>{ address && !validateSpecialCharacters(address) && (getSpecialCharacterErrorMessage()) }</Text>
             </View>
             <View>
               <TextInput
@@ -268,6 +280,7 @@ const EuroTransferScreen = ({ theme, navigation, route }) => {
                 onChangeText={text => setCity(text)}
                 underlineColor={theme.colors.lightGrey}
               />
+              <Text style={styles.referenceWarning}>{ city && !validateSpecialCharacters(city) && (getSpecialCharacterErrorMessage()) }</Text>
             </View>
             <View>
               <TextInput
@@ -278,6 +291,7 @@ const EuroTransferScreen = ({ theme, navigation, route }) => {
                 onChangeText={text => setState(text)}
                 underlineColor={theme.colors.lightGrey}
               />
+              <Text style={styles.referenceWarning}>{ state && !validateSpecialCharacters(state) && (getSpecialCharacterErrorMessage()) }</Text>
             </View>
             <SelectDropdown
               data={listOfCountry}
@@ -314,6 +328,7 @@ const EuroTransferScreen = ({ theme, navigation, route }) => {
                 onChangeText={text => setPostalCode(text)}
                 underlineColor={theme.colors.lightGrey}
               />
+              <Text style={styles.referenceWarning}>{ postalCode && !validateSpecialCharacters(postalCode) && (getSpecialCharacterErrorMessage()) }</Text>
             </View>
           </CollapseBody>
         </Collapse>
@@ -379,24 +394,25 @@ const EuroTransferScreen = ({ theme, navigation, route }) => {
             <TextInput
               autoCapitalize="none"
               style={styles.input}
-              label="Add description *"
+              label="Payment reference *"
               placeholder="Short payment reference"
               value={paymentReference}
               onChangeText={text => setPaymentReference(text)}
               underlineColor={theme.colors.lightGrey}
             />
+            <Text style={styles.referenceWarning}>{ paymentReference && !validateSpecialCharacters(paymentReference) && (getSpecialCharacterErrorMessage()) }</Text>
           </View>
           <View>
             <TextInput
               autoCapitalize="none"
               style={styles.input}
-              label="Payment details *"
+              label="Internal notes"
               value={notes}
               onChangeText={text => setNotes(text)}
               maxLength={35}
-              error={notes && !validateName(notes)}
               underlineColor={theme.colors.lightGrey}
             />
+            <Text style={styles.referenceWarning}>{ notes && !validateSpecialCharacters(notes) && (getSpecialCharacterErrorMessage()) }</Text>
           </View>
           <View>
             <TextInput
@@ -417,8 +433,8 @@ const EuroTransferScreen = ({ theme, navigation, route }) => {
           <View>
             <TextInput
               style={[styles.input, styles.inputBorder]}
-              label="Yet to calculate"
-              value={fee}
+              label={"Fee " + `${currency && getSymbolFromCurrency(currency)}` + " *"}
+              value={fee ? fee : "Yet to calculate"}
               disabled={true}
               underlineColor={theme.colors.lightGrey}
             />

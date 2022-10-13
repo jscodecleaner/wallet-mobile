@@ -18,7 +18,7 @@ import { useStyles } from './InternationalTransfer.style'
 import { transferTypeList } from '../../../services/common'
 import CustomButton from '../../../components/CustomButton/CustomButton'
 import { getAccountFromAccountID, getPaymentMethodList, getTransactionFee, getAvailableBalance, stringToFloat, floatToString } from '../../../services/utility'
-import { validateName } from '../../../services/validators'
+import { validateSpecialCharacters, getSpecialCharacterErrorMessage } from '../../../services/validators'
 import useProviderBankCodeTypeList from '../../../services/hooks'
 
 const pAndTType = 'international-transfer'
@@ -95,16 +95,19 @@ const InternationalTransferScreen = ({ theme, navigation, route }) => {
   }, [accountList])
 
   const handleFetchTransactionFee = async () => {
+    const fromAcc = getAccountFromAccountID(accountList, fromAccount)
+    const providerName = getAccountFromAccountID(accountList, fromAccount).providerName
     setProgress(true)
     const response = await getTransactionFee(
       loginData.access_token, 
-      getAccountFromAccountID(accountList, fromAccount).providerName, 
+      encodeURIComponent(providerName),
       {
         currentProfile: loginData.current_profile, 
         amount: Number(parseFloat(amount==''?'0':amount).toFixed(2)), 
         paymentMethod, 
         currencyName: currency, 
         pAndTType, 
+        fromAccountIban: fromAcc.iBan
         // sortCode: parseInt(sortCode)
       }
     )
@@ -153,8 +156,27 @@ const InternationalTransferScreen = ({ theme, navigation, route }) => {
       fromAccountName.length > 0 && 
       accountNumber.length > 0 &&
       paymentReference.length > 0 &&
-      notes.length > 0 && validateName(notes) &&
-      amount.length > 0 && amountCheck()
+      validateSpecialCharacters(paymentReference) &&
+      amount.length > 0 &&
+      amountCheck() &&
+      (notes ? validateSpecialCharacters(notes) : true) &&
+      recipientName.length > 0 &&
+      recipientAddress1.length > 0 &&
+      validateSpecialCharacters(recipientAddress1) &&
+      (recipientAddress2 ? validateSpecialCharacters(recipientAddress2) : true) &&
+      recipientCity.length > 0 &&
+      validateSpecialCharacters(recipientCity) &&
+      recipientState.length > 0 &&
+      validateSpecialCharacters(recipientState) &&
+      recipientPostcode.length > 0 && 
+      validateSpecialCharacters(recipientPostcode) &&
+      bankName.length > 0 &&
+      (bankAddress1 ? validateSpecialCharacters(bankAddress1) : true) &&
+      (bankAddress2 ? validateSpecialCharacters(bankAddress2) : true) &&
+      (bankPostcode ? validateSpecialCharacters(bankPostcode) : true) &&
+      (intermediaryAddress1 ? validateSpecialCharacters(intermediaryAddress1) : true) &&
+      (intermediaryAddress2 ? validateSpecialCharacters(intermediaryAddress2) : true) &&
+      (intermediaryPostcode ? validateSpecialCharacters(intermediaryPostcode) : true)
     )
       return "normal"
     else
@@ -256,8 +278,8 @@ const InternationalTransferScreen = ({ theme, navigation, route }) => {
             <TextInput
               autoCapitalize="none"
               style={styles.input}
-              label="Account number/IBAN *"
-              placeholder="Recipient account number"
+              label="Recipient's account number/ IBAN *"
+              placeholder="Recipient's account number/ IBAN"
               value={accountNumber}
               onChangeText={text => setAccountNumber(text)}
               underlineColor={theme.colors.lightGrey}
@@ -323,23 +345,25 @@ const InternationalTransferScreen = ({ theme, navigation, route }) => {
             <TextInput
               autoCapitalize="none"
               style={styles.input}
-              label="Add description *"
+              label="Payment reference *"
               placeholder="Short payment reference"
               value={paymentReference}
               onChangeText={text => setPaymentReference(text)}
               underlineColor={theme.colors.lightGrey}
             />
+            <Text style={styles.referenceWarning}>{ paymentReference && !validateSpecialCharacters(paymentReference) && (getSpecialCharacterErrorMessage()) }</Text>
           </View>
           <View>
             <TextInput
               autoCapitalize="none"
               style={styles.input}
-              label="Payment details *"
+              label="Internal notes"
               value={notes}
               maxLength={35}
               onChangeText={text => setNotes(text)}
               underlineColor={theme.colors.lightGrey}
             />
+            <Text style={styles.referenceWarning}>{ notes && !validateSpecialCharacters(notes) && (getSpecialCharacterErrorMessage()) }</Text>
           </View>
         </View>
         
@@ -355,7 +379,7 @@ const InternationalTransferScreen = ({ theme, navigation, route }) => {
               <TextInput
                 autoCapitalize="none"
                 style={styles.input}
-                label="Name"
+                label="Name *"
                 value={recipientName}
                 onChangeText={text => setRecipientName(text)}
                 underlineColor={theme.colors.lightGrey}
@@ -370,6 +394,7 @@ const InternationalTransferScreen = ({ theme, navigation, route }) => {
                 onChangeText={text => setRecipientAddress1(text)}
                 underlineColor={theme.colors.lightGrey}
               />
+              <Text style={styles.referenceWarning}>{ recipientAddress1 && !validateSpecialCharacters(recipientAddress1) && (getSpecialCharacterErrorMessage()) }</Text>
             </View>
             <View>
               <TextInput
@@ -380,6 +405,7 @@ const InternationalTransferScreen = ({ theme, navigation, route }) => {
                 onChangeText={text => setRecipientAddress2(text)}
                 underlineColor={theme.colors.lightGrey}
               />
+              <Text style={styles.referenceWarning}>{ recipientAddress2 && !validateSpecialCharacters(recipientAddress2) && (getSpecialCharacterErrorMessage()) }</Text>
             </View>
             <View>
               <TextInput
@@ -390,6 +416,7 @@ const InternationalTransferScreen = ({ theme, navigation, route }) => {
                 onChangeText={text => setRecipientCity(text)}
                 underlineColor={theme.colors.lightGrey}
               />
+              <Text style={styles.referenceWarning}>{ recipientCity && !validateSpecialCharacters(recipientCity) && (getSpecialCharacterErrorMessage()) }</Text>
             </View>
             <View>
               <TextInput
@@ -400,6 +427,7 @@ const InternationalTransferScreen = ({ theme, navigation, route }) => {
                 onChangeText={text => setRecipientState(text)}
                 underlineColor={theme.colors.lightGrey}
               />
+              <Text style={styles.referenceWarning}>{ recipientState && !validateSpecialCharacters(recipientState) && (getSpecialCharacterErrorMessage()) }</Text>
             </View>
             <SelectDropdown
               data={listOfCountry}
@@ -436,6 +464,7 @@ const InternationalTransferScreen = ({ theme, navigation, route }) => {
                 onChangeText={text => setRecipientPostcode(text)}
                 underlineColor={theme.colors.lightGrey}
               />
+              <Text style={styles.referenceWarning}>{ recipientPostcode && !validateSpecialCharacters(recipientPostcode) && (getSpecialCharacterErrorMessage()) }</Text>
             </View>
           </CollapseBody>
         </Collapse>
@@ -452,7 +481,7 @@ const InternationalTransferScreen = ({ theme, navigation, route }) => {
               <TextInput
                 autoCapitalize="none"
                 style={styles.input}
-                label="Name"
+                label="Name *"
                 value={bankName}
                 onChangeText={text => setBankName(text)}
                 underlineColor={theme.colors.lightGrey}
@@ -467,6 +496,7 @@ const InternationalTransferScreen = ({ theme, navigation, route }) => {
                 onChangeText={text => setBankAddress1(text)}
                 underlineColor={theme.colors.lightGrey}
               />
+              <Text style={styles.referenceWarning}>{ bankAddress1 && !validateSpecialCharacters(bankAddress1) && (getSpecialCharacterErrorMessage()) }</Text>
             </View>
             <View>
               <TextInput
@@ -477,6 +507,7 @@ const InternationalTransferScreen = ({ theme, navigation, route }) => {
                 onChangeText={text => setBankAddress2(text)}
                 underlineColor={theme.colors.lightGrey}
               />
+              <Text style={styles.referenceWarning}>{ bankAddress2 && !validateSpecialCharacters(bankAddress2) && (getSpecialCharacterErrorMessage()) }</Text>
             </View>
             <View>
               <SelectDropdown
@@ -514,6 +545,7 @@ const InternationalTransferScreen = ({ theme, navigation, route }) => {
                 onChangeText={text => setBankPostcode(text)}
                 underlineColor={theme.colors.lightGrey}
               />
+              <Text style={styles.referenceWarning}>{ bankPostcode && !validateSpecialCharacters(bankPostcode) && (getSpecialCharacterErrorMessage()) }</Text>
             </View>
             <SelectDropdown
               data={listOfCountry}
@@ -571,6 +603,7 @@ const InternationalTransferScreen = ({ theme, navigation, route }) => {
                 onChangeText={text => setIntermediaryAddress1(text)}
                 underlineColor={theme.colors.lightGrey}
               />
+              <Text style={styles.referenceWarning}>{ intermediaryAddress1 && !validateSpecialCharacters(intermediaryAddress1) && (getSpecialCharacterErrorMessage()) }</Text>
             </View>
             <View>
               <TextInput
@@ -581,6 +614,7 @@ const InternationalTransferScreen = ({ theme, navigation, route }) => {
                 onChangeText={text => setIntermediaryAddress2(text)}
                 underlineColor={theme.colors.lightGrey}
               />
+              <Text style={styles.referenceWarning}>{ intermediaryAddress2 && !validateSpecialCharacters(intermediaryAddress2) && (getSpecialCharacterErrorMessage()) }</Text>
             </View>
             <View>
               <SelectDropdown
@@ -618,6 +652,7 @@ const InternationalTransferScreen = ({ theme, navigation, route }) => {
                 onChangeText={text => setIntermediaryPostcode(text)}
                 underlineColor={theme.colors.lightGrey}
               />
+              <Text style={styles.referenceWarning}>{ intermediaryPostcode && !validateSpecialCharacters(intermediaryPostcode) && (getSpecialCharacterErrorMessage()) }</Text>
             </View>
             <SelectDropdown
               data={listOfCountry}
@@ -665,8 +700,8 @@ const InternationalTransferScreen = ({ theme, navigation, route }) => {
             <TextInput
               autoCapitalize="none"
               style={[styles.input, styles.inputBorder]}
-              label="Yet to calculate"
-              value={fee}
+              label={"Fee " + `${currency && getSymbolFromCurrency(currency)}` + " *"}
+              value={fee ? fee : "Yet to calculate"}
               disabled={true}
               underlineColor={theme.colors.lightGrey}
             />

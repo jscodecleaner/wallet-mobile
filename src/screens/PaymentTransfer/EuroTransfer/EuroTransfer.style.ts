@@ -95,4 +95,9 @@ export const useStyles = theme => (StyleSheet.create({
     fontSize: 16,
     marginHorizontal: 12,
   },
+  referenceWarning: {
+    color: 'red',
+    paddingLeft: 10,
+    fontSize: 12
+  },
 }))
