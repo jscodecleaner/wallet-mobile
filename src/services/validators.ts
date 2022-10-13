@@ -47,3 +47,22 @@ export const validateSpecialCharacters = (value) => {
 export const getSpecialCharacterErrorMessage =()=> { 
   return "Valid characters are A-Z a-z 0-9 / - ? : . ,"
 }
+
+export const validateRecipientName = (name) => {
+  const regex = /^[a-zA-Z0-9-.,\s"]*$/i
+  return regex.test(name)
+}
+
+export const getSpecialCharacterRecipientNameErrorMessage = () => { 
+  return "Valid characters are A-Z a-z 0-9 - . ,"
+}
+
+export const validateSortCodeUKDomestic = (code) => { 
+  const regex = /^[0-9"]{6}$/
+  return regex.test(code)
+}
+
+export const validateRecipientAccountNumberUKDomestic = (accountNumber) => { 
+  const regex = /^[0-9"]{8}$/
+  return regex.test(accountNumber)
+}
