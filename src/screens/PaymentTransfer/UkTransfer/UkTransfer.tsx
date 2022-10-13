@@ -97,7 +97,13 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
       validateSortCodeUKDomestic(sortCode) && 
       validateRecipientAccountNumberUKDomestic(accountNumber) &&
       validateSpecialCharacters(paymentReference) && 
-      (notes ? validateSpecialCharacters(notes) : true)
+      (notes ? validateSpecialCharacters(notes) : true) &&
+      (recipientAddress1 ? validateSpecialCharacters(recipientAddress1) : true) &&
+      (recipientAddress2 ? validateSpecialCharacters(recipientAddress2) : true) &&
+      (recipientPostalCode ? validateSpecialCharacters(recipientPostalCode) : true) &&
+      (bankAddress1 ? validateSpecialCharacters(bankAddress1) : true) &&
+      (bankAddress2 ? validateSpecialCharacters(bankAddress2) : true) &&
+      (bankPostalCode ? validateSpecialCharacters(bankPostalCode) : true)
     )
       return "normal"
     else
@@ -379,6 +385,7 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
                 onChangeText={text => setRecipientAddress1(text)}
                 underlineColor={theme.colors.lightGrey}
               />
+              <Text style={styles.referenceWarning}>{ recipientAddress1 && !validateSpecialCharacters(recipientAddress1) && (getSpecialCharacterErrorMessage()) }</Text>
             </View>
             <View>
               <TextInput
@@ -389,6 +396,7 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
                 onChangeText={text => setRecipientAddress2(text)}
                 underlineColor={theme.colors.lightGrey}
               />
+              <Text style={styles.referenceWarning}>{ recipientAddress2 && !validateSpecialCharacters(recipientAddress2) && (getSpecialCharacterErrorMessage()) }</Text>
             </View>
             <View>
               <TextInput
@@ -399,6 +407,7 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
                 onChangeText={text => setRecipientPostalCode(text)}
                 underlineColor={theme.colors.lightGrey}
               />
+              <Text style={styles.referenceWarning}>{ recipientPostalCode && !validateSpecialCharacters(recipientPostalCode) && (getSpecialCharacterErrorMessage()) }</Text>
             </View>
             <SelectDropdown
               data={listOfCountry}
@@ -446,6 +455,7 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
                 onChangeText={text => setBankAddress1(text)}
                 underlineColor={theme.colors.lightGrey}
               />
+              <Text style={styles.referenceWarning}>{ bankAddress1 && !validateSpecialCharacters(bankAddress1) && (getSpecialCharacterErrorMessage()) }</Text>
             </View>
             <View>
               <TextInput
@@ -456,6 +466,7 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
                 onChangeText={text => setBankAddress2(text)}
                 underlineColor={theme.colors.lightGrey}
               />
+              <Text style={styles.referenceWarning}>{ bankAddress2 && !validateSpecialCharacters(bankAddress2) && (getSpecialCharacterErrorMessage()) }</Text>
             </View>
             <View>
               <TextInput
@@ -466,6 +477,7 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
                 onChangeText={text => setBankPostalCode(text)}
                 underlineColor={theme.colors.lightGrey}
               />
+              <Text style={styles.referenceWarning}>{ bankPostalCode && !validateSpecialCharacters(bankPostalCode) && (getSpecialCharacterErrorMessage()) }</Text>
             </View>
             <SelectDropdown
               data={listOfCountry}
