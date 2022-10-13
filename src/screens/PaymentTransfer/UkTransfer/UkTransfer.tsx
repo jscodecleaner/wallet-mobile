@@ -96,7 +96,8 @@ const UkTransferScreen = ({ theme, navigation, route }) => {
       validateRecipientName(bankName) &&
       validateSortCodeUKDomestic(sortCode) && 
       validateRecipientAccountNumberUKDomestic(accountNumber) &&
-      validateSpecialCharacters(paymentReference)
+      validateSpecialCharacters(paymentReference) && 
+      (notes ? validateSpecialCharacters(notes) : true)
     )
       return "normal"
     else

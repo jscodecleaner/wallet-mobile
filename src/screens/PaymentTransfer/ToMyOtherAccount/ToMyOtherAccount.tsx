@@ -75,7 +75,8 @@ const ToMyOtherAccountScreen = ({ theme, navigation, route }) => {
       paymentReference.length > 0 &&
       amount.length > 0 && 
       amountCheck() &&
-      validateSpecialCharacters(paymentReference)
+      validateSpecialCharacters(paymentReference) &&
+      (notes ? validateSpecialCharacters(notes) : true)
     )
       return "normal"
     else

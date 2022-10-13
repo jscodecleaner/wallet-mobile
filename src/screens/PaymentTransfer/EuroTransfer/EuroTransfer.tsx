@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux"
 import { SafeAreaView, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview'
 import Spinner from 'react-native-loading-spinner-overlay'
-import { Button, Text, TextInput, withTheme, HelperText } from 'react-native-paper'
+import { Button, Text, TextInput, withTheme } from 'react-native-paper'
 import FontAwesomeIcons from 'react-native-vector-icons/FontAwesome'
 import { Popup , Toast } from 'react-native-popup-confirm-toast'
 import countryList from 'react-select-country-list'
@@ -81,8 +81,11 @@ const EuroTransferScreen = ({ theme, navigation, route }) => {
       iBanNumber.length > 0 &&
       bicCode.length > 0 &&
       paymentReference.length > 0 &&
-      amount.length > 0 && amountCheck() &&
-      validateBICCode(bicCode)
+      amount.length > 0 && 
+      amountCheck() &&
+      validateBICCode(bicCode) &&
+      validateSpecialCharacters(paymentReference) &&
+      (notes ? validateSpecialCharacters(notes) : true)
     )
       return "normal"
     else
@@ -212,7 +215,8 @@ const EuroTransferScreen = ({ theme, navigation, route }) => {
             <TextInput
               autoCapitalize="none"
               style={styles.input}
-              label="Account holder's name *"
+              label="Recipient's account name *"
+              placeholder="Recipient's account name"
               value={accountHolderName}
               onChangeText={text => setAccountHolderName(text)}
               underlineColor={theme.colors.lightGrey}
@@ -222,7 +226,8 @@ const EuroTransferScreen = ({ theme, navigation, route }) => {
             <TextInput
               autoCapitalize="none"
               style={styles.input}
-              label="IBAN Number *"
+              label="Recipient's IBAN *"
+              placeholder="Recipient's IBAN"
               value={iBanNumber}
               onChangeText={text => setIBanNumber(text)}
               underlineColor={theme.colors.lightGrey}
@@ -232,14 +237,14 @@ const EuroTransferScreen = ({ theme, navigation, route }) => {
             <TextInput
               autoCapitalize="none"
               style={styles.input}
-              label="BIC Code *"
+              label="Recipient's account BIC Code *"
+              placeholder="Recipient's account BIC Code"
               value={bicCode}
+              maxLength={11}
               onChangeText={text => setBicCode(text)}
               underlineColor={theme.colors.lightGrey}
             />
-            { bicCode != '' && !validateBICCode(bicCode) && <HelperText type="error">
-              At least 8 or 11 character
-            </HelperText> }
+            <Text style={styles.referenceWarning}>{ bicCode && !validateBICCode(bicCode) && ("Length should be 8 or 11 characters. Allowed A-Z and 0-9") }</Text>
           </View>
         </View>
         
