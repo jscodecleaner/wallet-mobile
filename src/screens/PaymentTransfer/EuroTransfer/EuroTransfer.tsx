@@ -85,7 +85,11 @@ const EuroTransferScreen = ({ theme, navigation, route }) => {
       amountCheck() &&
       validateBICCode(bicCode) &&
       validateSpecialCharacters(paymentReference) &&
-      (notes ? validateSpecialCharacters(notes) : true)
+      (notes ? validateSpecialCharacters(notes) : true) &&
+      (address ? validateSpecialCharacters(address) : true) &&
+      (city ? validateSpecialCharacters(city) : true) &&
+      (state ? validateSpecialCharacters(state) : true) &&
+      (postalCode ? validateSpecialCharacters(postalCode) : true) 
     )
       return "normal"
     else
@@ -265,6 +269,7 @@ const EuroTransferScreen = ({ theme, navigation, route }) => {
                 onChangeText={text => setAddress(text)}
                 underlineColor={theme.colors.lightGrey}
               />
+              <Text style={styles.referenceWarning}>{ address && !validateSpecialCharacters(address) && (getSpecialCharacterErrorMessage()) }</Text>
             </View>
             <View>
               <TextInput
@@ -275,6 +280,7 @@ const EuroTransferScreen = ({ theme, navigation, route }) => {
                 onChangeText={text => setCity(text)}
                 underlineColor={theme.colors.lightGrey}
               />
+              <Text style={styles.referenceWarning}>{ city && !validateSpecialCharacters(city) && (getSpecialCharacterErrorMessage()) }</Text>
             </View>
             <View>
               <TextInput
@@ -285,6 +291,7 @@ const EuroTransferScreen = ({ theme, navigation, route }) => {
                 onChangeText={text => setState(text)}
                 underlineColor={theme.colors.lightGrey}
               />
+              <Text style={styles.referenceWarning}>{ state && !validateSpecialCharacters(state) && (getSpecialCharacterErrorMessage()) }</Text>
             </View>
             <SelectDropdown
               data={listOfCountry}
@@ -321,6 +328,7 @@ const EuroTransferScreen = ({ theme, navigation, route }) => {
                 onChangeText={text => setPostalCode(text)}
                 underlineColor={theme.colors.lightGrey}
               />
+              <Text style={styles.referenceWarning}>{ postalCode && !validateSpecialCharacters(postalCode) && (getSpecialCharacterErrorMessage()) }</Text>
             </View>
           </CollapseBody>
         </Collapse>
